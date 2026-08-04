@@ -1244,16 +1244,31 @@
   color: var(--swatch--light-100);
 }
 
-.contact_success {
+.contact_success,
+.contact_error {
   display: none;
   margin: 0;
   padding: 0.65rem 0.85rem;
   border-radius: var(--radius--small);
+}
+
+.contact_success {
   background: color-mix(in srgb, #22c55e 14%, transparent);
 }
 
-.contact_success.is-visible {
+.contact_error {
+  background: color-mix(in srgb, #ef4444 14%, transparent);
+  color: color-mix(in srgb, #ef4444 70%, var(--swatch--dark-900));
+}
+
+.contact_success.is-visible,
+.contact_error.is-visible {
   display: block;
+}
+
+.contact_footer .btn_wrap:disabled {
+  opacity: 0.65;
+  pointer-events: none;
 }
 
 /* --- Touch targets ------------------------------------------------------

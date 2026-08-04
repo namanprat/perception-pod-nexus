@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="en" class="u-theme-light is-preloading"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v7.1.6"><title>Perception Pod — A Creative Intelligence Studio</title><meta name="author" content="Naman Pratulya"><meta name="description" content="Perception Pod — Garden of Growth. A creative intelligence studio bridging creative intuition and performance intelligence."><!-- New Spirit (Adobe Fonts / Typekit) — kit id mirrors --_typography---typekit-kit-id --><link rel="preconnect" href="https://use.typekit.net" crossorigin><link rel="stylesheet" href="https://use.typekit.net/gqw3ofa.css" data-nexus-typekit="gqw3ofa"><!-- Apply persisted layout/colour/type overrides before paint (set from /styling). --><script>
+      (function () {
+        try {
+          var root = document.documentElement;
+          var locked = localStorage.getItem("nexus:container-lock");
+          var width = localStorage.getItem("nexus:container-width");
+          if (locked !== null || width !== null) {
+            var rem = parseFloat(width || "90");
+            if (!isFinite(rem) || rem <= 0) rem = 90;
+            root.style.setProperty(
+              "--max-width--main",
+              locked === "0" ? "100vw" : rem + "rem",
+            );
+          }
+
+          var swatchesRaw = localStorage.getItem("nexus:swatches");
+          if (swatchesRaw) {
+            var swatches = JSON.parse(swatchesRaw);
+            var swatchMap = {
+              light: "--swatch--light-100",
+              dark: "--swatch--dark-900",
+              brand: "--swatch--brand-500",
+              accent: "--swatch--accent",
+              overscroll: "--swatch--overscroll",
+            };
+            for (var swatchKey in swatchMap) {
+              if (
+                typeof swatches[swatchKey] === "string" &&
+                /^#[0-9a-fA-F]{6}$/.test(swatches[swatchKey])
+              ) {
+                root.style.setProperty(swatchMap[swatchKey], swatches[swatchKey].toLowerCase());
+              }
+            }
+          }
+
+          var extrasRaw = localStorage.getItem("nexus:extra-swatches");
+          if (extrasRaw) {
+            var extras = JSON.parse(extrasRaw);
+            for (var extraSlug in extras) {
+              if (
+                typeof extras[extraSlug] === "string" &&
+                /^#[0-9a-fA-F]{6}$/.test(extras[extraSlug]) &&
+                /^[a-z][a-z0-9-]{0,31}$/.test(extraSlug)
+              ) {
+                root.style.setProperty("--swatch--" + extraSlug, extras[extraSlug].toLowerCase());
+              }
+            }
+          }
+
+          /* Typekit — swap kit link if localStorage / CSS differs from the default. */
+          var kitId = localStorage.getItem("nexus:typekit-kit-id");
+          if (!kitId) {
+            var kitFromCss = getComputedStyle(root)
+              .getPropertyValue("--_typography---typekit-kit-id")
+              .trim();
+            if (/^[a-z0-9]{5,10}$/i.test(kitFromCss)) kitId = kitFromCss.toLowerCase();
+          }
+          if (kitId && /^[a-z0-9]{5,10}$/i.test(kitId)) {
+            var kitNorm = kitId.toLowerCase();
+            var existing = document.querySelector('link[data-nexus-typekit]');
+            if (!existing || existing.getAttribute("data-nexus-typekit") !== kitNorm) {
+              if (existing) existing.remove();
+              var link = document.createElement("link");
+              link.rel = "stylesheet";
+              link.href = "https://use.typekit.net/" + kitNorm + ".css";
+              link.setAttribute("data-nexus-typekit", kitNorm);
+              document.head.appendChild(link);
+            }
+          }
+
+          var familiesRaw = localStorage.getItem("nexus:font-families");
+          if (familiesRaw) {
+            var families = JSON.parse(familiesRaw);
+            var familyMap = {
+              primary: "--_typography---font--primary",
+              secondary: "--_typography---font--secondary",
+              tertiary: "--_typography---font--tertiary",
+            };
+            for (var familyKey in familyMap) {
+              if (typeof families[familyKey] === "string" && families[familyKey].trim()) {
+                root.style.setProperty(familyMap[familyKey], families[familyKey].trim());
+              }
+            }
+          }
+
+          /* Type styles master switch — when off, never apply user type styles. */
+          var typeStylesFlag = localStorage.getItem("nexus:type-styles-enabled");
+          if (typeStylesFlag === null) {
+            var flagFromCss = getComputedStyle(root)
+              .getPropertyValue("--_typography---type-styles-enabled")
+              .trim();
+            typeStylesFlag = flagFromCss === "0" ? "0" : "1";
+          }
+          var typeStylesOn = typeStylesFlag !== "0";
+          root.style.setProperty(
+            "--_typography---type-styles-enabled",
+            typeStylesOn ? "1" : "0",
+          );
+          root.classList.toggle("is-type-styles-off", !typeStylesOn);
+
+          var styleKeys = [
+            "display", "h1", "h2", "h3", "h4", "h5", "h6",
+            "large", "main", "small", "mono", "eyebrow",
+          ];
+
+          if (!typeStylesOn) {
+            for (var di = 0; di < styleKeys.length; di++) {
+              var dsk = styleKeys[di];
+              root.style.setProperty("--_typography---font-style--" + dsk, "Arial, sans-serif");
+              root.style.setProperty("--_typography---text-wrap--" + dsk, "pretty");
+              root.style.setProperty("--_typography---text-transform--" + dsk, "none");
+              root.style.setProperty("--_typography---text-align--" + dsk, "start");
+              root.style.setProperty("--_typography---font-weight--" + dsk, "400");
+            }
+          } else {
+            var styleFontsRaw = localStorage.getItem("nexus:text-style-fonts");
+            if (styleFontsRaw) {
+              var styleFonts = JSON.parse(styleFontsRaw);
+              var roles = { primary: 1, secondary: 1, tertiary: 1 };
+              for (var styleKey in styleFonts) {
+                var role = styleFonts[styleKey];
+                if (roles[role]) {
+                  root.style.setProperty(
+                    "--_typography---font-style--" + styleKey,
+                    "var(--_typography---font--" + role + ")",
+                  );
+                }
+              }
+            }
+
+            var styleOptionsRaw = localStorage.getItem("nexus:text-style-options");
+            if (styleOptionsRaw) {
+              var styleOptions = JSON.parse(styleOptionsRaw);
+              var wrapOk = { balance: 1, pretty: 1, wrap: 1, nowrap: 1, stable: 1 };
+              var transformOk = { none: 1, uppercase: 1, lowercase: 1, capitalize: 1 };
+              var alignOk = { start: 1, center: 1, end: 1, justify: 1 };
+              var weightOk = { "300": 1, "400": 1, "500": 1, "600": 1, "700": 1 };
+              for (var i = 0; i < styleKeys.length; i++) {
+                var sk = styleKeys[i];
+                var w = styleOptions.wrap && styleOptions.wrap[sk];
+                var tr = styleOptions.transform && styleOptions.transform[sk];
+                var al = styleOptions.align && styleOptions.align[sk];
+                var wt = styleOptions.weight && styleOptions.weight[sk];
+                if (wrapOk[w]) root.style.setProperty("--_typography---text-wrap--" + sk, w);
+                if (transformOk[tr]) root.style.setProperty("--_typography---text-transform--" + sk, tr);
+                if (alignOk[al]) root.style.setProperty("--_typography---text-align--" + sk, al);
+                if (weightOk[wt]) root.style.setProperty("--_typography---font-weight--" + sk, wt);
+              }
+            }
+          }
+
+          var buttonStylesRaw = localStorage.getItem("nexus:button-styles");
+          if (buttonStylesRaw) {
+            var buttonStyles = JSON.parse(buttonStylesRaw);
+            var buttonMap = {
+              fontFamily: "--button--font-family",
+              primaryBackground: "--button-primary--background",
+              primaryBackgroundHover: "--button-primary--background-hover",
+              primaryText: "--button-primary--text",
+              primaryTextHover: "--button-primary--text-hover",
+              secondaryText: "--button-secondary--text",
+              secondaryTextHover: "--button-secondary--text-hover",
+              tertiaryText: "--button-tertiary--text",
+              tertiaryTextHover: "--button-tertiary--text-hover",
+            };
+            for (var buttonKey in buttonMap) {
+              var buttonValue = buttonStyles[buttonKey];
+              if (typeof buttonValue === "string" && /^var\(--[a-zA-Z0-9_-]+\)$/.test(buttonValue)) {
+                root.style.setProperty(buttonMap[buttonKey], buttonValue);
+              }
+            }
+            var paddingPresets = {
+              compact: ["var(--_spacing---space--2)", "var(--_spacing---space--4)"],
+              default: ["var(--_spacing---space--3)", "var(--_spacing---space--5)"],
+              comfortable: ["var(--_spacing---space--4)", "var(--_spacing---space--6)"],
+            };
+            var padPreset = buttonStyles.paddingPreset;
+            if (typeof padPreset === "string" && paddingPresets[padPreset]) {
+              root.style.setProperty("--button--padding-block", paddingPresets[padPreset][0]);
+              root.style.setProperty("--button--padding-inline", paddingPresets[padPreset][1]);
+            }
+            var radiusValue = buttonStyles.radius;
+            if (
+              typeof radiusValue === "string" &&
+              /^(\d*\.?\d+rem|100vw)$/.test(radiusValue)
+            ) {
+              root.style.setProperty("--button--radius", radiusValue);
+            }
+          }
+
+          var rungsRaw = localStorage.getItem("nexus:spacing-rungs");
+          if (rungsRaw) {
+            var rungs = JSON.parse(rungsRaw);
+            var clampRung = function (value) {
+              var n = Number(value);
+              if (!isFinite(n)) return 0;
+              return Math.min(2, Math.max(-2, Math.round(n)));
+            };
+            if (typeof rungs.gutter === "number") {
+              root.style.setProperty("--site--gutter-rung", String(clampRung(rungs.gutter)));
+            }
+            if (typeof rungs.padding === "number") {
+              root.style.setProperty("--_spacing---padding-rung", String(clampRung(rungs.padding)));
+            }
+          }
+
+          /* Preloader pages: never restore mid-scroll under the locked shell. */
+          if (root.classList.contains("is-preloading")) {
+            if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+            window.scrollTo(0, 0);
+          }
+        } catch (e) {}
+      })();
+    </script><style>html.lenis,html.lenis body{height:auto}.lenis:not(.lenis-autoToggle).lenis-stopped{overflow:clip}.lenis [data-lenis-prevent],.lenis [data-lenis-prevent-wheel],.lenis [data-lenis-prevent-touch],.lenis [data-lenis-prevent-vertical],.lenis [data-lenis-prevent-horizontal]{overscroll-behavior:contain}.lenis.lenis-smooth iframe{pointer-events:none}.lenis.lenis-autoToggle{transition-behavior:allow-discrete;transition-property:overflow;transition-duration:1ms}
+</style><link rel="stylesheet" href="/_astro/Section.DyJLJxEq.css"><style>html:has([data-r3f]),html:has([data-r3f]) body,html:has([data-r3f]).u-theme-light,html:has([data-r3f]).u-theme-dark,html:has([data-r3f]).u-theme-brand{background-color:#0000}.r3f_wrap[data-astro-cid-ihf4jyxl]{pointer-events:none;z-index:0;width:100%;height:100vh;position:fixed;inset:0;overflow:hidden}
+</style></head><body><div class="preloader_wrap u-theme-dark" aria-hidden="true"><div class="preloader_logo"><div class="preloader_progressbar"></div></div><svg class="preloader_curve" aria-hidden="true" preserveAspectRatio="none"><path class="preloader_curve_path"></path></svg></div><nav class="nav_wrap" id="top"><div class="nav_contain u-container"><div class="nav_meta"><ul role="list" class="nav_meta"><li class="nav_item"><span class="u-text-style-h6" data-clock>00:00:00 IST</span></li></ul></div><a class="nav_logo_contain" href="#top" aria-label="Perception Pod home"><img src="/assets/logo.svg" alt="" class="nav_wordmark"></a><div class="u-button-wrapper nav_btn"><button type="button" class="btn_wrap" data-contact-open data-trigger="hover focus"><span class="btn_text">Contact</span></button></div></div></nav><div class="r3f_wrap" data-r3f aria-hidden="true" data-astro-cid-ihf4jyxl><style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).only=e;window.dispatchEvent(new Event("astro:only"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(a,s,c)=>s in a?g(a,s,{enumerable:!0,configurable:!0,writable:!0,value:c}):a[s]=c;var l=(a,s,c)=>w(a,typeof s!="symbol"?s+"":s,c);var E=new Set(["__proto__","constructor","prototype"]);{let a={0:t=>y(t),1:t=>c(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(c(t)),5:t=>new Set(c(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in a?a[p](e):void 0},c=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let r=this.querySelectorAll("astro-slot"),n={},d=this.querySelectorAll("template[data-astro-template]");for(let o of d){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of r){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let i=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(i+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${i}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),r.disconnect(),this.childrenConnectedCallback()},r=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});r.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let r=new URL(e,document.baseURI);return r.searchParams.set("astro-retry",Date.now().toString()),r.toString()}async importWithRetry(e){try{return await import(e)}catch(r){return await new Promise(n=>setTimeout(n,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let r=this.getAttribute("component-url"),n=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:r}});this.dispatchEvent(n)&&console.error(`[astro-island] Error hydrating ${r}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),r=this.getAttribute("client");if(Astro[r]===void 0){window.addEventListener(`astro:${r}`,()=>this.start(),{once:!0});return}try{await Astro[r](async()=>{let n=this.getAttribute("renderer-url");try{let[d,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),n?this.importWithRetry(n):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=d;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=d[h]}return this.hydrator=u,this.hydrate}catch(d){return this.handleHydrationError(d),()=>{}}},e,this)}catch(n){this.handleHydrationError(n)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="Z1XSn2Q" component-url="/_astro/App.DhtQzEEb.js" component-export="default" renderer-url="/_astro/client.DDW4n44G.js" props="{&quot;data-astro-cid-ihf4jyxl&quot;:[0,true]}" ssr client="only" opts="{&quot;name&quot;:&quot;App&quot;,&quot;value&quot;:&quot;react&quot;}"></astro-island></div><div class="page_wrap" data-main><main class="page_main"><section class="hero_wrap"><div class="hero_contain u-container"><div class="hero_top"><img src="/assets/logo.svg" alt="Perception Pod" class="hero_wordmark"></div><div class="hero_bottom"><div class="hero_bottom_wrap u-grid-main"><ul class="hero_links u-text-style-h6" role="list"><li class="hero_nav_item"><span class="hero_link" data-clock>00:00:00 IST</span></li><li class="hero_nav_item"><span class="hero_link">Delhi, India</span></li></ul><div class="hero_center"><h3 id="header-split" class="hero_title u-text-style-h3">Garden of Growth,<br>A Creative Intelligence Studio</h3><div class="hero_actions u-button-wrapper"><button type="button" class="btn_wrap" data-contact-open data-trigger="hover focus"><span class="btn_text">Contact</span></button></div></div><ul class="hero_links u-text-style-h6" role="list"><li class="hero_nav_item"><a class="hero_link" href="#services">Services</a></li><li class="hero_nav_item"><a class="hero_link" href="#about">About</a></li></ul></div></div></div></section><section class="scrub_text_wrap" data-scrub-text><script type="application/json" data-scrub-slides>[{"header":"A Brand is a Living Mosaic","body":"Brands aren't static pages in a deck. They're living mosaics of contradictions, emotions, and human stories. We nurture the ones that refuse to sit still in perfect little boxes, the ones that listen to the chaos and evolve with the weather."},{"header":"Wild Things Grow Best","body":"Forget the rulebook. Authentic brands don't bloom from templates, they erupt from soil-deep understanding and wild intention. We dig into the messy dirt of human truth, because real growth doesn't follow instructions. It follows instinct."},{"header":"Every Element Serves a Purpose","body":"In our garden, nothing exists just to look pretty. Every petal attracts, every stem supports, every root feeds the whole. Your brand isn't decoration, it's a living organism where design meets data and strategy blooms into stories that matter."}]</script><div class="scrub_text_sticky"><div class="scrub_contain" id="pp-scrub" data-asset-base-url="/frames" data-first-frame="1" data-frame-count="115" aria-hidden="true"></div><div class="scrub_text_dock u-container"><div class="scrub_text_grid u-grid-main"><div class="scrub_text_main u-column-span-4"><div class="scrub_text_header_wrap"><h1 class="scrub_text_header u-text-style-h1">A Brand is a Living Mosaic</h1></div><p class="scrub_text_body u-text-style-large">Brands aren&#39;t static pages in a deck. They&#39;re living mosaics of contradictions, emotions, and human stories. We nurture the ones that refuse to sit still in perfect little boxes, the ones that listen to the chaos and evolve with the weather.</p></div></div></div></div></section><section class="bloom_wrap" id="services"><div class="bloom_stage"><div class="bloom_head u-container u-margin-trim"><div class="bloom_head_grid u-grid-main"><div class="bloom_head_main"><h2 class="bloom_title u-text-style-h1 u-text-align-center">The Bloom Room</h2><p class="bloom_text u-text-style-large u-text-align-center">We bridge the gap between creative intuition and performance intelligence with tools that work, ideas that bloom, and insight that leads to creativity that actually performs. Choose your garden, we help you grow it. Here's how.</p></div></div></div><div class="bloom_cards"><article class="bloom_card is-1" id="bloom-card-1" aria-label="Roots — Research and Strategy"><div class="bloom_card_head"><div class="bloom_card_row"><span class="bloom_card_label u-text-style-h2">Roots</span><span class="bloom_card_badge"><span class="bloom_card_num u-text-style-h5">1</span></span></div><p class="bloom_card_sub u-text-style-h3">Research &amp; Strategy</p></div><hr class="bloom_card_divider"><ul class="bloom_card_list"><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Trend + market analysis</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Audience + persona research</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Cultural + competitor insights</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>PMF + UX testing</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Insight-driven storytelling</li></ul></article><article class="bloom_card is-2" id="bloom-card-2" aria-label="Seed — Brand Identity and Positioning"><div class="bloom_card_head"><div class="bloom_card_row"><span class="bloom_card_label u-text-style-h2">Seed</span><span class="bloom_card_badge"><span class="bloom_card_num u-text-style-h5">2</span></span></div><p class="bloom_card_sub u-text-style-h3">Brand Identity &amp; Positioning</p></div><hr class="bloom_card_divider"><ul class="bloom_card_list"><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Trend + market analysis</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Audience + persona research</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Cultural + competitor insights</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>PMF + UX testing</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Insight-driven storytelling</li></ul></article><article class="bloom_card is-3" id="bloom-card-3" aria-label="Stem — Digital Presence and Experience"><div class="bloom_card_head"><div class="bloom_card_row"><span class="bloom_card_label u-text-style-h2">Stem</span><span class="bloom_card_badge"><span class="bloom_card_num u-text-style-h5">3</span></span></div><p class="bloom_card_sub u-text-style-h3">Digital Presence &amp; Experience</p></div><hr class="bloom_card_divider"><ul class="bloom_card_list"><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Trend + market analysis</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Audience + persona research</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Cultural + competitor insights</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>PMF + UX testing</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Insight-driven storytelling</li></ul></article><article class="bloom_card is-4" id="bloom-card-4" aria-label="Bud — Content and Performance"><div class="bloom_card_head"><div class="bloom_card_row"><span class="bloom_card_label u-text-style-h2">Bud</span><span class="bloom_card_badge"><span class="bloom_card_num u-text-style-h5">4</span></span></div><p class="bloom_card_sub u-text-style-h3">Content &amp; Performance</p></div><hr class="bloom_card_divider"><ul class="bloom_card_list"><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Trend + market analysis</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Audience + persona research</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Cultural + competitor insights</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>PMF + UX testing</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Insight-driven storytelling</li></ul></article><article class="bloom_card is-5" id="bloom-card-5" aria-label="Flower — Campaign Activations"><div class="bloom_card_head"><div class="bloom_card_row"><span class="bloom_card_label u-text-style-h2">Flower</span><span class="bloom_card_badge"><span class="bloom_card_num u-text-style-h5">5</span></span></div><p class="bloom_card_sub u-text-style-h3">Campaign Activations</p></div><hr class="bloom_card_divider"><ul class="bloom_card_list"><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Trend + market analysis</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Audience + persona research</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Cultural + competitor insights</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>PMF + UX testing</li><li class="bloom_card_list_item u-text-style-large"><span class="bloom_card_bullet" aria-hidden="true"></span>Insight-driven storytelling</li></ul></article></div></div></section><section class="manifesto_wrap" id="about"><div class="manifesto_sticky u-container"><div class="manifesto_contain"><h2 class="manifesto_text u-text-style-h2 u-text-align-center">At Perception Pod we plant a garden of wild ideas, grown with purpose, where the conventional is left to decompose. We combine creative direction with consumer insights to help brands grow with their audience, not past them. Using AI-powered research, behavioural data, and bold storytelling, we build brands that stick.</h2></div></div></section><section class="faq_wrap u-section"><div class="faq_contain u-container"><div class="faq_layout u-layout"><div class="faq_grid u-grid-main"><h2 class="faq_title u-text-style-h1 u-column-span-4">Frequently Asked Questions</h2><div class="faq_list"><div class="faq_item"><button class="faq_item_head" id="faq-q-1" aria-expanded="false" aria-controls="faq-a-1"><span class="faq_item_question u-text-style-h4">Why We Think in Gardens?</span><span class="faq_item_icon" aria-hidden="true"><span class="faq_item_bar"></span><span class="faq_item_bar is-vertical"></span></span></button><div class="faq_item_panel" id="faq-a-1" role="region" aria-labelledby="faq-q-1"><div class="faq_item_answer"><p class="u-text-style-large">We help you build an ecosystem for your brand that thrives like a garden growing wild and blooming with ideas.</p><p class="u-text-style-large">A garden engages all five senses — so should your brand. At Perception Pod, we believe great brands don&#39;t just get noticed, they are felt. Like stepping into an untamed garden, your brand should stir something visceral: texture beneath the feet, scent in the air, wind on the skin.</p><p class="u-text-style-large">Because if your brand doesn&#39;t trigger sensation, it won&#39;t trigger memory.</p></div></div></div><div class="faq_item"><button class="faq_item_head" id="faq-q-2" aria-expanded="false" aria-controls="faq-a-2"><span class="faq_item_question u-text-style-h4">What exactly does Perception Pod do?</span><span class="faq_item_icon" aria-hidden="true"><span class="faq_item_bar"></span><span class="faq_item_bar is-vertical"></span></span></button><div class="faq_item_panel" id="faq-a-2" role="region" aria-labelledby="faq-q-2"><div class="faq_item_answer"><p class="u-text-style-large">We help emerging brands grow with clarity and impact. From audience research and creative strategy to campaigns and brand design, we turn scattered perceptions into a focused, sensory brand system that adapts as you scale.</p></div></div></div><div class="faq_item"><button class="faq_item_head" id="faq-q-3" aria-expanded="false" aria-controls="faq-a-3"><span class="faq_item_question u-text-style-h4">Are you a design agency, a strategy studio, or a research firm?</span><span class="faq_item_icon" aria-hidden="true"><span class="faq_item_bar"></span><span class="faq_item_bar is-vertical"></span></span></button><div class="faq_item_panel" id="faq-a-3" role="region" aria-labelledby="faq-q-3"><div class="faq_item_answer"><p class="u-text-style-large">We&#39;re a little of all three, but not exactly like any of them. Think of us as your creative intelligence partner: part brand strategist, part data whisperer, part design thinker. We don&#39;t just make things look good, we make sure they mean something. Here, design meets data and brands are built from intelligence.</p></div></div></div><div class="faq_item"><button class="faq_item_head" id="faq-q-4" aria-expanded="false" aria-controls="faq-a-4"><span class="faq_item_question u-text-style-h4">What if I don&#39;t have a lot of budget?</span><span class="faq_item_icon" aria-hidden="true"><span class="faq_item_bar"></span><span class="faq_item_bar is-vertical"></span></span></button><div class="faq_item_panel" id="faq-a-4" role="region" aria-labelledby="faq-q-4"><div class="faq_item_answer"><p class="u-text-style-large">No problem. We offer modular services — from one-month sprints to flexible bundles — so you only pay for what you need. No bloated retainers. No long-term contracts. Just smart, scalable support for whatever stage you&#39;re at.</p><p class="u-text-style-large">Take a look at our Core Engagement Model that highlights how we can support your brand.</p><p class="u-text-style-large">The Sprint: Solve 1 problem in 30 days — A tight, focused burst of creative clarity. Whether it&#39;s a pitch deck, a positioning fix, a landing page, or a logo, we build and ship within a tight timeframe. Best for: early-stage startups, time-sensitive projects, or one-off needs.</p><p class="u-text-style-large">The Subscription: Your creative co-pilot — on demand. Ongoing creative support across strategy, content, research, and design, delivered with agility and attention. You get premium output without the chaos of chasing freelancers for a flat monthly fee. Best for: founders or teams who want flexible monthly support without long contracts.</p><p class="u-text-style-large">The Insight Lab: Pure research. Before you launch, pivot, or pitch, we dig deep into the people you&#39;re building for. Best for: product teams, brand strategists, marketers, or anyone seeking audience knowledge.</p><p class="u-text-style-large">The Brand OS: Everything your brand needs to live and breathe. We build your entire brand system — from strategy to visual identity to website to launch, UX, UI, and more. Think of it as your brand&#39;s operating system, designed to scale, adapt, and resonate. Best for: founders launching or rebranding, or teams building a bold foundation.</p><p class="u-text-style-large">The Campaign Capsule: One campaign. All the right moves. From insights to execution, we design campaigns with soul, not just ads. Includes: research, creative concepting, content, design, rollout. Best for: launches, product drops, or seasonal storytelling.</p></div></div></div><div class="faq_item"><button class="faq_item_head" id="faq-q-5" aria-expanded="false" aria-controls="faq-a-5"><span class="faq_item_question u-text-style-h4">Do you work with small teams or only funded startups?</span><span class="faq_item_icon" aria-hidden="true"><span class="faq_item_bar"></span><span class="faq_item_bar is-vertical"></span></span></button><div class="faq_item_panel" id="faq-a-5" role="region" aria-labelledby="faq-q-5"><div class="faq_item_answer"><p class="u-text-style-large">From garage to growth phase, we build brand systems that scale with teams. Pre-launch or post-Series A, if you&#39;re serious about your audience, we&#39;re serious about you.</p></div></div></div><div class="faq_item"><button class="faq_item_head" id="faq-q-6" aria-expanded="false" aria-controls="faq-a-6"><span class="faq_item_question u-text-style-h4">How do we do things differently?</span><span class="faq_item_icon" aria-hidden="true"><span class="faq_item_bar"></span><span class="faq_item_bar is-vertical"></span></span></button><div class="faq_item_panel" id="faq-a-6" role="region" aria-labelledby="faq-q-6"><div class="faq_item_answer"><p class="u-text-style-large">We don&#39;t use templates, we build from real signals: human, cultural, and behavioral. Here&#39;s how:</p><ol class="faq_item_list u-text-style-large"><li>Global Minds, Boutique Moves — Big-brand experience, indie agility.</li><li>Data-Driven Design — Visuals that don&#39;t just look good, they work.</li><li>Performance That Moves You — Emotion-led, culturally tuned, built to grow.</li><li>Emotional Intelligence You Can See — We turn feelings into brand DNA.</li><li>Built for the Brave — For teams ready to stand out, not fit in.</li></ol><p class="u-text-style-large">Creative intelligence, rooted in what your audience really needs.</p></div></div></div><div class="faq_item"><button class="faq_item_head" id="faq-q-7" aria-expanded="false" aria-controls="faq-a-7"><span class="faq_item_question u-text-style-h4">Can I work with you just for research or strategy (without design)?</span><span class="faq_item_icon" aria-hidden="true"><span class="faq_item_bar"></span><span class="faq_item_bar is-vertical"></span></span></button><div class="faq_item_panel" id="faq-a-7" role="region" aria-labelledby="faq-q-7"><div class="faq_item_answer"><p class="u-text-style-large">Absolutely. Whether it&#39;s deep-dive research or design thinking, we plug in where you need us most. From pre-campaign insights and trend decks to audience personas and market segmentation, we offer sharp, focused support for any stage of your brand journey.</p></div></div></div><div class="faq_item"><button class="faq_item_head" id="faq-q-8" aria-expanded="false" aria-controls="faq-a-8"><span class="faq_item_question u-text-style-h4">What&#39;s the first step to work with you?</span><span class="faq_item_icon" aria-hidden="true"><span class="faq_item_bar"></span><span class="faq_item_bar is-vertical"></span></span></button><div class="faq_item_panel" id="faq-a-8" role="region" aria-labelledby="faq-q-8"><div class="faq_item_answer"><p class="u-text-style-large">Start with a discovery call. We&#39;ll map where you are and help you chart your next move. A sprint, a campaign capsule, or a custom bundle? We will point you to the perfect pick.</p></div></div></div></div></div></div></div></section><footer class="footer_wrap" id="contact"><div class="footer_media"><img class="footer_media_img" src="/assets/footer-bloom.png" alt=""></div><div class="footer_contain u-container u-text-align-center"><div class="footer_top"><h2 class="u-text-style-h1">Got a project? Let's talk</h2><div class="footer_actions u-button-wrapper"><button type="button" class="btn_wrap" data-contact-open data-trigger="hover focus"><span class="btn_text">Get in touch</span></button></div></div><div class="footer_links"><a class="footer_link u-text-style-h6 u-text-faded" href="#" data-trigger="hover focus">LinkedIn</a><a class="footer_link u-text-style-h6 u-text-faded" href="#" data-trigger="hover focus">Instagram</a><a class="footer_link u-text-style-h6 u-text-faded" href="mailto:hello@perceptionpod.com" data-trigger="hover focus">Email</a></div></div><img src="/assets/logo.svg" alt="Perception Pod" class="footer_wordmark"></footer></main></div><section class="contact_wrap" aria-hidden="true" aria-label="Contact"><div class="contact_panel" role="dialog" aria-modal="true" aria-labelledby="contact-title"><header class="contact_header"><h2 id="contact-title" class="contact_title u-text-style-h2">Start a Project</h2><button type="button" class="contact_close" aria-label="Close contact form"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></button></header><form class="contact_form" aria-label="Contact Form"><div class="contact_body"><label class="contact_field"><span class="contact_prompt u-text-style-h4">Hello! My name is</span><input class="contact_input u-text-style-large" name="name" placeholder="John Smith" type="text" autocomplete="name"></label><label class="contact_field"><span class="contact_prompt u-text-style-h4">My email is</span><input class="contact_input u-text-style-large" name="email" placeholder="email@gmail.com" type="email" autocomplete="email" required></label><fieldset class="contact_fieldset"><legend class="contact_prompt u-text-style-h4">I am reaching out regarding</legend><div class="contact_services"><label class="contact_service u-text-style-large"><input type="checkbox" name="service" value="research"><span>Research &amp; Strategy</span></label><label class="contact_service u-text-style-large"><input type="checkbox" name="service" value="identity"><span>Visual Identity</span></label><label class="contact_service u-text-style-large"><input type="checkbox" name="service" value="digital"><span>Digital Presence &amp; UX</span></label><label class="contact_service u-text-style-large"><input type="checkbox" name="service" value="performance"><span>Performance Readiness</span></label></div></fieldset><label class="contact_field"><span class="contact_prompt u-text-style-h4">Tell us about your project</span><textarea class="contact_input contact_textarea u-text-style-large" name="message" rows="3" placeholder="A few lines about what you're building…"></textarea></label></div><footer class="contact_footer"><button type="submit" class="btn_wrap" data-trigger="hover focus"><span class="btn_text">Send message</span></button><p class="contact_error u-text-style-large" role="alert" aria-live="assertive"></p><p class="contact_success u-text-style-large" role="status">Thanks — we'll be in touch shortly.</p></footer></form></div></section><script type="module" src="/_astro/Lenis.astro_astro_type_script_index_0_lang.B4WBnftz.js"></script><script type="module" src="/_astro/Gsap.astro_astro_type_script_index_0_lang.D73QVDNz.js"></script></body></html><script type="module" src="/_astro/index.astro_astro_type_script_index_0_lang.o9iV-1BX.js"></script>

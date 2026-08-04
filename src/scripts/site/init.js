@@ -1,4 +1,5 @@
 // Perception Pod — site entry. No WebGL gradient; cream theme bg from Nexus.
+import "./botid.js";
 import { initClock } from "./clock.js";
 import { initBloomCards, destroyBloomCards } from "./bloomCards.js";
 import { destroyGsapRuntime, initGsapRuntime, bindLenisScrollTrigger, ScrollTrigger } from "./gsapRuntime.js";

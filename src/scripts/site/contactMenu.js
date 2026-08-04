@@ -86,11 +86,68 @@ export function initContactMenu() {
   });
 
   if (form) {
-    addListener(form, "submit", (event) => {
+    const success = form.querySelector(".contact_success");
+    const errorEl = form.querySelector(".contact_error");
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const submitLabel = submitBtn?.querySelector(".btn_text");
+
+    const setError = (message) => {
+      if (!errorEl) return;
+      if (message) {
+        errorEl.textContent = message;
+        errorEl.classList.add("is-visible");
+      } else {
+        errorEl.textContent = "";
+        errorEl.classList.remove("is-visible");
+      }
+    };
+
+    const setPending = (pending) => {
+      if (!submitBtn) return;
+      submitBtn.disabled = pending;
+      submitBtn.setAttribute("aria-busy", pending ? "true" : "false");
+      if (submitLabel) {
+        submitLabel.textContent = pending ? "Sending…" : "Send message";
+      }
+    };
+
+    addListener(form, "submit", async (event) => {
       event.preventDefault();
-      const success = form.querySelector(".contact_success");
-      if (success) {
-        success.classList.add("is-visible");
+      if (submitBtn?.disabled) return;
+
+      setError("");
+      success?.classList.remove("is-visible");
+      setPending(true);
+
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          body: new FormData(form),
+        });
+
+        let payload = null;
+        try {
+          payload = await response.json();
+        } catch {
+          payload = null;
+        }
+
+        if (!response.ok || !payload?.ok) {
+          const message =
+            payload?.error ||
+            (response.status === 403
+              ? "Unable to verify this request. Please try again."
+              : "Something went wrong. Please try again.");
+          setError(message);
+          return;
+        }
+
+        form.reset();
+        success?.classList.add("is-visible");
+      } catch {
+        setError("Network error. Check your connection and try again.");
+      } finally {
+        setPending(false);
       }
     });
   }

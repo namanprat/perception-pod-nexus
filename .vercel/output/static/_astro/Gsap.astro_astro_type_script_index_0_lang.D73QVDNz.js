@@ -1,0 +1,1 @@
+import{n as e,t}from"./ScrollTrigger.NzcVObI7.js";e.registerPlugin(t),e.matchMedia().add(`(prefers-reduced-motion: no-preference)`,()=>{let t=e.utils.toArray(`[data-animate]`);for(let n of t)e.from(n,{opacity:0,y:24,duration:.8,ease:`power2.out`,scrollTrigger:{trigger:n,start:`top 85%`,once:!0}})});

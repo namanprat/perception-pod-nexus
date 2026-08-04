@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
+import vercel from "@astrojs/vercel";
 import { saveTokensPlugin } from "./scripts/save-tokens-plugin.ts";
 import { excludeStylingFromBuild, watchFeatureFlags } from "./scripts/dev-only-routes.ts";
 import rawFeatures from "./src/features.json";
@@ -11,6 +12,8 @@ import { FEATURE_KEYS, normaliseFeatures } from "./src/lib/features.ts";
 const features = normaliseFeatures(rawFeatures);
 
 export default defineConfig({
+  // Serverless adapter so `/api/*` can run on-demand while pages stay prerendered.
+  adapter: vercel(),
   // The React renderer is pulled in only when R3F is on — a falsy entry here is
   // ignored by Astro, so with the flag off the integration never runs and no
   // react/react-dom client runtime is emitted. Toggle it from /styling.
