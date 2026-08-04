@@ -719,6 +719,7 @@
 }
 
 .scrub_text_header_wrap {
+  width: 100%;
   overflow: hidden;
   padding-block: 0.3125rem 0.9375rem;
   padding-right: 0.1875rem;
