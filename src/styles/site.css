@@ -687,8 +687,7 @@
 }
 
 .scrub_text_main {
-  width: 100%;
-  max-width: none;
+  width: min(100%, var(--site--span-4));
   display: flex;
   flex-flow: column;
   align-items: flex-start;
