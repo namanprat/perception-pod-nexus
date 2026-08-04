@@ -1,10 +1,5 @@
 /* Perception Pod site chrome — layout only. Tokens / type / themes from Nexus. */
 
-:root {
-  --site-gap: var(--_spacing---space--6);
-  --site-pad-y: var(--_spacing---section-space--main);
-}
-
 .page_wrap {
   position: relative;
   z-index: 2;
@@ -42,7 +37,7 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: var(--site-gap);
+  gap: var(--_spacing---space--6);
 }
 
 .nav_logo_contain {
@@ -219,7 +214,7 @@
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  gap: var(--site-gap);
+  gap: var(--_spacing---space--6);
   /* Mask the wordmark yPercent park/reveal so it never sits visibly above the slot. */
   overflow: hidden;
 }
@@ -259,14 +254,10 @@
   width: 100%;
 }
 
-/* Site column grid — 4+4+4 (12) / 3+2+3 (8) / full stack (4). */
+/* Site column grid — tracks/gutters from .u-grid-main; spans stay flag-driven. */
 .hero_bottom_wrap {
-  display: grid;
-  grid-template-columns: repeat(var(--site--column-count), minmax(0, 1fr));
-  column-gap: var(--site--gutter);
-  row-gap: var(--site-gap);
+  row-gap: var(--_spacing---space--6);
   align-items: stretch;
-  width: 100%;
 }
 
 .hero_links {
@@ -305,7 +296,7 @@
     display: flex;
     flex-direction: column-reverse;
     align-items: stretch;
-    gap: var(--site-gap);
+    gap: var(--_spacing---space--6);
   }
 
   .hero_links,
@@ -410,36 +401,27 @@
   z-index: 1;
   grid-area: 1 / 1;
   width: 100%;
-  max-width: 100%;
-  margin-inline: auto;
-  text-align: center;
-  pointer-events: auto;
   gap: var(--_spacing---space--4);
+  pointer-events: auto;
 }
 
-.bloom_title {
+/* Center a 4-col measure on whatever band the grid is in. */
+.bloom_text_row {
   width: 100%;
+  row-gap: 0;
 }
 
 .bloom_text {
-  width: min(100%, var(--site--span-4));
-  margin-inline: auto;
+  grid-column-start: calc((var(--site--column-count) - 4) / 2 + 1);
+  grid-column-end: span 4;
+  width: 100%;
+  min-width: 0;
 }
 
-/* Below tablet: every bloom measure goes full container width. */
 @container bloom (width <= 50em) {
-  .bloom_head,
-  .bloom_title,
   .bloom_text {
-    width: 100%;
-    max-width: 100%;
+    grid-column: 1 / -1;
   }
-}
-
-/* Both utilities set their own text-align token — override it. */
-.bloom_head .bloom_title,
-.bloom_head .bloom_text {
-  text-align: center;
 }
 
 .bloom_cards {
@@ -494,7 +476,7 @@
     align-items: center;
     gap: var(--_spacing---space--3);
     padding-top: 25svh;
-    padding-bottom: var(--site-pad-y);
+    padding-bottom: var(--_spacing---section-space--main);
   }
 
   .bloom_cards {
@@ -707,7 +689,7 @@
   }
 
   .scrub_text_main {
-    grid-column: 1 / -1;
+    grid-column: 1 / -1; /* same as .u-column-span-full */
     width: 100%;
     align-items: center;
   }
@@ -762,7 +744,6 @@
   width: 100%;
   max-width: 40ch;
   margin-inline: auto;
-  text-align: center;
   color: var(--_theme---heading-accent);
 }
 
@@ -773,41 +754,26 @@
   background-color: transparent;
 }
 
-/* span-4 + span-6 only fits while the grid has 12 columns. These spans are
-   lengths, not grid tracks, so nothing caps them on the narrower grids —
-   min() does, and the pair stacks once there is no room for both. */
+/* Tracks/gutters from .u-grid-main; title start / list end leave the middle open. */
 .faq_grid {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--site--gutter);
-  width: 100%;
-}
-
-.faq_title {
-  width: min(100%, var(--site--span-4));
-  flex-shrink: 0;
+  align-items: start;
+  row-gap: var(--_spacing---space--6);
 }
 
 .faq_list {
-  width: min(100%, var(--site--span-6));
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
+  min-width: 0;
+  /* Last 6 columns — mirrors prior space-between + span-6 width. */
+  grid-column-end: -1;
+  grid-column-start: span 6;
 }
 
-/* The container measures ~48em as the viewport reaches medium, where the grid
-   drops to 8 columns and the pair stops fitting. Direction and widths flip
-   together so they cannot disagree at the boundary. @container is the
-   per-component switch; responsive.css owns every width query. */
+/* Stack to full width once the 4+6 pair no longer fits the container. */
 @container (width <= 48em) {
-  .faq_grid {
-    flex-direction: column;
-  }
-
   .faq_title,
   .faq_list {
-    width: 100%;
+    grid-column: 1 / -1;
   }
 }
 
@@ -858,8 +824,8 @@
 
 .faq_item_answer {
   display: grid;
-  gap: 0.85rem;
-  padding-bottom: var(--site-gap);
+  gap: var(--_spacing---space--4);
+  padding-bottom: var(--_spacing---space--6);
 }
 
 .faq_item_answer > :first-child {
@@ -925,17 +891,14 @@
   position: relative;
   z-index: 1;
   align-items: center;
-  gap: var(--site-pad-y);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
+  gap: var(--_spacing---section-space--main);
 }
 
 .footer_top {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--site-gap);
+  gap: var(--_spacing---space--6);
   width: 100%;
 }
 
@@ -947,7 +910,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: var(--site-pad-y);
+  gap: var(--_spacing---section-space--main);
   width: 100%;
 }
 
