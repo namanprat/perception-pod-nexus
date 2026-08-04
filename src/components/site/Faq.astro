@@ -1,0 +1,178 @@
+---
+import Section from "../Section.astro";
+
+type FaqBlock =
+  | { type: "p"; text: string }
+  | { type: "list"; items: string[] };
+
+const faqs: { q: string; blocks: FaqBlock[] }[] = [
+  {
+    q: "Why We Think in Gardens?",
+    blocks: [
+      {
+        type: "p",
+        text: "We help you build an ecosystem for your brand that thrives like a garden growing wild and blooming with ideas.",
+      },
+      {
+        type: "p",
+        text: "A garden engages all five senses — so should your brand. At Perception Pod, we believe great brands don't just get noticed, they are felt. Like stepping into an untamed garden, your brand should stir something visceral: texture beneath the feet, scent in the air, wind on the skin.",
+      },
+      {
+        type: "p",
+        text: "Because if your brand doesn't trigger sensation, it won't trigger memory.",
+      },
+    ],
+  },
+  {
+    q: "What exactly does Perception Pod do?",
+    blocks: [
+      {
+        type: "p",
+        text: "We help emerging brands grow with clarity and impact. From audience research and creative strategy to campaigns and brand design, we turn scattered perceptions into a focused, sensory brand system that adapts as you scale.",
+      },
+    ],
+  },
+  {
+    q: "Are you a design agency, a strategy studio, or a research firm?",
+    blocks: [
+      {
+        type: "p",
+        text: "We're a little of all three, but not exactly like any of them. Think of us as your creative intelligence partner: part brand strategist, part data whisperer, part design thinker. We don't just make things look good, we make sure they mean something. Here, design meets data and brands are built from intelligence.",
+      },
+    ],
+  },
+  {
+    q: "What if I don't have a lot of budget?",
+    blocks: [
+      {
+        type: "p",
+        text: "No problem. We offer modular services — from one-month sprints to flexible bundles — so you only pay for what you need. No bloated retainers. No long-term contracts. Just smart, scalable support for whatever stage you're at.",
+      },
+      {
+        type: "p",
+        text: "Take a look at our Core Engagement Model that highlights how we can support your brand.",
+      },
+      {
+        type: "p",
+        text: "The Sprint: Solve 1 problem in 30 days — A tight, focused burst of creative clarity. Whether it's a pitch deck, a positioning fix, a landing page, or a logo, we build and ship within a tight timeframe. Best for: early-stage startups, time-sensitive projects, or one-off needs.",
+      },
+      {
+        type: "p",
+        text: "The Subscription: Your creative co-pilot — on demand. Ongoing creative support across strategy, content, research, and design, delivered with agility and attention. You get premium output without the chaos of chasing freelancers for a flat monthly fee. Best for: founders or teams who want flexible monthly support without long contracts.",
+      },
+      {
+        type: "p",
+        text: "The Insight Lab: Pure research. Before you launch, pivot, or pitch, we dig deep into the people you're building for. Best for: product teams, brand strategists, marketers, or anyone seeking audience knowledge.",
+      },
+      {
+        type: "p",
+        text: "The Brand OS: Everything your brand needs to live and breathe. We build your entire brand system — from strategy to visual identity to website to launch, UX, UI, and more. Think of it as your brand's operating system, designed to scale, adapt, and resonate. Best for: founders launching or rebranding, or teams building a bold foundation.",
+      },
+      {
+        type: "p",
+        text: "The Campaign Capsule: One campaign. All the right moves. From insights to execution, we design campaigns with soul, not just ads. Includes: research, creative concepting, content, design, rollout. Best for: launches, product drops, or seasonal storytelling.",
+      },
+    ],
+  },
+  {
+    q: "Do you work with small teams or only funded startups?",
+    blocks: [
+      {
+        type: "p",
+        text: "From garage to growth phase, we build brand systems that scale with teams. Pre-launch or post-Series A, if you're serious about your audience, we're serious about you.",
+      },
+    ],
+  },
+  {
+    q: "How do we do things differently?",
+    blocks: [
+      {
+        type: "p",
+        text: "We don't use templates, we build from real signals: human, cultural, and behavioral. Here's how:",
+      },
+      {
+        type: "list",
+        items: [
+          "Global Minds, Boutique Moves — Big-brand experience, indie agility.",
+          "Data-Driven Design — Visuals that don't just look good, they work.",
+          "Performance That Moves You — Emotion-led, culturally tuned, built to grow.",
+          "Emotional Intelligence You Can See — We turn feelings into brand DNA.",
+          "Built for the Brave — For teams ready to stand out, not fit in.",
+        ],
+      },
+      {
+        type: "p",
+        text: "Creative intelligence, rooted in what your audience really needs.",
+      },
+    ],
+  },
+  {
+    q: "Can I work with you just for research or strategy (without design)?",
+    blocks: [
+      {
+        type: "p",
+        text: "Absolutely. Whether it's deep-dive research or design thinking, we plug in where you need us most. From pre-campaign insights and trend decks to audience personas and market segmentation, we offer sharp, focused support for any stage of your brand journey.",
+      },
+    ],
+  },
+  {
+    q: "What's the first step to work with you?",
+    blocks: [
+      {
+        type: "p",
+        text: "Start with a discovery call. We'll map where you are and help you chart your next move. A sprint, a campaign capsule, or a custom bundle? We will point you to the perfect pick.",
+      },
+    ],
+  },
+];
+---
+
+<Section name="faq">
+  <div class="faq_grid">
+    <h2 class="faq_title u-text-style-h1">Frequently Asked Questions</h2>
+
+    <div class="faq_list">
+      {
+        faqs.map((faq, i) => {
+          const n = i + 1;
+          return (
+            <div class="faq_item">
+              <button
+                class="faq_item_head"
+                id={`faq-q-${n}`}
+                aria-expanded="false"
+                aria-controls={`faq-a-${n}`}
+              >
+                <span class="faq_item_question u-text-style-h5">{faq.q}</span>
+                <span class="faq_item_icon" aria-hidden="true">
+                  <span class="faq_item_bar" />
+                  <span class="faq_item_bar is-vertical" />
+                </span>
+              </button>
+              <div
+                class="faq_item_panel"
+                id={`faq-a-${n}`}
+                role="region"
+                aria-labelledby={`faq-q-${n}`}
+              >
+                <div class="faq_item_answer">
+                  {faq.blocks.map((block) =>
+                    block.type === "list" ? (
+                      <ol class="faq_item_list u-text-style-large">
+                        {block.items.map((item) => (
+                          <li>{item}</li>
+                        ))}
+                      </ol>
+                    ) : (
+                      <p class="u-text-style-large">{block.text}</p>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</Section>

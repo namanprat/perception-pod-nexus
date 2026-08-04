@@ -1,0 +1,33 @@
+---
+/**
+ * Dashed column guides, filling the nearest positioned ancestor.
+ *
+ * All 12 columns are always rendered; utilities.css hides the surplus with
+ * the responsive keyword variables, so there is no media query here and no
+ * resize listener. Surplus columns hide via responsive keyword variables.
+ *
+ * Use `inset` when the guides sit inside a u-container (section demos) so
+ * they share the grid's width. Leave it off for the viewport overlay, which
+ * needs the site margin / max-width lock to match u-container.
+ */
+interface Props {
+  overlay?: boolean;
+  inset?: boolean;
+}
+
+const { overlay = false, inset = false } = Astro.props;
+
+/* is-9 hides columns 9–12 from medium down; is-5 hides 5–8 from small down. */
+const columns = Array.from({ length: 12 }, (_, i) => {
+  const n = i + 1;
+  return [n >= 9 ? "is-9" : n >= 5 ? "is-5" : "", overlay ? "is-overlay" : ""]
+    .filter(Boolean)
+    .join(" ");
+});
+
+const rootClass = ["u-grid-lines", inset ? "is-inset" : ""].filter(Boolean).join(" ");
+---
+
+<div class={rootClass} aria-hidden="true">
+  {columns.map((modifiers) => <div class={`u-grid-lines_col ${modifiers}`.trim()} />)}
+</div>

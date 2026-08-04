@@ -1,0 +1,421 @@
+/* ===========================================================================
+   NEXUS — VARIABLES
+   Swatches, themes, spacing, typography, sizing.
+
+   Naming grammar:
+     --swatch--*            global palette
+     --_theme---*           contextual, reassigned by .u-theme-* utilities
+     --_spacing---space--N  spacing scale
+     --_typography---*      type system
+     --site--*, --radius--*, --max-width--*, --border-width--*
+
+   The whole system hangs off one ladder: --phi-0 .. --phi-12, where each rung
+   is the previous rung x sqrt(phi) (1.272). Two rungs is exactly phi.
+   =========================================================================== */
+
+:root {
+  /* ─── The ratio ──────────────────────────────────────────────────────────
+     phi      = (1 + sqrt5) / 2 = 1.618033988749895
+     sqrt-phi = phi ^ 0.5       = 1.272019649514069                          */
+  --ratio--phi: 1.618;
+  --ratio--phi-half: 1.272;
+
+  /* ─── The ladder (unitless, x 1rem) ──────────────────────────────────── */
+  --phi-0: 0.786;   /* phi^-0.5 */
+  --phi-1: 1;       /* base     */
+  --phi-2: 1.272;
+  --phi-3: 1.618;   /* phi      */
+  --phi-4: 2.058;
+  --phi-5: 2.618;   /* phi^2    */
+  --phi-6: 3.33;
+  --phi-7: 4.236;   /* phi^3    */
+  --phi-8: 5.388;
+  --phi-9: 6.854;   /* phi^4    */
+  --phi-10: 8.72;
+  --phi-11: 11.09;  /* phi^5    */
+  --phi-12: 14.109;
+
+  /* ─── Swatches ─────────────────────────────────────────────────────────
+     Editable bases (written from /styling during `astro dev`):
+       light-100 · dark-900 · brand-500 · accent · overscroll
+     Relatives derive with color-mix so a live edit reflows the system. */
+  --swatch--light-100: #ffffeb;
+  --swatch--light-200: color-mix(in srgb, var(--swatch--light-100), white 45%);
+  --swatch--light-100-o20: color-mix(in srgb, var(--swatch--light-100) 20%, transparent);
+
+  --swatch--dark-900: #3d392e;
+  --swatch--dark-800: color-mix(in srgb, var(--swatch--dark-900), white 18%);
+  --swatch--dark-900-o20: color-mix(in srgb, var(--swatch--dark-900) 20%, transparent);
+
+  --swatch--brand-500: #eae9e4;
+  --swatch--brand-100: color-mix(in srgb, var(--swatch--brand-500), white 80%);
+  --swatch--brand-200: color-mix(in srgb, var(--swatch--brand-500), white 60%);
+  --swatch--brand-300: color-mix(in srgb, var(--swatch--brand-500), white 40%);
+  --swatch--brand-400: color-mix(in srgb, var(--swatch--brand-500), white 20%);
+  --swatch--brand-600: color-mix(in srgb, var(--swatch--brand-500), black 20%);
+  --swatch--brand-700: color-mix(in srgb, var(--swatch--brand-500), black 40%);
+  --swatch--brand-800: color-mix(in srgb, var(--swatch--brand-500), black 60%);
+  --swatch--brand-900: color-mix(in srgb, var(--swatch--brand-500), black 80%);
+
+  --swatch--brand-text: var(--swatch--dark-900);
+  --swatch--brand-text-o20: color-mix(in srgb, var(--swatch--brand-text) 20%, transparent);
+
+  --swatch--accent: #c17f59;
+  --swatch--accent-100: color-mix(in srgb, var(--swatch--accent), white 80%);
+  --swatch--accent-200: color-mix(in srgb, var(--swatch--accent), white 60%);
+  --swatch--accent-300: color-mix(in srgb, var(--swatch--accent), white 40%);
+  --swatch--accent-400: color-mix(in srgb, var(--swatch--accent), white 20%);
+  --swatch--accent-500: var(--swatch--accent);
+  --swatch--accent-600: color-mix(in srgb, var(--swatch--accent), black 20%);
+  --swatch--accent-700: color-mix(in srgb, var(--swatch--accent), black 40%);
+  --swatch--accent-800: color-mix(in srgb, var(--swatch--accent), black 60%);
+  --swatch--accent-900: color-mix(in srgb, var(--swatch--accent), black 80%);
+
+  /* Project-detail overscroll swatch. */
+  --swatch--overscroll: #c3c3c3;
+
+  /* BEGIN EXTRA SWATCHES */
+  /* END EXTRA SWATCHES */
+
+  /* ─── Typography: families ─────────────────────────────────────────────
+     --_typography---font--nexus is immutable framework chrome (always Arial).
+     primary / secondary / tertiary are site + type-style stacks (user-editable).
+     --_typography---type-styles-enabled: 1|0 master switch for u-text-style-*. */
+  --_typography---font--nexus: Arial, sans-serif;
+  --_typography---type-styles-enabled: 1;
+  --_typography---typekit-kit-id: gqw3ofa;
+  --_typography---font--primary: "new-spirit-condensed", Georgia, serif;
+  --_typography---font--secondary: Arial, sans-serif;
+  --_typography---font--tertiary: Arial, sans-serif;
+
+  /* Per text-style font role. Written from /styling during `astro dev`.
+     Defaults: display–h5 → primary, body → secondary, h6/mono/eyebrow → tertiary. */
+  --_typography---font-style--display: var(--_typography---font--primary);
+  --_typography---font-style--h1: var(--_typography---font--primary);
+  --_typography---font-style--h2: var(--_typography---font--primary);
+  --_typography---font-style--h3: var(--_typography---font--primary);
+  --_typography---font-style--h4: var(--_typography---font--primary);
+  --_typography---font-style--h5: var(--_typography---font--primary);
+  --_typography---font-style--h6: var(--_typography---font--tertiary);
+  --_typography---font-style--large: var(--_typography---font--secondary);
+  --_typography---font-style--main: var(--_typography---font--secondary);
+  --_typography---font-style--small: var(--_typography---font--secondary);
+  --_typography---font-style--mono: var(--_typography---font--tertiary);
+  --_typography---font-style--eyebrow: var(--_typography---font--tertiary);
+
+  /* Per text-style wrap / transform / align. Written from /styling.
+     Headings default to balance + none + start; body to pretty; h6/eyebrow uppercase. */
+  --_typography---text-wrap--display: balance;
+  --_typography---text-wrap--h1: balance;
+  --_typography---text-wrap--h2: balance;
+  --_typography---text-wrap--h3: balance;
+  --_typography---text-wrap--h4: balance;
+  --_typography---text-wrap--h5: balance;
+  --_typography---text-wrap--h6: balance;
+  --_typography---text-wrap--large: pretty;
+  --_typography---text-wrap--main: pretty;
+  --_typography---text-wrap--small: pretty;
+  --_typography---text-wrap--mono: pretty;
+  --_typography---text-wrap--eyebrow: pretty;
+
+  --_typography---text-transform--display: none;
+  --_typography---text-transform--h1: none;
+  --_typography---text-transform--h2: none;
+  --_typography---text-transform--h3: none;
+  --_typography---text-transform--h4: none;
+  --_typography---text-transform--h5: none;
+  --_typography---text-transform--h6: uppercase;
+  --_typography---text-transform--large: none;
+  --_typography---text-transform--main: none;
+  --_typography---text-transform--small: none;
+  --_typography---text-transform--mono: none;
+  --_typography---text-transform--eyebrow: uppercase;
+
+  --_typography---text-align--display: start;
+  --_typography---text-align--h1: start;
+  --_typography---text-align--h2: start;
+  --_typography---text-align--h3: start;
+  --_typography---text-align--h4: start;
+  --_typography---text-align--h5: start;
+  --_typography---text-align--h6: start;
+  --_typography---text-align--large: start;
+  --_typography---text-align--main: start;
+  --_typography---text-align--small: start;
+  --_typography---text-align--mono: start;
+  --_typography---text-align--eyebrow: start;
+
+  /* Per text-style weight. Written from /styling. */
+  --_typography---font-weight--display: 500;
+  --_typography---font-weight--h1: 500;
+  --_typography---font-weight--h2: 500;
+  --_typography---font-weight--h3: 500;
+  --_typography---font-weight--h4: 400;
+  --_typography---font-weight--h5: 300;
+  --_typography---font-weight--h6: 700;
+  --_typography---font-weight--large: 400;
+  --_typography---font-weight--main: 400;
+  --_typography---font-weight--small: 400;
+  --_typography---font-weight--mono: 400;
+  --_typography---font-weight--eyebrow: 400;
+
+  /* ─── Typography: weights (Arial ships real 400/700; medium ≈ 500) ───── */
+  --_typography---font--primary-light: 400;
+  --_typography---font--primary-regular: 400;
+  --_typography---font--primary-medium: 500;
+  --_typography---font--primary-bold: 700;
+
+  /* ─── Typography: line heights ───────────────────────────────────────── */
+  --_typography---line-height--none: 1;
+  --_typography---line-height--tight: 0.85;
+  --_typography---line-height--medium: 1.25;
+  --_typography---line-height--golden: var(--ratio--phi); /* 1.618, body copy */
+  --_typography---line-height--large: 1.5;
+
+  /* ─── Typography: letter spacing ─────────────────────────────────────── */
+  --_typography---letter-spacing--none: 0;
+  --_typography---letter-spacing--main: 0.01em;
+  --_typography---letter-spacing--title: -0.04em;
+  --_typography---letter-spacing--wide: 0.1em;
+  --_typography---letter-spacing--wider: 0.2em;
+  --_typography---letter-spacing--eyebrow: 1.6em;
+
+  /* ─── Typography: sizes ──────────────────────────────────────────────────
+     Two tiers.
+
+     UI sizes are static rungs — they must not grow with the viewport:
+       small --phi-0 · main --phi-1 · large/h6 --phi-2
+
+     Display sizes are fluid across the 20rem -> 110rem band, and every one
+     spans exactly two rungs (x phi). That uniform span is what keeps the
+     scale golden at *every* viewport, not just at the ends: each size is
+     rung x (1 + t(phi - 1)) for the same t, so the ratio between any two of
+     them is fixed as the viewport changes.
+
+       token    min      -> max        ratio to the size below
+       h5       --phi-1  -> --phi-3    —
+       h4       --phi-2  -> --phi-4    sqrt-phi
+       h3       --phi-3  -> --phi-5    sqrt-phi
+       h2       --phi-5  -> --phi-7    phi
+       h1       --phi-6  -> --phi-8    sqrt-phi
+       display  --phi-8  -> --phi-10   phi                                   */
+  --_typography---size--small: 0.786rem;
+  --_typography---size--main: 1rem;
+  --_typography---size--large: 1.272rem;
+  /* ponytail: h6 locked to main — chrome labels/buttons share body size */
+  --_typography---size--h6: var(--_typography---size--main);
+  --_typography---size--h5: clamp(1rem, 0.8627rem + 0.6867vw, 1.618rem);
+  --_typography---size--h4: clamp(1.272rem, 1.0973rem + 0.8733vw, 2.058rem);
+  --_typography---size--h3: clamp(1.618rem, 1.3958rem + 1.1111vw, 2.618rem);
+  --_typography---size--h2: clamp(2.618rem, 2.2584rem + 1.7978vw, 4.236rem);
+  --_typography---size--h1: clamp(3.33rem, 2.8727rem + 2.2867vw, 5.388rem);
+  --_typography---size--display: clamp(5.388rem, 4.6476rem + 3.7022vw, 8.72rem);
+
+  /* Scales with font size — 1/phi of the element's own size. */
+  --_text-style---margin-bottom: 0.618em;
+
+  /* ─── Spacing ────────────────────────────────────────────────────────────
+     Eight static rungs. space--1 / space--2 are too small for text. */
+  --_spacing---space--1: 0.382rem;  /* phi^-2 */
+  --_spacing---space--2: 0.618rem;  /* phi^-1 */
+  --_spacing---space--3: 0.786rem;
+  --_spacing---space--4: 1rem;
+  --_spacing---space--5: 1.272rem;
+  --_spacing---space--6: 1.618rem;
+  --_spacing---space--7: 2.058rem;
+  --_spacing---space--8: 2.618rem;
+
+  /* Section rhythm reuses the h2 / h1 / display fluid bands.
+     --_spacing---padding-rung shifts every band by √φ per step (same ladder
+     as the gutters). 0 = default; -1 = one rung down. */
+  --_spacing---padding-rung: 0;
+  --_spacing---padding-scale: pow(
+    var(--ratio--phi-half),
+    var(--_spacing---padding-rung)
+  );
+  --_spacing---section-space--none: 0rem;
+  --_spacing---section-space--small: calc(
+    clamp(2.618rem, 2.2584rem + 1.7978vw, 4.236rem) * var(--_spacing---padding-scale)
+  );
+  --_spacing---section-space--main: calc(
+    clamp(3.33rem, 2.8727rem + 2.2867vw, 5.388rem) * var(--_spacing---padding-scale)
+  );
+  --_spacing---section-space--large: calc(
+    clamp(5.388rem, 4.6476rem + 3.7022vw, 8.72rem) * var(--_spacing---padding-scale)
+  );
+  --_spacing---section-space--page-top: calc(
+    clamp(6.854rem, 5.9127rem + 4.7067vw, 11.09rem) * var(--_spacing---padding-scale)
+  );
+
+  /* ─── Sizing ─────────────────────────────────────────────────────────────
+     --max-width--main is THE LAYOUT KNOB — the lock width. The grid scales
+     fluidly with the viewport up to here, then freezes and centres. Change
+     this one value and the columns, gutter and margin all re-derive.
+
+       u-container        locks at --max-width--main   (90rem when locked)
+       u-container-small  locks at --max-width--small  (50rem)
+       u-container-full   never locks — fluid forever
+     Default below is unlocked (100vw); /styling can lock to a rem width. */
+  --max-width--small: 50rem;
+  --max-width--main: 120rem;
+  --max-width--full: 100%;
+
+  --border-width--main: 0.094rem;
+  --radius--small: 0.618rem;  /* 1 / phi */
+  --radius--main: 1.618rem;   /* phi     */
+  --radius--round: 100vw;
+
+  /* ─── Site layout ────────────────────────────────────────────────────────
+     Margin : gutter is exactly phi at every viewport, floor included.
+
+     Column counts: 12 / 8 / 4 — a standard twelve-column desktop grid that
+     halves at tablet and phone. wide / xlarge / large share 12; the count
+     is assembled from the responsive flags, so no media query is needed. */
+  /* Gutter sits on the spacing ladder. Floor base = space--4 (1rem / φ¹).
+     --site--gutter-rung shifts floor + fluid band + cap together by √φ per
+     step so margin÷gutter stays φ and the internal grid rhythm holds.
+     -1 = one rung down (floor ≈ space--3). */
+  --site--gutter-rung: 0;
+  --site--gutter-scale: pow(var(--ratio--phi-half), var(--site--gutter-rung));
+  --site--gutter-vw: calc(2 * var(--site--gutter-scale));
+  --site--gutter-floor: calc(var(--_spacing---space--4) * var(--site--gutter-scale));
+
+  /* The gutter locks with the width. If it kept growing as a vw past the lock,
+     the gaps would widen while the columns stayed put: at a 2000px viewport an
+     unlocked gutter is 54% of a column against 37% at 1280px. Capping it at the
+     same proportion of the lock width holds the grid's internal rhythm steady
+     at every size above the lock. */
+  --site--gutter: clamp(
+    var(--site--gutter-floor),
+    calc(var(--site--gutter-vw) * 1vw),
+    calc(var(--max-width--main) * var(--site--gutter-vw) / 100)
+  );
+
+  /* Margin is gutter x phi by construction, so the ratio cannot drift —
+     it holds through the floor, the fluid band and the lock alike. */
+  --site--margin: calc(var(--site--gutter) * var(--ratio--phi));
+
+  --site--column-count: calc(
+    var(--_responsive---wide) * 12 + var(--_responsive---xlarge) * 12 +
+      var(--_responsive---large) * 12 + var(--_responsive---medium) * 8 +
+      var(--_responsive---small) * 4 + var(--_responsive---xsmall) * 4
+  );
+
+  --site--screen-height: 100svh;
+  --site--safe-area-top: env(safe-area-inset-top, 0px);
+  --site--safe-area-bottom: env(safe-area-inset-bottom, 0px);
+
+  --site--grid-width: min(var(--max-width--main), calc(100vw - var(--site--margin) * 2));
+  --site--column-width: calc(
+    (var(--site--grid-width) - (var(--site--gutter) * (var(--site--column-count) - 1))) /
+      var(--site--column-count)
+  );
+  --site--column-width-plus-gutter: calc(var(--site--column-width) + var(--site--gutter));
+
+  /* Span helpers — the width of N columns plus the N-1 gutters between them,
+     as a length.
+
+     .u-column-span-* already covers children of .u-grid-main, where the grid
+     itself does the arithmetic. These are for everything that has to line up
+     with the grid without being in it: a max-width on a text block, a sticky
+     rail, a figure that breaks out of the flow.
+
+       span(n) = n * (column + gutter) - gutter
+
+     which is why each one reads off --site--column-width-plus-gutter instead of
+     repeating the column calc. Change the gutter or the lock width and these
+     follow, same as everything else here.
+
+     Twelve-column set (halves / thirds / quarters). Anything wider than span-4
+     overflows on small unless you narrow it. There is deliberately no span-12;
+     --site--grid-width is already the full-width case. */
+  --site--span-1: var(--site--column-width);
+  --site--span-2: calc(var(--site--column-width-plus-gutter) * 2 - var(--site--gutter));
+  --site--span-3: calc(var(--site--column-width-plus-gutter) * 3 - var(--site--gutter));
+  --site--span-4: calc(var(--site--column-width-plus-gutter) * 4 - var(--site--gutter));
+  --site--span-6: calc(var(--site--column-width-plus-gutter) * 6 - var(--site--gutter));
+  --site--span-8: calc(var(--site--column-width-plus-gutter) * 8 - var(--site--gutter));
+
+  /* ─── Z-index scale ──────────────────────────────────────────────────── */
+  --z--negative: -10;
+  --z--default: 0;
+  --z--raised: 1;
+  --z--dropdown: 10;
+  --z--sticky: 100;
+  --z--nav: 200;
+  --z--menu: 210;
+  --z--overlay: 999;
+  --z--modal: 9999;
+
+  /* ─── Button recipe (editable from /styling) ───────────────────────────
+     Themes map these into --_theme---button-* . Tertiary is underline-only. */
+  --button--font-family: var(--_typography---font-style--h6);
+  --button--padding-block: var(--_spacing---space--3);
+  --button--padding-inline: var(--_spacing---space--5);
+  --button--radius: var(--radius--round);
+
+  --button-primary--background: var(--swatch--light-100);
+  --button-primary--background-hover: var(--swatch--overscroll);
+  --button-primary--text: var(--swatch--dark-900);
+  --button-primary--text-hover: var(--swatch--light-100);
+
+  --button-secondary--text: var(--swatch--dark-900);
+  --button-secondary--text-hover: var(--swatch--light-100);
+
+  --button-tertiary--text: var(--swatch--dark-900);
+  --button-tertiary--text-hover: var(--swatch--accent);
+
+  /* ─── Theme (site shell defaults to dark via BaseLayout) ─────────────── */
+  --_theme---background: var(--swatch--light-100);
+  --_theme---background-2: var(--swatch--light-200);
+  --_theme---background-skeleton: color-mix(in srgb, currentColor 10%, transparent);
+  --_theme---text: var(--swatch--dark-900);
+  --_theme---border: color-mix(in srgb, currentColor 20%, transparent);
+  --_theme---accent: var(--swatch--accent);
+  --_theme---heading-accent: var(--swatch--dark-900);
+
+  --_theme---text-link--text: var(--swatch--dark-900);
+  --_theme---text-link--text-hover: var(--swatch--accent);
+  --_theme---text-link--border: color-mix(in srgb, currentColor 40%, transparent);
+  --_theme---text-link--border-hover: currentColor;
+
+  --_theme---button-primary--background: var(--button-primary--background);
+  --_theme---button-primary--background-hover: var(--button-primary--background-hover);
+  --_theme---button-primary--text: var(--button-primary--text);
+  --_theme---button-primary--text-hover: var(--button-primary--text-hover);
+  --_theme---button-primary--border: var(--button-primary--background);
+  --_theme---button-primary--border-hover: var(--button-primary--background-hover);
+
+  --_theme---button-secondary--background: transparent;
+  --_theme---button-secondary--background-hover: var(--button-primary--background);
+  --_theme---button-secondary--text: var(--button-secondary--text);
+  --_theme---button-secondary--text-hover: var(--button-secondary--text-hover);
+  --_theme---button-secondary--border: color-mix(in srgb, var(--button-secondary--text) 72%, transparent);
+  --_theme---button-secondary--border-hover: var(--button-secondary--text);
+
+  --_theme---button-tertiary--background: transparent;
+  --_theme---button-tertiary--background-hover: transparent;
+  --_theme---button-tertiary--text: var(--button-tertiary--text);
+  --_theme---button-tertiary--text-hover: var(--button-tertiary--text-hover);
+  --_theme---button-tertiary--border: transparent;
+  --_theme---button-tertiary--border-hover: transparent;
+}
+
+/* ─── color-mix() fallbacks ─────────────────────────────────────────────── */
+@supports not (color: color-mix(in srgb, red, blue)) {
+  :root {
+    --swatch--light-200: #f3f2ee;
+    --swatch--light-100-o20: rgba(255, 255, 235, 0.2);
+    --swatch--dark-800: #2d2d2d;
+    --swatch--dark-900-o20: rgba(0, 0, 0, 0.2);
+    --swatch--brand-100: #f7f6f3;
+    --swatch--brand-200: #f3f2ee;
+    --swatch--brand-300: #efede8;
+    --swatch--brand-400: #d9d9d9;
+    --swatch--brand-600: #b5b5b5;
+    --swatch--brand-700: #8a8a8a;
+    --swatch--brand-800: #5a5a5a;
+    --swatch--brand-900: #2d2d2d;
+    --swatch--brand-text: #000000;
+    --swatch--brand-text-o20: rgba(0, 0, 0, 0.2);
+  }
+}

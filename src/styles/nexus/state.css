@@ -1,0 +1,73 @@
+/* ===========================================================================
+   NEXUS — STATE & TRIGGER
+   Flips variable values on a parent so children react without any descendant
+   selector. This file is the ONLY place `.is-active`, `[data-state]` and
+   `[data-trigger]` may appear — component CSS reads the variables:
+
+     hidden by default, shown when active  ->  var(--_state---false)
+     shown by default, hidden when active  ->  var(--_state---true)
+
+     opacity: calc(1 - 0.4 * var(--_trigger---on));
+     transform: translateX(calc(2rem * var(--_trigger---on)));
+
+   `true` / `on` always come first in calc() and color-mix() expressions.
+   =========================================================================== */
+
+:root {
+  --_state---true: 0;
+  --_state---false: 1;
+  --_trigger---on: 0;
+  --_trigger---off: 1;
+}
+
+/* ─── State: JS-driven interactives toggle .is-active ───────────────────── */
+
+.is-active {
+  --_state---true: 1;
+  --_state---false: 0;
+}
+
+/* ─── State: declarative listeners ─────────────────────────────────────── */
+
+[data-state~="checked"]:has(> input:checked),
+[data-state~="checked"]:checked,
+[data-state~="current"].is-active,
+[data-state~="open"].is-active,
+[data-state~="pressed"][aria-pressed="true"],
+[data-state~="expanded"][aria-expanded="true"],
+[data-state~="external"][target="_blank"] {
+  --_state---true: 1;
+  --_state---false: 0;
+}
+
+/* ─── Trigger: hover / focus ───────────────────────────────────────────── */
+
+@media (hover: hover) and (pointer: fine) {
+  [data-trigger~="hover"]:hover,
+  [data-trigger~="group"]:hover {
+    --_trigger---on: 1;
+    --_trigger---off: 0;
+  }
+}
+
+[data-trigger~="focus"]:focus-visible,
+[data-trigger~="focus"]:has(:focus-visible),
+[data-trigger~="group"]:focus-visible,
+[data-trigger~="group"]:has(:focus-visible) {
+  --_trigger---on: 1;
+  --_trigger---off: 0;
+}
+
+/* Always-on preview state, for authoring and screenshots. */
+[data-trigger~="preview"] {
+  --_trigger---on: 1;
+  --_trigger---off: 0;
+}
+
+/* Touch devices get the hover state applied permanently where opted in. */
+@media (hover: none) {
+  [data-trigger~="mobile"] {
+    --_trigger---on: 1;
+    --_trigger---off: 0;
+  }
+}

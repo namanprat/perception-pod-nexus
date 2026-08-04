@@ -1,0 +1,32 @@
+---
+/**
+ * Fixed full-viewport shader backdrop. Only when `r3f` is on.
+ */
+import App from "./r3f/App.tsx";
+---
+
+<div class="r3f_wrap" data-r3f aria-hidden="true">
+  <App client:only="react" />
+</div>
+
+<style is:global>
+  html:has([data-r3f]),
+  html:has([data-r3f]) body,
+  html:has([data-r3f]).u-theme-light,
+  html:has([data-r3f]).u-theme-dark,
+  html:has([data-r3f]).u-theme-brand {
+    background-color: transparent;
+  }
+</style>
+
+<style>
+  .r3f_wrap {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+/**
+ * The Nexus section shell:
+ *   <section class="[name]_wrap u-section">
+ *     <div class="[name]_contain u-container">
+ *       <div class="[name]_layout u-layout">
+ *
+ * `name` supplies the component class prefix so pages stay on the naming
+ * convention without repeating the boilerplate. Layout never sits on
+ * `u-container` — that owns `container-type: inline-size`.
+ */
+interface Props {
+  name: string;
+  space?: "none" | "small" | "main" | "large";
+  pageTop?: boolean;
+  theme?: "light" | "dark" | "brand";
+  container?: "main" | "small" | "full";
+}
+
+const {
+  name,
+  space = "main",
+  pageTop = false,
+  theme,
+  container = "main",
+} = Astro.props;
+
+const sectionClass = [
+  `${name}_wrap`,
+  "u-section",
+  space !== "main" ? `u-section-${space}` : "",
+  pageTop ? "u-section-page-top" : "",
+  theme ? `u-theme-${theme}` : "",
+]
+  .filter(Boolean)
+  .join(" ");
+
+const containerClass = [
+  `${name}_contain`,
+  "u-container",
+  container !== "main" ? `u-container-${container}` : "",
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<section class={sectionClass}>
+  <div class={containerClass}>
+    <div class={`${name}_layout u-layout`}>
+      <slot />
+    </div>
+  </div>
+</section>

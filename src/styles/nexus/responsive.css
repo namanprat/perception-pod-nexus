@@ -1,0 +1,189 @@
+/* ===========================================================================
+   NEXUS — RESPONSIVE
+   Width @media for band flags and shared keyword variables lives here only.
+   Framework utilities must not add width queries. Component / page CSS may
+   use @container (on u-container children) for one-off layout — do not dump
+   bespoke keywords into this file unless ≥2 sites need the same switch.
+
+   Flags — exactly one is 1, the rest 0. Use them in calc():
+     --_responsive---wide | xlarge | large | medium | small | xsmall
+
+   Keyword variables — downward bands (medium/small/xsmall) are set at their
+   breakpoint and below; upward bands (xlarge/wide) at their breakpoint and
+   above. `initial` above/below makes `var(--flex-medium, grid)` fall back.
+
+   --auto-* carries `auto` and not the CSS-wide keyword `unset`. A CSS-wide
+   keyword in a custom property declaration applies to the custom property
+   itself rather than being passed on as a value, which leaves it
+   guaranteed-invalid — so `var(--auto-medium, 14rem)` would take the fallback
+   at every width and the switch would silently never fire.
+
+   Breakpoints: wide ≥120em · xlarge 75–120em · large 50–75em ·
+   medium 35–50em · small 20–35em · xsmall <20em.
+   =========================================================================== */
+
+:root {
+  --_responsive---wide: 0;
+  --_responsive---xlarge: 0;
+  --_responsive---large: 1;
+  --_responsive---medium: 0;
+  --_responsive---small: 0;
+  --_responsive---xsmall: 0;
+
+  --flex-wide: initial;
+  --none-wide: initial;
+  --column-wide: initial;
+  --row-wide: initial;
+  --start-wide: initial;
+  --center-wide: initial;
+  --end-wide: initial;
+  --first-wide: initial;
+  --last-wide: initial;
+  --auto-wide: initial;
+  --relative-wide: initial;
+
+  --flex-xlarge: initial;
+  --none-xlarge: initial;
+  --column-xlarge: initial;
+  --row-xlarge: initial;
+  --start-xlarge: initial;
+  --center-xlarge: initial;
+  --end-xlarge: initial;
+  --first-xlarge: initial;
+  --last-xlarge: initial;
+  --auto-xlarge: initial;
+  --relative-xlarge: initial;
+
+  --flex-medium: initial;
+  --none-medium: initial;
+  --column-medium: initial;
+  --row-medium: initial;
+  --start-medium: initial;
+  --center-medium: initial;
+  --end-medium: initial;
+  --first-medium: initial;
+  --last-medium: initial;
+  --auto-medium: initial;
+  --relative-medium: initial;
+
+  --flex-small: initial;
+  --none-small: initial;
+  --column-small: initial;
+  --row-small: initial;
+  --start-small: initial;
+  --center-small: initial;
+  --end-small: initial;
+  --first-small: initial;
+  --last-small: initial;
+  --auto-small: initial;
+  --relative-small: initial;
+
+  --flex-xsmall: initial;
+  --none-xsmall: initial;
+  --column-xsmall: initial;
+  --row-xsmall: initial;
+  --start-xsmall: initial;
+  --center-xsmall: initial;
+  --end-xsmall: initial;
+  --first-xsmall: initial;
+  --last-xsmall: initial;
+  --auto-xsmall: initial;
+  --relative-xsmall: initial;
+}
+
+@media (width >= 75em) {
+  :root {
+    --_responsive---large: 0;
+    --_responsive---xlarge: 1;
+
+    --flex-xlarge: flex;
+    --none-xlarge: none;
+    --column-xlarge: column;
+    --row-xlarge: row;
+    --start-xlarge: flex-start;
+    --center-xlarge: center;
+    --end-xlarge: flex-end;
+    --first-xlarge: -1;
+    --last-xlarge: 1;
+    --auto-xlarge: auto;
+    --relative-xlarge: relative;
+  }
+}
+
+@media (width >= 120em) {
+  :root {
+    --_responsive---xlarge: 0;
+    --_responsive---wide: 1;
+
+    --flex-wide: flex;
+    --none-wide: none;
+    --column-wide: column;
+    --row-wide: row;
+    --start-wide: flex-start;
+    --center-wide: center;
+    --end-wide: flex-end;
+    --first-wide: -1;
+    --last-wide: 1;
+    --auto-wide: auto;
+    --relative-wide: relative;
+  }
+}
+
+@media (width <= 50em) {
+  :root {
+    --_responsive---large: 0;
+    --_responsive---xlarge: 0;
+    --_responsive---wide: 0;
+    --_responsive---medium: 1;
+
+    --flex-medium: flex;
+    --none-medium: none;
+    --column-medium: column;
+    --row-medium: row;
+    --start-medium: flex-start;
+    --center-medium: center;
+    --end-medium: flex-end;
+    --first-medium: -1;
+    --last-medium: 1;
+    --auto-medium: auto;
+    --relative-medium: relative;
+  }
+}
+
+@media (width <= 35em) {
+  :root {
+    --_responsive---medium: 0;
+    --_responsive---small: 1;
+
+    --flex-small: flex;
+    --none-small: none;
+    --column-small: column;
+    --row-small: row;
+    --start-small: flex-start;
+    --center-small: center;
+    --end-small: flex-end;
+    --first-small: -1;
+    --last-small: 1;
+    --auto-small: auto;
+    --relative-small: relative;
+  }
+}
+
+@media (width <= 20em) {
+  :root {
+    --_responsive---small: 0;
+    --_responsive---xsmall: 1;
+
+    --flex-xsmall: flex;
+    --none-xsmall: none;
+    --column-xsmall: column;
+    --row-xsmall: row;
+    --start-xsmall: flex-start;
+    --center-xsmall: center;
+    --end-xsmall: flex-end;
+    --first-xsmall: -1;
+    --last-xsmall: 1;
+    --auto-xsmall: auto;
+    --relative-xsmall: relative;
+  }
+}

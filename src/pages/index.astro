@@ -1,0 +1,47 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Preloader from "../components/site/Preloader.astro";
+import Nav from "../components/site/Nav.astro";
+import Hero from "../components/site/Hero.astro";
+import ScrubText from "../components/site/ScrubText.astro";
+import Bloom from "../components/site/Bloom.astro";
+import Manifesto from "../components/site/Manifesto.astro";
+import Faq from "../components/site/Faq.astro";
+import Footer from "../components/site/Footer.astro";
+import Contact from "../components/site/Contact.astro";
+
+const R3f = __FEATURE_R3F__
+  ? (await import("../components/features/R3f.astro")).default
+  : null;
+---
+
+<BaseLayout
+  theme="light"
+  preloading={__FEATURE_GSAP__}
+  title="Perception Pod — A Creative Intelligence Studio"
+  description="Perception Pod — Garden of Growth. A creative intelligence studio bridging creative intuition and performance intelligence."
+>
+  {__FEATURE_GSAP__ && <Preloader />}
+  <Nav />
+  {R3f && <R3f />}
+
+  <div class="page_wrap" data-main>
+    <main class="page_main">
+      <Hero />
+      <ScrubText />
+      <Bloom />
+      <Manifesto />
+      <Faq />
+      <Footer />
+    </main>
+  </div>
+  <Contact />
+</BaseLayout>
+
+<script>
+  /* Gate the whole site motion graph so check:features allOff ships no gsap. */
+  if (__FEATURE_GSAP__) {
+    const { initSite } = await import("../scripts/site/init.js");
+    initSite();
+  }
+</script>

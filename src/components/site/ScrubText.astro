@@ -1,0 +1,42 @@
+---
+const slides = [
+  {
+    header: "A Brand is a Living Mosaic",
+    body: "Brands aren't static pages in a deck. They're living mosaics of contradictions, emotions, and human stories. We nurture brands that refuse to be contained in perfect little boxes— brands that listen to the chaos and evolve with the weather.",
+  },
+  {
+    header: "Wild Things Grow Best",
+    body: "Forget the rulebook. Authentic brands don't bloom from templates, they erupt from soil-deep understanding and wild intention. We dig our hands into the messy, beautiful dirt of human truth because real growth doesn't follow instructions. It follows instinct.",
+  },
+  {
+    header: "Every Element Serves a Purpose",
+    body: "In our garden, nothing exists just to look pretty. Every petal attracts, every stem supports, every root feeds the whole ecosystem. Your brand isn't decoration, it's a living, breathing organism where design meets data and strategy blooms into stories that truly matter.",
+  },
+];
+
+const first = slides[0];
+---
+
+<section class="scrub_text_wrap" data-scrub-text>
+  <script type="application/json" data-scrub-slides set:html={JSON.stringify(slides)} />
+
+  <div class="scrub_text_sticky">
+    <div
+      class="scrub_contain"
+      id="pp-scrub"
+      data-asset-base-url="/frames"
+      data-first-frame="1"
+      data-frame-count="115"
+      aria-hidden="true"
+    ></div>
+
+    <div class="scrub_text_dock u-container">
+      <div class="scrub_text_main">
+        <div class="scrub_text_header_wrap">
+          <h1 class="scrub_text_header u-text-style-h1">{first.header}</h1>
+        </div>
+        <p class="scrub_text_body u-text-style-large">{first.body}</p>
+      </div>
+    </div>
+  </div>
+</section>

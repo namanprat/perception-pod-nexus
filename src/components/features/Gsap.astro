@@ -1,0 +1,39 @@
+---
+/**
+ * Scroll-triggered reveals for anything marked `data-animate`. Rendered only
+ * when `gsap` is on in features.json.
+ *
+ * Lenis + ScrollTrigger RAF sync lives in gsapRuntime (site entry). This
+ * component only registers data-animate reveals.
+ */
+---
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* matchMedia is GSAP's own reduced-motion gate: it builds the tweens under
+     "no-preference" and reverts them — cleanly, including the triggers — the
+     moment the preference flips. */
+  const mm = gsap.matchMedia();
+
+  mm.add("(prefers-reduced-motion: no-preference)", () => {
+    const targets = gsap.utils.toArray<HTMLElement>("[data-animate]");
+
+    for (const target of targets) {
+      gsap.from(target, {
+        opacity: 0,
+        y: 24,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: target,
+          start: "top 85%",
+          once: true,
+        },
+      });
+    }
+  });
+</script>

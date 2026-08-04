@@ -1,0 +1,88 @@
+---
+const cards = [
+  {
+    id: 1,
+    name: "Roots",
+    sub: "Research & Strategy",
+    label: "Roots — Research and Strategy",
+  },
+  {
+    id: 2,
+    name: "Seed",
+    sub: "Brand Identity & Positioning",
+    label: "Seed — Brand Identity and Positioning",
+  },
+  {
+    id: 3,
+    name: "Stem",
+    sub: "Digital Presence & Experience",
+    label: "Stem — Digital Presence and Experience",
+  },
+  {
+    id: 4,
+    name: "Bud",
+    sub: "Content & Performance",
+    label: "Bud — Content and Performance",
+  },
+  {
+    id: 5,
+    name: "Flower",
+    sub: "Campaign Activations",
+    label: "Flower — Campaign Activations",
+  },
+];
+
+const bullets = [
+  "Trend + market analysis",
+  "Audience + persona research",
+  "Cultural + competitor insights",
+  "PMF + UX testing",
+  "Insight-driven storytelling",
+];
+---
+
+<section class="bloom_wrap" id="services">
+  <div class="bloom_stage">
+    <div class="bloom_head u-container u-margin-trim">
+      <h2 class="bloom_title u-text-style-h1">
+        Choose your garden. We help you grow.
+      </h2>
+      <p class="bloom_text u-text-style-large">
+        We bridge the gap between creative intuition and performance
+        intelligence with tools that work, ideas that bloom, and insight that
+        leads to creativity that actually performs. Here's how.
+      </p>
+    </div>
+
+    <div class="bloom_cards">
+      {
+        cards.map((card) => (
+          <article
+            class={`bloom_card is-${card.id}`}
+            id={`bloom-card-${card.id}`}
+            aria-label={card.label}
+          >
+            <div class="bloom_card_head">
+              <div class="bloom_card_row">
+                <span class="bloom_card_label">{card.name}</span>
+                <span class="bloom_card_badge">
+                  <span class="bloom_card_num">{card.id}</span>
+                </span>
+              </div>
+              <p class="bloom_card_sub">{card.sub}</p>
+            </div>
+            <hr class="bloom_card_divider" />
+            <ul class="bloom_card_list">
+              {bullets.map((item) => (
+                <li class="bloom_card_list_item u-text-style-large">
+                  <span class="bloom_card_bullet" aria-hidden="true" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

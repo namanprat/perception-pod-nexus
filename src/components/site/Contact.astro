@@ -1,0 +1,103 @@
+---
+---
+
+<section class="contact_wrap" aria-hidden="true" aria-label="Contact">
+  <div class="contact_panel" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+    <header class="contact_header">
+      <h2 id="contact-title" class="contact_title u-text-style-h2">
+        Start a Project
+      </h2>
+      <button
+        type="button"
+        class="contact_close"
+        aria-label="Close contact form"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 14 14"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M1 1l12 12M13 1L1 13"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          ></path>
+        </svg>
+      </button>
+    </header>
+
+    <form class="contact_form" aria-label="Contact Form">
+      <div class="contact_body">
+        <label class="contact_field">
+          <span class="contact_prompt u-text-style-h4">Hello! My name is</span>
+          <input
+            class="contact_input u-text-style-large"
+            name="name"
+            placeholder="John Smith"
+            type="text"
+            autocomplete="name"
+          />
+        </label>
+
+        <label class="contact_field">
+          <span class="contact_prompt u-text-style-h4">My email is</span>
+          <input
+            class="contact_input u-text-style-large"
+            name="email"
+            placeholder="email@gmail.com"
+            type="email"
+            autocomplete="email"
+            required
+          />
+        </label>
+
+        <fieldset class="contact_fieldset">
+          <legend class="contact_prompt u-text-style-h4">
+            I am reaching out regarding
+          </legend>
+          <div class="contact_services">
+            <label class="contact_service u-text-style-large">
+              <input type="checkbox" name="service" value="research" />
+              <span>Research &amp; Strategy</span>
+            </label>
+            <label class="contact_service u-text-style-large">
+              <input type="checkbox" name="service" value="identity" />
+              <span>Visual Identity</span>
+            </label>
+            <label class="contact_service u-text-style-large">
+              <input type="checkbox" name="service" value="digital" />
+              <span>Digital Presence &amp; UX</span>
+            </label>
+            <label class="contact_service u-text-style-large">
+              <input type="checkbox" name="service" value="performance" />
+              <span>Performance Readiness</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <label class="contact_field">
+          <span class="contact_prompt u-text-style-h4"
+            >Tell us about your project</span
+          >
+          <textarea
+            class="contact_input contact_textarea u-text-style-large"
+            name="message"
+            rows="3"
+            placeholder="A few lines about what you're building…"
+          ></textarea>
+        </label>
+      </div>
+
+      <footer class="contact_footer">
+        <button type="submit" class="btn_wrap" data-trigger="hover focus">
+          <span class="btn_text">Send message</span>
+        </button>
+        <p class="contact_success u-text-style-large" role="status">
+          Thanks — we'll be in touch shortly. (Demo form — no data sent.)
+        </p>
+      </footer>
+    </form>
+  </div>
+</section>

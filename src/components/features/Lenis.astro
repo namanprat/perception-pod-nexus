@@ -1,0 +1,49 @@
+---
+/**
+ * Site-wide smooth scrolling. Rendered only when `lenis` is on in
+ * features.json — when it is off this component is never in the render graph,
+ * so neither the script nor the stylesheet reaches the bundle.
+ *
+ * Exposes the instance on window.__nexusLenis so site motion (ScrollTrigger
+ * sync, contact underlay lock, bloom drag) can reuse it — no second Lenis.
+ *
+ * autoRaf is false: GSAP drives lenis.raf via gsap.ticker (see gsapRuntime)
+ * so scrubbed ScrollTriggers stay frame-locked to smooth scroll.
+ */
+---
+
+<script>
+  import Lenis from "lenis";
+  import "lenis/dist/lenis.css";
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  let lenis: Lenis | null = null;
+
+  const sync = () => {
+    if (reduced.matches) {
+      lenis?.destroy();
+      lenis = null;
+      window.__nexusLenis = null;
+      window.dispatchEvent(new CustomEvent("nexus:lenis", { detail: null }));
+      return;
+    }
+    if (!lenis) {
+      lenis = new Lenis({
+        autoRaf: false,
+        lerp: 0.1,
+        smoothWheel: true,
+      });
+      window.__nexusLenis = lenis;
+      window.dispatchEvent(new CustomEvent("nexus:lenis", { detail: lenis }));
+      // Preloader locks scroll from first paint — stay at top until unlocked.
+      if (document.documentElement.classList.contains("is-preloading")) {
+        lenis.scrollTo(0, { immediate: true });
+        lenis.stop();
+      }
+    }
+  };
+
+  sync();
+  reduced.addEventListener("change", sync);
+</script>

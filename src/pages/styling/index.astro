@@ -1,0 +1,2509 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../components/Section.astro';
+import GridLines from '../../components/GridLines.astro';
+
+import rawFeatures from "../../features.json";
+import { FEATURE_KEYS, FEATURE_META, normaliseFeatures } from "../../lib/features";
+import { RUNG_OPTIONS } from "../../lib/spacing-rungs";
+import {
+  TEXT_ALIGN_OPTIONS,
+  TEXT_TRANSFORM_OPTIONS,
+  TEXT_WEIGHT_OPTIONS,
+  TEXT_WRAP_OPTIONS,
+} from "../../lib/text-style-options";
+import { TEXT_STYLE_KEYS } from "../../lib/text-style-fonts";
+import { BUTTON_PADDING_PRESET_OPTIONS } from "../../lib/button-styles";
+
+const features = normaliseFeatures(rawFeatures);
+
+const ladder = [
+  { i: 0, value: "0.786", note: "phi^-0.5" },
+  { i: 1, value: "1", note: "base" },
+  { i: 2, value: "1.272", note: "sqrt-phi" },
+  { i: 3, value: "1.618", note: "phi" },
+  { i: 4, value: "2.058", note: "" },
+  { i: 5, value: "2.618", note: "phi^2" },
+  { i: 6, value: "3.33", note: "" },
+  { i: 7, value: "4.236", note: "phi^3" },
+  { i: 8, value: "5.388", note: "" },
+  { i: 9, value: "6.854", note: "phi^4" },
+  { i: 10, value: "8.72", note: "" },
+  { i: 11, value: "11.09", note: "phi^5" },
+];
+
+const typeScale = [
+  { key: "display", token: "--_typography---size--display", label: "Display", style: "u-text-style-display", rung: "phi-8 → phi-10", tag: "h1", font: "primary" },
+  { key: "h1", token: "--_typography---size--h1", label: "Heading 1", style: "u-text-style-h1", rung: "phi-6 → phi-8", tag: "h1", font: "primary" },
+  { key: "h2", token: "--_typography---size--h2", label: "Heading 2", style: "u-text-style-h2", rung: "phi-5 → phi-7", tag: "h2", font: "primary" },
+  { key: "h3", token: "--_typography---size--h3", label: "Heading 3", style: "u-text-style-h3", rung: "phi-3 → phi-5", tag: "h3", font: "primary" },
+  { key: "h4", token: "--_typography---size--h4", label: "Heading 4", style: "u-text-style-h4", rung: "phi-2 → phi-4", tag: "h4", font: "primary" },
+  { key: "h5", token: "--_typography---size--h5", label: "Heading 5", style: "u-text-style-h5", rung: "phi-1 → phi-3", tag: "h5", font: "primary" },
+  { key: "h6", token: "--_typography---size--h6", label: "Heading 6", style: "u-text-style-h6", rung: "phi-1 (= main)", tag: "h6", font: "tertiary" },
+  { key: "large", token: "--_typography---size--large", label: "Large", style: "u-text-style-large", rung: "phi-2", tag: "p", font: "secondary" },
+  { key: "main", token: "--_typography---size--main", label: "Main", style: "u-text-style-main", rung: "phi-1", tag: "p", font: "secondary" },
+  { key: "small", token: "--_typography---size--small", label: "Small", style: "u-text-style-small", rung: "phi-0", tag: "p", font: "secondary" },
+];
+
+const fontRoles = [
+  { value: "primary", label: "Primary" },
+  { value: "secondary", label: "Secondary" },
+  { value: "tertiary", label: "Tertiary" },
+] as const;
+
+const textStyleFontLabels: Record<(typeof TEXT_STYLE_KEYS)[number], string> = {
+  display: "Display",
+  h1: "Heading 1",
+  h2: "Heading 2",
+  h3: "Heading 3",
+  h4: "Heading 4",
+  h5: "Heading 5",
+  h6: "Heading 6",
+  large: "Large",
+  main: "Main",
+  small: "Small",
+  mono: "Mono",
+  eyebrow: "Eyebrow",
+};
+
+const fontFamilies = [
+  { role: "primary", token: "--_typography---font--primary", sample: "New Spirit", value: '"new-spirit-condensed", Georgia, serif' },
+  { role: "secondary", token: "--_typography---font--secondary", sample: "Arial", value: "Arial, sans-serif" },
+  { role: "tertiary", token: "--_typography---font--tertiary", sample: "Arial 0123456789", value: "Arial, sans-serif" },
+] as const;
+
+const buttonColourOptions = [
+  { label: "Light", token: "--swatch--light-100" },
+  { label: "Dark", token: "--swatch--dark-900" },
+  { label: "Brand", token: "--swatch--brand-500" },
+  { label: "Accent", token: "--swatch--accent" },
+  { label: "Overscroll", token: "--swatch--overscroll" },
+] as const;
+
+const buttonStyleControls = [
+  { key: "primaryBackground", label: "Primary fill" },
+  { key: "primaryBackgroundHover", label: "Primary fill hover" },
+  { key: "primaryText", label: "Primary text" },
+  { key: "primaryTextHover", label: "Primary text hover" },
+  { key: "secondaryText", label: "Secondary text" },
+  { key: "secondaryTextHover", label: "Secondary text hover" },
+  { key: "tertiaryText", label: "Tertiary text" },
+  { key: "tertiaryTextHover", label: "Tertiary text hover" },
+] as const;
+
+const spacing = [1, 2, 3, 4, 5, 6, 7, 8];
+const ramp = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+const spans = [2, 3, 4, 6, 8];
+const cells = Array.from({ length: 12 }, (_, i) => i + 1);
+
+const sectionSpace = [
+  { token: "--_spacing---section-space--small", label: "small" },
+  { token: "--_spacing---section-space--main", label: "main" },
+  { token: "--_spacing---section-space--large", label: "large" },
+  { token: "--_spacing---section-space--page-top", label: "page-top" },
+];
+---
+<BaseLayout title="Nexus — design system" description="φ-based grid, type and colour tokens for Astro.">
+  <!-- ─── Masthead ──────────────────────────────────────────────────── -->
+  <Section name="masthead" space="large" pageTop>
+    <div class="masthead_content u-margin-trim">
+      <p class="masthead_eyebrow u-text-style-eyebrow u-margin-bottom">φ = 1.618033988749895</p>
+      <div class="masthead_title u-heading u-text-style-display">
+        <h1>Nexus Framework</h1>
+      </div>
+      <div class="masthead_text u-text u-text-style-large">
+        <p>One ladder drives everything. Each rung is the previous rung ×&nbsp;√φ (1.272), so every second rung is exactly φ. Type sizes, column counts, gutters and spacing all read off it — expressed as Nexus variables and utilities.</p>
+      </div>
+      <p class="masthead_hint u-text-style-mono">Shift&nbsp;+&nbsp;G toggles the grid overlay · resize to watch the columns step 12&nbsp;→&nbsp;8&nbsp;→&nbsp;4</p>
+    </div>
+  </Section>
+  <!-- ─── The ladder ────────────────────────────────────────────────── -->
+  <Section name="ladder">
+    <h2 class="ladder_title u-text-style-h6">01 — The ladder</h2>
+    <ul class="ladder_list_wrap">
+      {
+        ladder.map(({ i, value, note }) => (
+          <li class="ladder_row_wrap">
+            <code class="ladder_token u-text-style-mono">--phi-{i}</code>
+            <div class="ladder_value u-text-style-mono">{value}</div>
+            <div class={`ladder_bar is-${i}`} />
+            <div class="ladder_note u-text-style-mono u-text-faded">{note}</div>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+  <!-- ─── Grid ──────────────────────────────────────────────────────── -->
+  <Section name="grid">
+    <h2 class="grid_title u-text-style-h6">02 — Grid</h2>
+    <div class="grid_intro u-margin-trim">
+      <div class="grid_text u-text u-text-style-main u-text-faded">
+        <p>Twelve-column grid — 12 / 8 / 4. Halves, thirds and quarters land on whole columns. Margin is exactly φ × the gutter at every viewport, floor included. The count is assembled from the Nexus responsive flags (wide ≥120em · xlarge · large · medium · small · xsmall). Prefer flags / keyword vars; use @container for one-offs — live length readouts use probe measurement because custom props return specified values.</p>
+      </div>
+    </div>
+    <p class="grid_band_smoke u-text-style-small u-text-faded">Band smoke: stacks below medium; row from large; wide keyword available via --flex-wide.</p>
+    <div class="grid_demo_wrap">
+      <GridLines inset />
+      <div class="grid_cells_wrap u-grid-main">
+        {
+          cells.map((n) => (
+            <div class={`grid_cell_wrap ${n >= 9 ? "is-9" : n >= 5 ? "is-5" : ""}`.trim()}>
+              <div class="grid_cell_label u-text-style-mono">{String(n).padStart(2, "0")}</div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <dl class="grid_metrics_wrap">
+      <div class="grid_metric_wrap">
+        <dt class="grid_metric_label u-text-style-mono u-text-faded">columns</dt>
+        <dd class="grid_metric_value u-text-style-h4" data-metric="count">—</dd>
+      </div>
+      <div class="grid_metric_wrap">
+        <dt class="grid_metric_label u-text-style-mono u-text-faded">gutter</dt>
+        <dd class="grid_metric_value u-text-style-h4" data-metric="gutter">—</dd>
+      </div>
+      <div class="grid_metric_wrap">
+        <dt class="grid_metric_label u-text-style-mono u-text-faded">margin</dt>
+        <dd class="grid_metric_value u-text-style-h4" data-metric="margin">—</dd>
+      </div>
+      <div class="grid_metric_wrap">
+        <dt class="grid_metric_label u-text-style-mono u-text-faded">margin ÷ gutter</dt>
+        <dd class="grid_metric_value u-text-style-h4" data-metric="ratio">—</dd>
+      </div>
+      <div class="grid_metric_wrap">
+        <dt class="grid_metric_label u-text-style-mono u-text-faded">--max-width--main</dt>
+        <dd class="grid_metric_value u-text-style-h4" data-metric="lock">—</dd>
+      </div>
+      <div class="grid_metric_wrap">
+        <dt class="grid_metric_label u-text-style-mono u-text-faded">container</dt>
+        <dd class="grid_metric_value u-text-style-h4" data-metric="container">—</dd>
+      </div>
+      <div class="grid_metric_wrap">
+        <dt class="grid_metric_label u-text-style-mono u-text-faded">gutter ÷ column</dt>
+        <dd class="grid_metric_value u-text-style-h4" data-metric="proportion">—</dd>
+      </div>
+    </dl>
+    <h3 class="grid_subtitle u-text-style-mono u-text-faded">Container lock</h3>
+    <div class="grid_lock_wrap">
+      <p class="grid_lock_text u-text-style-small u-text-faded">Sets <code class="grid_lock_code u-text-style-mono">--max-width--main</code> in <code class="grid_lock_code u-text-style-mono">variables.css</code> during <code class="grid_lock_code u-text-style-mono">astro dev</code>.</p>
+      <div class="grid_lock_controls_wrap">
+        <label class="grid_lock_toggle_wrap">
+          <input class="grid_lock_toggle" type="checkbox" data-container-lock checked />
+          <div class="grid_lock_toggle_label u-text-style-mono">Lock container</div>
+        </label>
+        <label class="grid_lock_width_wrap">
+          <div class="grid_lock_width_label u-text-style-mono u-text-faded">Width</div>
+          <div class="grid_lock_width_field_wrap">
+            <input class="grid_lock_width" type="number" inputmode="decimal" min="20" max="200" step="1" value="90" data-container-width />
+            <div class="grid_lock_width_unit u-text-style-mono u-text-faded">rem</div>
+          </div>
+        </label>
+        <div class="grid_lock_actions u-button-wrapper">
+          <button class="grid_lock_button" type="button" data-container-apply data-trigger="hover focus">Apply width</button>
+          <button class="grid_lock_button_secondary" type="button" data-container-reset data-trigger="hover focus">Reset</button>
+        </div>
+      </div>
+    </div>
+    <h3 class="grid_subtitle u-text-style-mono u-text-faded">Gutter rung</h3>
+    <div class="grid_rung_wrap">
+      <p class="grid_lock_text u-text-style-small u-text-faded">Shifts the gutter floor, fluid band and lock cap together by √φ per step. Floor base is <code class="grid_lock_code u-text-style-mono">--_spacing---space--4</code>; −1 is one rung down (≈ space--3). Margin stays φ × gutter.</p>
+      <div class="grid_rung_controls_wrap">
+        <label class="grid_rung_field_wrap">
+          <div class="grid_lock_width_label u-text-style-mono u-text-faded">Rung</div>
+          <select class="grid_rung_select" data-gutter-rung>
+            {
+              RUNG_OPTIONS.map(({ value, label }) => (
+                <option value={value} selected={value === 0}>{label}</option>
+              ))
+            }
+          </select>
+        </label>
+        <button class="grid_lock_button_secondary" type="button" data-gutter-rung-reset data-trigger="hover focus">Reset</button>
+      </div>
+    </div>
+    <h3 class="grid_subtitle u-text-style-mono u-text-faded">Column spans</h3>
+    <div class="grid_spans_wrap u-grid-main">
+      {
+        spans.map((n) => (
+          <div class={`grid_span_wrap u-column-span-${n}`}>
+            <div class="grid_span_label u-text-style-mono">u-column-span-{n}</div>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+  <!-- ─── Type ──────────────────────────────────────────────────────── -->
+  <Section name="type">
+    <h2 class="type_title u-text-style-h6">03 — Type</h2>
+    <div class="type_intro u-margin-trim">
+      <div class="type_text u-text u-text-style-main u-text-faded">
+        <p>Four static UI sizes, six fluid display sizes. Nexus chrome stays on Arial; type styles and the site use the families you pick. Disable type styles to force Arial everywhere and ignore the per-style controls.</p>
+      </div>
+    </div>
+    <div class="type_master_wrap u-font-nexus">
+      <button class="type_font_button" type="button" data-type-styles-toggle data-trigger="hover focus">Type styles: on</button>
+      <p class="type_master_hint u-text-style-small u-text-faded">When off, <code class="type_code u-text-style-mono">u-text-style-*</code> and site body/headings use Nexus Arial only.</p>
+    </div>
+    <p class="type_save_status u-text-style-mono u-text-faded" data-save-status>
+    </p>
+    <div class="type_specimen_wrap">
+      {
+        typeScale.map(({ key, token, label, style, rung, tag, font }, i) => {
+          const Tag = tag;
+          return (
+            <div class="type_row_wrap">
+              <div class="type_meta_wrap">
+                <code class="type_token u-text-style-mono">{token}</code>
+                <div class="type_rung u-text-style-mono u-text-faded">{rung}</div>
+                <div class="type_computed u-text-style-mono" data-computed={token}>
+                  —
+                </div>
+                {typeScale[i + 1] && (
+                  <div
+                    class="type_ratio u-text-style-mono"
+                    data-ratio-of={token}
+                    data-ratio-to={typeScale[i + 1].token}
+                  >
+                    —
+                  </div>
+                )}
+                <div class="type_option_controls_wrap u-font-nexus">
+                  <label class="type_font_wrap">
+                    <div class="type_font_label u-text-style-mono u-text-faded">Font</div>
+                    <select class="type_font_select" data-text-style-font={key}>
+                      {fontRoles.map((role) => (
+                        <option value={role.value} selected={role.value === font}>
+                          {role.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label class="type_font_wrap">
+                    <div class="type_font_label u-text-style-mono u-text-faded">Wrap</div>
+                    <select class="type_font_select" data-text-style-wrap={key}>
+                      {TEXT_WRAP_OPTIONS.map((opt) => (
+                        <option value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label class="type_font_wrap">
+                    <div class="type_font_label u-text-style-mono u-text-faded">Transform</div>
+                    <select class="type_font_select" data-text-style-transform={key}>
+                      {TEXT_TRANSFORM_OPTIONS.map((opt) => (
+                        <option value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label class="type_font_wrap">
+                    <div class="type_font_label u-text-style-mono u-text-faded">Align</div>
+                    <select class="type_font_select" data-text-style-align={key}>
+                      {TEXT_ALIGN_OPTIONS.map((opt) => (
+                        <option value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label class="type_font_wrap">
+                    <div class="type_font_label u-text-style-mono u-text-faded">Weight</div>
+                    <select class="type_font_select" data-text-style-weight={key}>
+                      {TEXT_WEIGHT_OPTIONS.map((opt) => (
+                        <option value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <Tag class={`type_sample ${style}`}>{label} — Revealed, not manufactured</Tag>
+            </div>
+          );
+        })
+      }
+    </div>
+    <div class="type_font_actions u-button-wrapper">
+      <button class="type_font_button_secondary" type="button" data-text-style-font-reset data-trigger="hover focus">Reset text styles to CSS defaults</button>
+    </div>
+    <h3 class="type_subtitle u-text-style-mono u-text-faded u-font-nexus">Adobe Fonts (Typekit)</h3>
+    <div class="type_typekit_wrap u-font-nexus">
+      <label class="type_typekit_field_wrap">
+        <div class="type_family_field_label u-text-style-mono u-text-faded">Kit id</div>
+        <input class="type_typekit_input" type="text" spellcheck="false" placeholder="e.g. nci7cab" data-typekit-kit-id />
+      </label>
+      <div class="type_font_actions u-button-wrapper">
+        <button class="type_font_button" type="button" data-typekit-add data-trigger="hover focus">Add kit fonts</button>
+        <button class="type_font_button_secondary" type="button" data-typekit-clear data-trigger="hover focus">Clear kit</button>
+      </div>
+      <p class="type_typekit_status u-text-style-small u-text-faded" data-typekit-status></p>
+    </div>
+    <h3 class="type_subtitle u-text-style-mono u-text-faded u-font-nexus">Families</h3>
+    <div class="type_families_wrap">
+      {
+        fontFamilies.map(({ role, token, sample, value }) => (
+          <div class="type_family_wrap">
+            <code class="type_family_token u-text-style-mono u-text-faded u-font-nexus">{token}</code>
+            <label class="type_family_field_wrap u-font-nexus">
+              <div class="type_family_field_label u-text-style-mono u-text-faded">Font for {role}</div>
+              <select class="type_family_select" data-font-family={role} data-default-stack={value}>
+                <option value={value} selected>{sample}</option>
+              </select>
+            </label>
+            <p class={`type_family_sample ${role === "tertiary" ? "is-mono" : ""} u-text-style-h4`} data-font-family-sample={role}>{sample}</p>
+          </div>
+        ))
+      }
+    </div>
+    <div class="type_font_actions u-button-wrapper u-font-nexus">
+      <button class="type_font_button" type="button" data-font-family-apply data-trigger="hover focus">Save families to CSS</button>
+      <button class="type_font_button_secondary" type="button" data-font-family-reset data-trigger="hover focus">Reset families to Arial</button>
+    </div>
+  </Section>
+  <!-- ─── Colour ────────────────────────────────────────────────────── -->
+  <Section name="colour">
+    <h2 class="colour_title u-text-style-h6">04 — Colour</h2>
+    <div class="colour_intro u-margin-trim">
+      <div class="colour_text u-text u-text-style-main u-text-faded">
+        <p>Light, dark, brand and accent are the editable bases (with brand and accent ramps). Add more named swatches below — during <code class="colour_code u-text-style-mono">astro dev</code> they write into <code class="colour_code u-text-style-mono">variables.css</code>. Brand theme uses accent for primary actions and headings.</p>
+      </div>
+    </div>
+    <div class="colour_swatches_wrap">
+      <figure class="colour_swatch_wrap">
+        <label class="colour_swatch_control_wrap">
+          <input class="colour_swatch_input" type="color" value="#ffffeb" data-swatch="light" aria-label="Edit light swatch" />
+          <div class="colour_swatch is-light">
+          </div>
+        </label>
+        <figcaption class="colour_swatch_caption u-text-style-mono">--swatch--light-100</figcaption>
+        <input class="colour_swatch_hex u-text-style-mono" type="text" value="#ffffeb" spellcheck="false" maxlength="7" data-swatch-hex="light" aria-label="Light hex" />
+      </figure>
+      <figure class="colour_swatch_wrap">
+        <label class="colour_swatch_control_wrap">
+          <input class="colour_swatch_input" type="color" value="#000000" data-swatch="dark" aria-label="Edit dark swatch" />
+          <div class="colour_swatch is-dark">
+          </div>
+        </label>
+        <figcaption class="colour_swatch_caption u-text-style-mono">--swatch--dark-900</figcaption>
+        <input class="colour_swatch_hex u-text-style-mono" type="text" value="#000000" spellcheck="false" maxlength="7" data-swatch-hex="dark" aria-label="Dark hex" />
+      </figure>
+      <figure class="colour_swatch_wrap">
+        <label class="colour_swatch_control_wrap">
+          <input class="colour_swatch_input" type="color" value="#eae9e4" data-swatch="brand" aria-label="Edit brand swatch" />
+          <div class="colour_swatch is-brand">
+          </div>
+        </label>
+        <figcaption class="colour_swatch_caption u-text-style-mono">--swatch--brand-500</figcaption>
+        <input class="colour_swatch_hex u-text-style-mono" type="text" value="#eae9e4" spellcheck="false" maxlength="7" data-swatch-hex="brand" aria-label="Brand hex" />
+      </figure>
+      <figure class="colour_swatch_wrap">
+        <label class="colour_swatch_control_wrap">
+          <input class="colour_swatch_input" type="color" value="#c17f59" data-swatch="accent" aria-label="Edit accent swatch" />
+          <div class="colour_swatch is-accent">
+          </div>
+        </label>
+        <figcaption class="colour_swatch_caption u-text-style-mono">--swatch--accent</figcaption>
+        <input class="colour_swatch_hex u-text-style-mono" type="text" value="#c17f59" spellcheck="false" maxlength="7" data-swatch-hex="accent" aria-label="Accent hex" />
+      </figure>
+      <figure class="colour_swatch_wrap">
+        <label class="colour_swatch_control_wrap">
+          <input class="colour_swatch_input" type="color" value="#c3c3c3" data-swatch="overscroll" aria-label="Edit overscroll swatch" />
+          <div class="colour_swatch is-overscroll">
+          </div>
+        </label>
+        <figcaption class="colour_swatch_caption u-text-style-mono">--swatch--overscroll</figcaption>
+        <input class="colour_swatch_hex u-text-style-mono" type="text" value="#c3c3c3" spellcheck="false" maxlength="7" data-swatch-hex="overscroll" aria-label="Overscroll hex" />
+      </figure>
+    </div>
+    <div class="colour_edit_actions u-button-wrapper">
+      <button class="colour_edit_button_secondary" type="button" data-swatch-reset data-trigger="hover focus">Reset colours</button>
+    </div>
+    <h3 class="colour_subtitle u-text-style-mono u-text-faded">Add colour</h3>
+    <div class="colour_add_wrap">
+      <label class="colour_add_name_wrap">
+        <div class="colour_add_label u-text-style-mono u-text-faded">Name</div>
+        <input class="colour_add_name" type="text" placeholder="coral" spellcheck="false" data-swatch-add-name />
+      </label>
+      <label class="colour_add_colour_wrap">
+        <div class="colour_add_label u-text-style-mono u-text-faded">Colour</div>
+        <div class="colour_add_colour_row">
+          <input class="colour_add_colour" type="color" value="#e36a5c" data-swatch-add-picker aria-label="Pick colour" />
+          <input class="colour_swatch_hex u-text-style-mono" type="text" value="#e36a5c" spellcheck="false" maxlength="7" data-swatch-add-hex aria-label="Hex code" />
+        </div>
+      </label>
+      <div class="colour_add_actions u-button-wrapper">
+        <button class="colour_edit_button" type="button" data-swatch-add data-trigger="hover focus">Add swatch</button>
+      </div>
+      <p class="colour_add_hint u-text-style-mono u-text-faded" data-swatch-add-status>
+      </p>
+    </div>
+    <div class="colour_extras_wrap" data-swatch-extras>
+    </div>
+    <div class="colour_extras_hidden u-display-none">
+      <figure class="colour_swatch_wrap is-extra">
+        <label class="colour_swatch_control_wrap">
+          <input class="colour_swatch_input" type="color" data-extra-swatch value="#e36a5c" />
+          <div class="colour_swatch is-extra">
+          </div>
+        </label>
+        <figcaption class="colour_swatch_caption u-text-style-mono">
+        </figcaption>
+        <input class="colour_swatch_hex u-text-style-mono" type="text" value="#e36a5c" spellcheck="false" maxlength="7" data-extra-swatch-hex aria-label="Extra hex" />
+        <button class="colour_extra_remove" type="button" data-extra-remove data-trigger="hover focus">Remove</button>
+      </figure>
+    </div>
+    <h3 class="colour_subtitle u-text-style-mono u-text-faded">Brand ramp</h3>
+    <div class="colour_ramp_wrap">
+      {
+        ramp.map((step) => (
+          <div class="colour_ramp_item_wrap">
+            <div class={`colour_ramp_chip is-brand is-${step}`} />
+            <div class="colour_ramp_label u-text-style-mono u-text-faded">{step}</div>
+          </div>
+        ))
+      }
+    </div>
+    <h3 class="colour_subtitle u-text-style-mono u-text-faded">Accent ramp</h3>
+    <div class="colour_ramp_wrap">
+      {
+        ramp.map((step) => (
+          <div class="colour_ramp_item_wrap">
+            <div class={`colour_ramp_chip is-accent is-${step}`} />
+            <div class="colour_ramp_label u-text-style-mono u-text-faded">{step}</div>
+          </div>
+        ))
+      }
+    </div>
+    <h3 class="colour_subtitle u-text-style-mono u-text-faded">Themes</h3>
+    <div class="colour_themes_wrap">
+      <div class="colour_theme_wrap u-theme-light">
+        <p class="colour_theme_name u-text-style-h5">u-theme-light</p>
+        <div class="colour_theme_accent_wrap">
+          <div class="colour_theme_accent">
+          </div>
+          <div class="colour_theme_accent_label u-text-style-mono u-text-faded">accent</div>
+        </div>
+        <div class="colour_theme_actions u-button-wrapper">
+          <button class="colour_theme_button" data-trigger="hover focus">Primary</button>
+          <button class="colour_theme_button_secondary" data-trigger="hover focus">Secondary</button>
+          <button class="colour_theme_button_tertiary" data-trigger="hover focus">Tertiary</button>
+        </div>
+      </div>
+      <div class="colour_theme_wrap u-theme-dark">
+        <p class="colour_theme_name u-text-style-h5">u-theme-dark</p>
+        <div class="colour_theme_accent_wrap">
+          <div class="colour_theme_accent">
+          </div>
+          <div class="colour_theme_accent_label u-text-style-mono u-text-faded">accent</div>
+        </div>
+        <div class="colour_theme_actions u-button-wrapper">
+          <button class="colour_theme_button" data-trigger="hover focus">Primary</button>
+          <button class="colour_theme_button_secondary" data-trigger="hover focus">Secondary</button>
+          <button class="colour_theme_button_tertiary" data-trigger="hover focus">Tertiary</button>
+        </div>
+      </div>
+      <div class="colour_theme_wrap u-theme-brand">
+        <p class="colour_theme_name u-text-style-h5">u-theme-brand</p>
+        <div class="colour_theme_accent_wrap">
+          <div class="colour_theme_accent">
+          </div>
+          <div class="colour_theme_accent_label u-text-style-mono u-text-faded">accent</div>
+        </div>
+        <div class="colour_theme_actions u-button-wrapper">
+          <button class="colour_theme_button" data-trigger="hover focus">Primary</button>
+          <button class="colour_theme_button_secondary" data-trigger="hover focus">Secondary</button>
+          <button class="colour_theme_button_tertiary" data-trigger="hover focus">Tertiary</button>
+        </div>
+      </div>
+    </div>
+  </Section>
+  <!-- ─── Buttons ───────────────────────────────────────────────────── -->
+  <Section name="button">
+    <h2 class="button_title u-text-style-h6">05 — Buttons</h2>
+    <div class="button_intro u-margin-trim">
+      <div class="button_text u-text u-text-style-main u-text-faded">
+        <p>Primary (filled), secondary (outline), tertiary (underline). Map fill and label colours to swatches, pick font source, padding preset, and radius — writes into <code class="button_code u-text-style-mono">variables.css</code> during <code class="button_code u-text-style-mono">astro dev</code>.</p>
+      </div>
+    </div>
+    <div class="button_specimen_wrap">
+      <div class="button_specimen_actions u-button-wrapper">
+        <button class="button_specimen_primary" data-trigger="hover focus">Primary</button>
+        <button class="button_specimen_secondary" data-trigger="hover focus">Secondary</button>
+        <button class="button_specimen_tertiary" data-trigger="hover focus">Tertiary</button>
+      </div>
+    </div>
+    <div class="button_controls_wrap">
+      <label class="button_control_wrap">
+        <div class="button_control_label u-text-style-mono u-text-faded">Font from</div>
+        <select class="button_control_select" data-button-style="fontFamily">
+          <optgroup label="Text styles">
+            {
+              TEXT_STYLE_KEYS.map((key) => (
+                <option value={`var(--_typography---font-style--${key})`}>{textStyleFontLabels[key]}</option>
+              ))
+            }
+          </optgroup>
+          <optgroup label="Family roles">
+            {
+              fontRoles.map((role) => (
+                <option value={`var(--_typography---font--${role.value})`} selected={role.value === "secondary"}>{role.label}</option>
+              ))
+            }
+          </optgroup>
+        </select>
+      </label>
+      {
+        buttonStyleControls.map(({ key, label }) => (
+          <label class="button_control_wrap">
+            <div class="button_control_label u-text-style-mono u-text-faded">{label}</div>
+            <select class="button_control_select" data-button-style={key}>
+              {
+                buttonColourOptions.map((option) => (
+                  <option value={`var(${option.token})`}>{option.label}</option>
+                ))
+              }
+            </select>
+          </label>
+        ))
+      }
+      <label class="button_control_wrap">
+        <div class="button_control_label u-text-style-mono u-text-faded">Padding</div>
+        <select class="button_control_select" data-button-style="paddingPreset">
+          {
+            BUTTON_PADDING_PRESET_OPTIONS.map((opt) => (
+              <option value={opt.value} selected={opt.value === "default"}>{opt.label}</option>
+            ))
+          }
+        </select>
+      </label>
+      <div class="button_control_wrap button_control_wrap_radius">
+        <div class="button_control_label u-text-style-mono u-text-faded">Radius</div>
+        <div class="button_radius_row">
+          <input
+            class="button_radius_slider"
+            type="range"
+            min="0"
+            max="2"
+            step="0.05"
+            value="1"
+            data-button-radius-slider
+          />
+          <span class="button_radius_value u-text-style-mono" data-button-radius-value>Pill</span>
+        </div>
+        <label class="button_radius_pill_wrap u-text-style-mono u-text-faded">
+          <input type="checkbox" checked data-button-radius-pill />
+          Pill
+        </label>
+      </div>
+    </div>
+    <div class="button_actions u-button-wrapper">
+      <button class="button_actions_reset" type="button" data-button-style-reset data-trigger="hover focus">Reset button styles</button>
+    </div>
+  </Section>
+  <!-- ─── Spacing ───────────────────────────────────────────────────── -->
+  <Section name="spacing">
+    <h2 class="spacing_title u-text-style-h6">06 — Spacing</h2>
+    <ul class="spacing_list_wrap">
+      {
+        spacing.map((n) => (
+          <li class="spacing_row_wrap">
+            <code class="spacing_label u-text-style-mono u-text-faded">--_spacing---space--{n}</code>
+            <div class={`spacing_bar is-${n}`} />
+          </li>
+        ))
+      }
+    </ul>
+    <h3 class="spacing_subtitle u-text-style-mono u-text-faded">Section padding rung</h3>
+    <div class="spacing_rung_wrap">
+      <p class="grid_lock_text u-text-style-small u-text-faded">Scales small / main / large / page-top section padding by √φ per step on the same ladder. −1 is one rung down from the default rhythm.</p>
+      <div class="grid_rung_controls_wrap">
+        <label class="grid_rung_field_wrap">
+          <div class="grid_lock_width_label u-text-style-mono u-text-faded">Rung</div>
+          <select class="grid_rung_select" data-padding-rung>
+            {
+              RUNG_OPTIONS.map(({ value, label }) => (
+                <option value={value} selected={value === 0}>{label}</option>
+              ))
+            }
+          </select>
+        </label>
+        <button class="grid_lock_button_secondary" type="button" data-padding-rung-reset data-trigger="hover focus">Reset</button>
+      </div>
+    </div>
+    <h3 class="spacing_subtitle u-text-style-mono u-text-faded">Section rhythm</h3>
+    <ul class="spacing_list_wrap">
+      {
+        sectionSpace.map(({ token, label }) => (
+          <li class="spacing_row_wrap">
+            <code class="spacing_label u-text-style-mono u-text-faded">{label}</code>
+            <div class="spacing_value u-text-style-mono" data-computed={token}>—</div>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+  <!-- ─── Bundle ────────────────────────────────────────────────────── -->
+  <Section name="bundle">
+    <h2 class="bundle_title u-text-style-h6">07 — Bundle</h2>
+    <p class="grid_lock_text u-text-style-small u-text-faded">
+      Build-time flags, not runtime ones. These rewrite <code class="grid_lock_code u-text-style-mono">src/features.json</code>
+      during <code class="grid_lock_code u-text-style-mono">astro dev</code>; anything switched off is left out of the
+      render graph, so its package never reaches the bundle. Verify with <code class="grid_lock_code u-text-style-mono">npm run check:features</code>.
+    </p>
+    <ul class="bundle_list_wrap">
+      {
+        FEATURE_KEYS.map((key) => (
+          <li class="bundle_row_wrap">
+            <label class="bundle_toggle_wrap">
+              <input
+                class="grid_lock_toggle"
+                type="checkbox"
+                data-feature={key}
+                checked={features[key]}
+              />
+              <div class="bundle_toggle_label u-text-style-mono">{FEATURE_META[key].label}</div>
+            </label>
+            <p class="bundle_note u-text-style-small u-text-faded">{FEATURE_META[key].note}</p>
+            <code class="bundle_packages u-text-style-mono u-text-faded">
+              {FEATURE_META[key].packages.join(" · ")}
+            </code>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="bundle_status u-text-style-mono u-text-faded" data-feature-status>
+      Toggling rewrites features.json — the dev server reloads, and the next build follows it.
+    </p>
+  </Section>
+  <!-- ─── Colophon ──────────────────────────────────────────────────── -->
+  <Section name="colophon" space="small">
+    <p class="colophon_text u-text-style-mono u-text-faded">
+      nexus-framework-astro · Author Naman Pratulya · tokens on φ · Nexus utilities
+    </p>
+  </Section>
+</BaseLayout>
+<script>
+  /* Resolved-value readout. getComputedStyle().getPropertyValue() on a custom
+     property returns the *specified* value — the literal "clamp(...)" string —
+     so every number here comes from measuring a probe element instead. */
+  import { readCssLengthPx } from "../../lib/css-length";
+  import {
+    applyContainerLockSettings,
+    clearContainerLockOverride,
+    clearContainerLockStorage,
+    DEFAULT_CONTAINER_WIDTH_REM,
+    readContainerLockSettings,
+    writeContainerLockSettings,
+  } from "../../lib/container-lock";
+  import {
+    addSwatch,
+    applyExtraSwatches,
+    applySwatchSettings,
+    clearExtraSwatchStorage,
+    clearSwatchOverride,
+    clearSwatchStorage,
+    DEFAULT_SWATCHES,
+    listExtraSwatches,
+    normalizeHex,
+    readExtraSwatches,
+    readSwatchSettings,
+    removeSwatch,
+    SWATCH_KEYS,
+    type SwatchKey,
+    writeExtraSwatches,
+    writeSwatchSettings,
+  } from "../../lib/swatch-colours";
+  import {
+    applyFontFamilySettings,
+    applyTextStyleFontSettings,
+    clearFontFamilyOverride,
+    clearFontFamilyStorage,
+    clearTextStyleFontOverride,
+    clearTextStyleFontStorage,
+    DEFAULT_FONT_FAMILIES,
+    DEFAULT_TEXT_STYLE_FONTS,
+    FONT_ROLES,
+    type FontRole,
+    isFontRole,
+    readFontFamilySettings,
+    readTextStyleFontSettings,
+    TEXT_STYLE_KEYS,
+    type TextStyleKey,
+    writeFontFamilySettings,
+    writeTextStyleFontSettings,
+  } from "../../lib/text-style-fonts";
+  import {
+    applyTypeStylesEnabled,
+    clearTypeStylesEnabledStorage,
+    readTypeStylesEnabled,
+    writeTypeStylesEnabled,
+  } from "../../lib/type-styles-enabled";
+  import {
+    clearFontCatalogStorage,
+    clearTypekitKitId,
+    DEFAULT_FONT_CATALOG,
+    ensureTypekitLink,
+    fetchTypekitFamilies,
+    mergeFontCatalog,
+    NEXUS_FONT_STACK,
+    readFontCatalog,
+    readTypekitKitId,
+    type FontCatalogEntry,
+    writeFontCatalog,
+    writeTypekitKitId,
+  } from "../../lib/typekit";
+  import {
+    applyTextStyleOptionSettings,
+    clearTextStyleOptionOverride,
+    clearTextStyleOptionStorage,
+    DEFAULT_TEXT_STYLE_OPTIONS,
+    isTextAlign,
+    isTextTransform,
+    isTextWeight,
+    isTextWrap,
+    readTextStyleOptionSettings,
+    writeTextStyleOptionSettings,
+    type TextStyleOptions,
+  } from "../../lib/text-style-options";
+  import {
+    applyButtonStyleSettings,
+    BUTTON_STYLE_KEYS,
+    type ButtonStyleKey,
+    clearButtonStyleOverride,
+    clearButtonStyleStorage,
+    DEFAULT_BUTTON_STYLES,
+    isPillRadius,
+    radiusToRem,
+    remToRadius,
+    readButtonStyleSettings,
+    writeButtonStyleSettings,
+  } from "../../lib/button-styles";
+  import {
+    applySpacingRungSettings,
+    clearSpacingRungStorage,
+    DEFAULT_SPACING_RUNGS,
+    readSpacingRungSettings,
+    writeSpacingRungSettings,
+  } from "../../lib/spacing-rungs";
+  import { saveTokensToCss } from "../../lib/save-tokens";
+  import { FEATURE_KEYS, FEATURE_META } from "../../lib/features";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    let paintMetrics: (() => void) | null = null;
+    const statusEl = document.querySelector<HTMLElement>("[data-save-status]");
+
+    const setSaveStatus = (message: string) => {
+      if (statusEl) statusEl.textContent = message;
+    };
+
+    const persist = async (
+      payload: Parameters<typeof saveTokensToCss>[0],
+      onFallback: () => void,
+      onSaved?: () => void,
+    ) => {
+      const saved = await saveTokensToCss(payload);
+      if (saved) {
+        onSaved?.();
+        setSaveStatus("Saved to src/styles/nexus/variables.css");
+        paintMetrics?.();
+        return;
+      }
+      onFallback();
+      setSaveStatus("Dev server unavailable — kept as a session override only");
+      paintMetrics?.();
+    };
+
+    document.querySelectorAll<HTMLElement>(".type_specimen_wrap").forEach((component) => {
+      if (component.dataset.scriptInitialized) return;
+      component.dataset.scriptInitialized = "true";
+
+      const paint = () => {
+        const rootPx =
+          parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+
+        for (const el of document.querySelectorAll<HTMLElement>("[data-computed]")) {
+          const px = readCssLengthPx(el.dataset.computed!);
+          el.textContent = px ? `${px.toFixed(1)}px · ${(px / rootPx).toFixed(3)}rem` : "—";
+        }
+
+        for (const el of document.querySelectorAll<HTMLElement>("[data-ratio-of]")) {
+          const a = readCssLengthPx(el.dataset.ratioOf!);
+          const b = readCssLengthPx(el.dataset.ratioTo!);
+          el.textContent = b ? `×${(a / b).toFixed(4)}` : "—";
+        }
+
+        const gutter = readCssLengthPx("--site--gutter");
+        const margin = readCssLengthPx("--site--margin");
+
+        /* --site--column-count is a calc() over the responsive flags, so
+           getPropertyValue would hand back the literal expression. Count the
+           grid's resolved tracks instead — that is the real answer anyway. */
+        const grid = document.querySelector(".grid_cells_wrap");
+        const count = grid
+          ? String(getComputedStyle(grid).gridTemplateColumns.split(/\s+/).filter(Boolean).length)
+          : "—";
+
+        const specified = getComputedStyle(document.documentElement)
+          .getPropertyValue("--max-width--main")
+          .trim();
+        const unlocked = specified === "100vw" || specified === "100%";
+        const lock = readCssLengthPx("--max-width--main");
+        const containerWidth = grid ? grid.getBoundingClientRect().width : 0;
+        const columnWidth = readCssLengthPx("--site--column-width");
+
+        const metrics: Record<string, string> = {
+          count,
+          gutter: `${gutter.toFixed(1)}px`,
+          margin: `${margin.toFixed(1)}px`,
+          ratio: gutter ? (margin / gutter).toFixed(3) : "—",
+          lock: unlocked ? "unlocked" : `${(lock / rootPx).toFixed(0)}rem`,
+          /* Locked once the container has stopped growing with the viewport. */
+          container: `${containerWidth.toFixed(0)}px ${
+            !unlocked && containerWidth >= lock - 0.5 ? "· locked" : "· fluid"
+          }`,
+          proportion: columnWidth ? `${((gutter / columnWidth) * 100).toFixed(1)}%` : "—",
+        };
+
+        for (const [key, value] of Object.entries(metrics)) {
+          const el = document.querySelector(`[data-metric="${key}"]`);
+          if (el) el.textContent = value;
+        }
+      };
+
+      paintMetrics = paint;
+
+      /* Paint once up front — ResizeObserver's initial delivery waits on a
+         rendering frame, which never arrives in a hidden or background tab, so
+         relying on it alone can leave the readout blank. Then observe for
+         updates: RO catches layout changes that fire no resize event at all
+         (zoom, a root font-size change, devtools viewport overrides). */
+      paint();
+      new ResizeObserver(paint).observe(document.documentElement);
+    });
+
+    document.querySelectorAll<HTMLElement>(".grid_lock_wrap").forEach((component) => {
+      if (component.dataset.scriptInitialized) return;
+      component.dataset.scriptInitialized = "true";
+
+      const toggle = component.querySelector<HTMLInputElement>("[data-container-lock]");
+      const widthInput = component.querySelector<HTMLInputElement>("[data-container-width]");
+      const applyButton = component.querySelector<HTMLButtonElement>("[data-container-apply]");
+      const resetButton = component.querySelector<HTMLButtonElement>("[data-container-reset]");
+      if (!toggle || !widthInput || !applyButton || !resetButton) return;
+
+      const syncUi = (settings: ReturnType<typeof readContainerLockSettings>) => {
+        toggle.checked = settings.locked;
+        widthInput.value = String(settings.widthRem);
+        widthInput.disabled = !settings.locked;
+        applyButton.disabled = !settings.locked;
+      };
+
+      const commit = (settings: ReturnType<typeof readContainerLockSettings>) => {
+        applyContainerLockSettings(settings);
+        syncUi(settings);
+        void persist(
+          { container: settings },
+          () => writeContainerLockSettings(settings),
+          () => clearContainerLockStorage(),
+        );
+      };
+
+      const readWidth = () => {
+        const parsed = parseFloat(widthInput.value);
+        if (!Number.isFinite(parsed) || parsed <= 0) return DEFAULT_CONTAINER_WIDTH_REM;
+        return Math.min(200, Math.max(20, parsed));
+      };
+
+      syncUi(readContainerLockSettings());
+
+      toggle.addEventListener("change", () => {
+        commit({ locked: toggle.checked, widthRem: readWidth() });
+      });
+
+      applyButton.addEventListener("click", () => {
+        commit({ locked: true, widthRem: readWidth() });
+      });
+
+      widthInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          commit({ locked: true, widthRem: readWidth() });
+        }
+      });
+
+      resetButton.addEventListener("click", () => {
+        const settings = { locked: true, widthRem: DEFAULT_CONTAINER_WIDTH_REM };
+        applyContainerLockSettings(settings);
+        syncUi(settings);
+        void persist(
+          { container: settings },
+          () => {
+            clearContainerLockOverride();
+            applyContainerLockSettings(settings);
+          },
+          () => clearContainerLockStorage(),
+        );
+      });
+    });
+
+    document.querySelectorAll<HTMLElement>(".colour_swatches_wrap").forEach((component) => {
+      if (component.dataset.scriptInitialized) return;
+      component.dataset.scriptInitialized = "true";
+
+      const inputs = component.querySelectorAll<HTMLInputElement>("[data-swatch]");
+      const hexInputs = component.querySelectorAll<HTMLInputElement>("[data-swatch-hex]");
+      const resetButton = document.querySelector<HTMLButtonElement>("[data-swatch-reset]");
+      const extrasRoot = document.querySelector<HTMLElement>("[data-swatch-extras]");
+      const extrasTemplate = document.querySelector<HTMLElement>(
+        ".colour_extras_hidden .colour_swatch_wrap.is-extra",
+      );
+      const addName = document.querySelector<HTMLInputElement>("[data-swatch-add-name]");
+      const addPicker = document.querySelector<HTMLInputElement>("[data-swatch-add-picker]");
+      const addHex = document.querySelector<HTMLInputElement>("[data-swatch-add-hex]");
+      const addButton = document.querySelector<HTMLButtonElement>("[data-swatch-add]");
+      const addStatus = document.querySelector<HTMLElement>("[data-swatch-add-status]");
+      if (!inputs.length) return;
+
+      const syncUi = (settings: ReturnType<typeof readSwatchSettings>) => {
+        for (const input of inputs) {
+          const key = input.dataset.swatch as SwatchKey | undefined;
+          if (!key || !SWATCH_KEYS.includes(key)) continue;
+          input.value = settings[key];
+        }
+        for (const input of hexInputs) {
+          const key = input.dataset.swatchHex as SwatchKey | undefined;
+          if (!key || !SWATCH_KEYS.includes(key)) continue;
+          input.value = settings[key];
+        }
+      };
+
+      const readFromInputs = () => {
+        const settings = { ...DEFAULT_SWATCHES };
+        for (const input of inputs) {
+          const key = input.dataset.swatch as SwatchKey | undefined;
+          if (!key || !SWATCH_KEYS.includes(key)) continue;
+          settings[key] = input.value;
+        }
+        return settings;
+      };
+
+      const persistExtras = (extras: ReturnType<typeof readExtraSwatches>) => {
+        applyExtraSwatches(extras);
+        void persist(
+          { extraSwatches: extras },
+          () => writeExtraSwatches(extras),
+          () => clearExtraSwatchStorage(),
+        );
+      };
+
+      const renderExtras = () => {
+        if (!extrasRoot || !extrasTemplate) return;
+        extrasRoot.replaceChildren();
+        for (const swatch of listExtraSwatches()) {
+          const node = extrasTemplate.cloneNode(true) as HTMLElement;
+          const input = node.querySelector<HTMLInputElement>("[data-extra-swatch]");
+          const hexInput = node.querySelector<HTMLInputElement>("[data-extra-swatch-hex]");
+          const chip = node.querySelector<HTMLElement>(".colour_swatch.is-extra");
+          const caption = node.querySelector<HTMLElement>(".colour_swatch_caption");
+          const removeButton = node.querySelector<HTMLButtonElement>("[data-extra-remove]");
+          if (!input || !chip || !caption || !removeButton) continue;
+
+          input.value = swatch.hex;
+          if (hexInput) hexInput.value = swatch.hex;
+          input.dataset.extraSwatch = swatch.slug;
+          chip.style.setProperty("background-color", `var(${swatch.token})`);
+          caption.textContent = swatch.token;
+          removeButton.dataset.extraRemove = swatch.slug;
+
+          const commitExtra = (hex: string) => {
+            const colour = normalizeHex(hex, swatch.hex);
+            input.value = colour;
+            if (hexInput) hexInput.value = colour;
+            const extras = readExtraSwatches();
+            extras[swatch.slug] = colour;
+            writeExtraSwatches(extras);
+            persistExtras(extras);
+          };
+
+          input.addEventListener("input", () => commitExtra(input.value));
+          hexInput?.addEventListener("change", () => commitExtra(hexInput.value));
+          hexInput?.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              commitExtra(hexInput.value);
+            }
+          });
+
+          removeButton.addEventListener("click", () => {
+            removeSwatch(swatch.slug);
+            persistExtras(readExtraSwatches());
+            renderExtras();
+          });
+
+          extrasRoot.appendChild(node);
+        }
+      };
+
+      const commit = (settings: ReturnType<typeof readSwatchSettings>) => {
+        applySwatchSettings(settings);
+        syncUi(settings);
+        void persist(
+          { swatches: settings },
+          () => writeSwatchSettings(settings),
+          () => clearSwatchStorage(),
+        );
+      };
+
+      const initial = readSwatchSettings();
+      applySwatchSettings(initial);
+      syncUi(initial);
+
+      const initialExtras = readExtraSwatches();
+      applyExtraSwatches(initialExtras);
+      renderExtras();
+
+      for (const input of inputs) {
+        input.addEventListener("input", () => {
+          commit(readFromInputs());
+        });
+      }
+
+      for (const hexInput of hexInputs) {
+        const applyHex = () => {
+          const key = hexInput.dataset.swatchHex as SwatchKey | undefined;
+          if (!key || !SWATCH_KEYS.includes(key)) return;
+          const settings = readFromInputs();
+          settings[key] = normalizeHex(hexInput.value, settings[key]);
+          commit(settings);
+        };
+        hexInput.addEventListener("change", applyHex);
+        hexInput.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            applyHex();
+          }
+        });
+      }
+
+      const syncAddColour = (hex: string) => {
+        const colour = normalizeHex(hex, "#e36a5c");
+        if (addPicker) addPicker.value = colour;
+        if (addHex) addHex.value = colour;
+      };
+
+      addPicker?.addEventListener("input", () => syncAddColour(addPicker.value));
+      addHex?.addEventListener("change", () => syncAddColour(addHex.value));
+      addHex?.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          syncAddColour(addHex.value);
+        }
+      });
+
+      addButton?.addEventListener("click", () => {
+        const name = addName?.value ?? "";
+        const hex = addHex?.value ?? addPicker?.value ?? "#e36a5c";
+        const created = addSwatch(name, hex);
+        if (!created) {
+          if (addStatus) {
+            addStatus.textContent =
+              "Use a short name (a-z, 0-9, hyphen) that is not already reserved.";
+          }
+          return;
+        }
+        if (addName) addName.value = "";
+        if (addStatus) addStatus.textContent = `Added ${created.token}`;
+        persistExtras(readExtraSwatches());
+        renderExtras();
+      });
+
+      resetButton?.addEventListener("click", () => {
+        const settings = { ...DEFAULT_SWATCHES };
+        applySwatchSettings(settings);
+        syncUi(settings);
+        void persist(
+          { swatches: settings },
+          () => {
+            clearSwatchOverride();
+            applySwatchSettings(settings);
+          },
+          () => clearSwatchStorage(),
+        );
+      });
+    });
+
+    document.querySelectorAll<HTMLElement>(".type_specimen_wrap").forEach((component) => {
+      if (component.dataset.fontScriptInitialized) return;
+      component.dataset.fontScriptInitialized = "true";
+
+      const fontSelects = component.querySelectorAll<HTMLSelectElement>("[data-text-style-font]");
+      const wrapSelects = component.querySelectorAll<HTMLSelectElement>("[data-text-style-wrap]");
+      const transformSelects = component.querySelectorAll<HTMLSelectElement>(
+        "[data-text-style-transform]",
+      );
+      const alignSelects = component.querySelectorAll<HTMLSelectElement>("[data-text-style-align]");
+      const weightSelects = component.querySelectorAll<HTMLSelectElement>("[data-text-style-weight]");
+      const resetButton = document.querySelector<HTMLButtonElement>("[data-text-style-font-reset]");
+      if (!fontSelects.length) return;
+
+      const syncFontUi = (settings: ReturnType<typeof readTextStyleFontSettings>) => {
+        for (const select of fontSelects) {
+          const key = select.dataset.textStyleFont as TextStyleKey | undefined;
+          if (!key || !TEXT_STYLE_KEYS.includes(key)) continue;
+          select.value = settings[key];
+        }
+      };
+
+      const syncOptionUi = (settings: TextStyleOptions) => {
+        for (const select of wrapSelects) {
+          const key = select.dataset.textStyleWrap as TextStyleKey | undefined;
+          if (!key || !TEXT_STYLE_KEYS.includes(key)) continue;
+          select.value = settings.wrap[key];
+        }
+        for (const select of transformSelects) {
+          const key = select.dataset.textStyleTransform as TextStyleKey | undefined;
+          if (!key || !TEXT_STYLE_KEYS.includes(key)) continue;
+          select.value = settings.transform[key];
+        }
+        for (const select of alignSelects) {
+          const key = select.dataset.textStyleAlign as TextStyleKey | undefined;
+          if (!key || !TEXT_STYLE_KEYS.includes(key)) continue;
+          select.value = settings.align[key];
+        }
+        for (const select of weightSelects) {
+          const key = select.dataset.textStyleWeight as TextStyleKey | undefined;
+          if (!key || !TEXT_STYLE_KEYS.includes(key)) continue;
+          select.value = settings.weight[key];
+        }
+      };
+
+      const readFonts = () => {
+        const settings = { ...DEFAULT_TEXT_STYLE_FONTS };
+        for (const select of fontSelects) {
+          const key = select.dataset.textStyleFont as TextStyleKey | undefined;
+          if (!key || !TEXT_STYLE_KEYS.includes(key)) continue;
+          if (isFontRole(select.value)) settings[key] = select.value;
+        }
+        return settings;
+      };
+
+      const readOptions = (): TextStyleOptions => {
+        const settings: TextStyleOptions = {
+          wrap: { ...DEFAULT_TEXT_STYLE_OPTIONS.wrap },
+          transform: { ...DEFAULT_TEXT_STYLE_OPTIONS.transform },
+          align: { ...DEFAULT_TEXT_STYLE_OPTIONS.align },
+          weight: { ...DEFAULT_TEXT_STYLE_OPTIONS.weight },
+        };
+        for (const select of wrapSelects) {
+          const key = select.dataset.textStyleWrap as TextStyleKey | undefined;
+          if (!key || !TEXT_STYLE_KEYS.includes(key)) continue;
+          if (isTextWrap(select.value)) settings.wrap[key] = select.value;
+        }
+        for (const select of transformSelects) {
+          const key = select.dataset.textStyleTransform as TextStyleKey | undefined;
+          if (!key || !TEXT_STYLE_KEYS.includes(key)) continue;
+          if (isTextTransform(select.value)) settings.transform[key] = select.value;
+        }
+        for (const select of alignSelects) {
+          const key = select.dataset.textStyleAlign as TextStyleKey | undefined;
+          if (!key || !TEXT_STYLE_KEYS.includes(key)) continue;
+          if (isTextAlign(select.value)) settings.align[key] = select.value;
+        }
+        for (const select of weightSelects) {
+          const key = select.dataset.textStyleWeight as TextStyleKey | undefined;
+          if (!key || !TEXT_STYLE_KEYS.includes(key)) continue;
+          if (isTextWeight(select.value)) settings.weight[key] = select.value;
+        }
+        return settings;
+      };
+
+      const commitFonts = (settings: ReturnType<typeof readTextStyleFontSettings>) => {
+        if (!readTypeStylesEnabled()) return;
+        applyTextStyleFontSettings(settings);
+        syncFontUi(settings);
+        void persist(
+          { textStyleFonts: settings },
+          () => writeTextStyleFontSettings(settings),
+          () => clearTextStyleFontStorage(),
+        );
+      };
+
+      const commitOptions = (settings: TextStyleOptions) => {
+        if (!readTypeStylesEnabled()) return;
+        applyTextStyleOptionSettings(settings);
+        syncOptionUi(settings);
+        void persist(
+          { textStyleOptions: settings },
+          () => writeTextStyleOptionSettings(settings),
+          () => clearTextStyleOptionStorage(),
+        );
+      };
+
+      const initialFonts = readTextStyleFontSettings();
+      const initialOptions = readTextStyleOptionSettings();
+      syncFontUi(initialFonts);
+      syncOptionUi(initialOptions);
+      if (readTypeStylesEnabled()) {
+        applyTextStyleFontSettings(initialFonts);
+        applyTextStyleOptionSettings(initialOptions);
+      }
+
+      for (const select of fontSelects) {
+        select.addEventListener("change", () => {
+          commitFonts(readFonts());
+        });
+      }
+
+      for (const select of [
+        ...wrapSelects,
+        ...transformSelects,
+        ...alignSelects,
+        ...weightSelects,
+      ]) {
+        select.addEventListener("change", () => {
+          commitOptions(readOptions());
+        });
+      }
+
+      resetButton?.addEventListener("click", () => {
+        if (!readTypeStylesEnabled()) return;
+        const fonts = { ...DEFAULT_TEXT_STYLE_FONTS };
+        const options: TextStyleOptions = {
+          wrap: { ...DEFAULT_TEXT_STYLE_OPTIONS.wrap },
+          transform: { ...DEFAULT_TEXT_STYLE_OPTIONS.transform },
+          align: { ...DEFAULT_TEXT_STYLE_OPTIONS.align },
+          weight: { ...DEFAULT_TEXT_STYLE_OPTIONS.weight },
+        };
+        applyTextStyleFontSettings(fonts);
+        applyTextStyleOptionSettings(options);
+        syncFontUi(fonts);
+        syncOptionUi(options);
+        void persist(
+          { textStyleFonts: fonts, textStyleOptions: options },
+          () => {
+            clearTextStyleFontOverride();
+            clearTextStyleOptionOverride();
+            applyTextStyleFontSettings(fonts);
+            applyTextStyleOptionSettings(options);
+          },
+          () => {
+            clearTextStyleFontStorage();
+            clearTextStyleOptionStorage();
+          },
+        );
+      });
+    });
+
+    const fillFontSelects = (catalog: FontCatalogEntry[]) => {
+      const selects = document.querySelectorAll<HTMLSelectElement>("[data-font-family]");
+      for (const select of selects) {
+        const current = select.value;
+        select.replaceChildren();
+        for (const entry of catalog) {
+          const option = document.createElement("option");
+          option.value = entry.stack;
+          option.textContent =
+            entry.source === "typekit" ? `${entry.family} (Typekit)` : entry.family;
+          select.appendChild(option);
+        }
+        const match = catalog.find((entry) => entry.stack === current);
+        select.value = match ? match.stack : NEXUS_FONT_STACK;
+      }
+    };
+
+    const syncFamilySamples = (settings: ReturnType<typeof readFontFamilySettings>) => {
+      for (const role of FONT_ROLES) {
+        const sample = document.querySelector<HTMLElement>(`[data-font-family-sample="${role}"]`);
+        if (!sample) continue;
+        sample.style.fontFamily = settings[role];
+        const label = settings[role].split(",")[0]?.trim() || "Arial";
+        sample.textContent = role === "tertiary" ? `${label} 0123456789` : label;
+      }
+    };
+
+    const setTypeStylesControlsDisabled = (disabled: boolean) => {
+      document.querySelectorAll<HTMLSelectElement>(
+        "[data-text-style-font], [data-text-style-wrap], [data-text-style-transform], [data-text-style-align], [data-text-style-weight]",
+      ).forEach((el) => {
+        el.disabled = disabled;
+      });
+      const reset = document.querySelector<HTMLButtonElement>("[data-text-style-font-reset]");
+      if (reset) reset.disabled = disabled;
+      document.querySelectorAll<HTMLElement>(".type_specimen_wrap").forEach((wrap) => {
+        wrap.classList.toggle("is-disabled", disabled);
+      });
+    };
+
+    const syncTypeStylesToggle = (enabled: boolean) => {
+      const button = document.querySelector<HTMLButtonElement>("[data-type-styles-toggle]");
+      if (button) button.textContent = enabled ? "Type styles: on" : "Type styles: off";
+      setTypeStylesControlsDisabled(!enabled);
+    };
+
+    document.querySelectorAll<HTMLElement>("[data-type-styles-toggle]").forEach((button) => {
+      if (!(button instanceof HTMLButtonElement)) return;
+      if (button.dataset.scriptInitialized) return;
+      button.dataset.scriptInitialized = "true";
+
+      const applyEnabled = (enabled: boolean) => {
+        applyTypeStylesEnabled(enabled);
+        syncTypeStylesToggle(enabled);
+        if (enabled) {
+          const fonts = readTextStyleFontSettings();
+          const options = readTextStyleOptionSettings();
+          applyTextStyleFontSettings(fonts);
+          applyTextStyleOptionSettings(options);
+        }
+        void persist(
+          { typeStylesEnabled: enabled },
+          () => writeTypeStylesEnabled(enabled),
+          () => clearTypeStylesEnabledStorage(),
+        );
+      };
+
+      const initialEnabled = readTypeStylesEnabled();
+      applyTypeStylesEnabled(initialEnabled);
+      syncTypeStylesToggle(initialEnabled);
+      if (initialEnabled) {
+        applyTextStyleFontSettings(readTextStyleFontSettings());
+        applyTextStyleOptionSettings(readTextStyleOptionSettings());
+      }
+
+      button.addEventListener("click", () => {
+        applyEnabled(!readTypeStylesEnabled());
+      });
+    });
+
+    document.querySelectorAll<HTMLElement>(".type_typekit_wrap").forEach((component) => {
+      if (component.dataset.scriptInitialized) return;
+      component.dataset.scriptInitialized = "true";
+
+      const input = component.querySelector<HTMLInputElement>("[data-typekit-kit-id]");
+      const addButton = component.querySelector<HTMLButtonElement>("[data-typekit-add]");
+      const clearButton = component.querySelector<HTMLButtonElement>("[data-typekit-clear]");
+      const status = component.querySelector<HTMLElement>("[data-typekit-status]");
+      if (!input) return;
+
+      const setStatus = (message: string) => {
+        if (status) status.textContent = message;
+      };
+
+      const initialKit = readTypekitKitId();
+      if (initialKit) {
+        input.value = initialKit;
+        ensureTypekitLink(initialKit);
+      }
+      fillFontSelects(readFontCatalog());
+
+      addButton?.addEventListener("click", async () => {
+        const kitId = input.value.trim();
+        setStatus("Loading kit…");
+        try {
+          const families = await fetchTypekitFamilies(kitId);
+          if (!families.length) {
+            setStatus("Kit loaded but no @font-face families were found.");
+            return;
+          }
+          ensureTypekitLink(kitId);
+          writeTypekitKitId(kitId);
+          const catalog = mergeFontCatalog(DEFAULT_FONT_CATALOG, families);
+          writeFontCatalog(catalog);
+          fillFontSelects(catalog);
+          setStatus(`Added ${families.length} face(s): ${families.join(", ")}`);
+          void persist(
+            { typekitKitId: kitId },
+            () => writeTypekitKitId(kitId),
+            () => {},
+          );
+        } catch (error) {
+          setStatus(error instanceof Error ? error.message : String(error));
+        }
+      });
+
+      clearButton?.addEventListener("click", () => {
+        input.value = "";
+        ensureTypekitLink("");
+        clearTypekitKitId();
+        clearFontCatalogStorage();
+        fillFontSelects(DEFAULT_FONT_CATALOG);
+        setStatus("Typekit cleared — catalog reset to Arial.");
+        void persist(
+          { typekitKitId: "" },
+          () => clearTypekitKitId(),
+          () => {},
+        );
+      });
+    });
+
+    document.querySelectorAll<HTMLElement>(".type_families_wrap").forEach((component) => {
+      if (component.dataset.scriptInitialized) return;
+      component.dataset.scriptInitialized = "true";
+
+      const selects = component.querySelectorAll<HTMLSelectElement>("[data-font-family]");
+      const applyButton = document.querySelector<HTMLButtonElement>("[data-font-family-apply]");
+      const resetButton = document.querySelector<HTMLButtonElement>("[data-font-family-reset]");
+      if (!selects.length) return;
+
+      fillFontSelects(readFontCatalog());
+
+      const syncUi = (settings: ReturnType<typeof readFontFamilySettings>) => {
+        for (const select of selects) {
+          const role = select.dataset.fontFamily as FontRole | undefined;
+          if (!role || !FONT_ROLES.includes(role)) continue;
+          const stack = settings[role];
+          if (![...select.options].some((opt) => opt.value === stack)) {
+            const option = document.createElement("option");
+            option.value = stack;
+            option.textContent = stack.split(",")[0]?.trim() || stack;
+            select.appendChild(option);
+          }
+          select.value = stack;
+        }
+        syncFamilySamples(settings);
+      };
+
+      const readFromSelects = () => {
+        const settings = { ...DEFAULT_FONT_FAMILIES };
+        for (const select of selects) {
+          const role = select.dataset.fontFamily as FontRole | undefined;
+          if (!role || !FONT_ROLES.includes(role)) continue;
+          settings[role] = select.value.trim() || NEXUS_FONT_STACK;
+        }
+        return settings;
+      };
+
+      const commit = (settings: ReturnType<typeof readFontFamilySettings>) => {
+        applyFontFamilySettings(settings);
+        syncUi(settings);
+        void persist(
+          { fontFamilies: settings },
+          () => writeFontFamilySettings(settings),
+          () => clearFontFamilyStorage(),
+        );
+      };
+
+      const initial = readFontFamilySettings();
+      applyFontFamilySettings(initial);
+      syncUi(initial);
+
+      applyButton?.addEventListener("click", () => {
+        commit(readFromSelects());
+      });
+
+      for (const select of selects) {
+        select.addEventListener("change", () => {
+          const settings = readFromSelects();
+          applyFontFamilySettings(settings);
+          syncFamilySamples(settings);
+          void persist(
+            { fontFamilies: settings },
+            () => writeFontFamilySettings(settings),
+            () => clearFontFamilyStorage(),
+          );
+        });
+      }
+
+      resetButton?.addEventListener("click", () => {
+        const settings = { ...DEFAULT_FONT_FAMILIES };
+        applyFontFamilySettings(settings);
+        syncUi(settings);
+        void persist(
+          { fontFamilies: settings },
+          () => {
+            clearFontFamilyOverride();
+            applyFontFamilySettings(settings);
+          },
+          () => clearFontFamilyStorage(),
+        );
+      });
+    });
+
+    document.querySelectorAll<HTMLElement>(".button_controls_wrap").forEach((component) => {
+      if (component.dataset.scriptInitialized) return;
+      component.dataset.scriptInitialized = "true";
+
+      const selects = component.querySelectorAll<HTMLSelectElement>("[data-button-style]");
+      const radiusSlider = component.querySelector<HTMLInputElement>("[data-button-radius-slider]");
+      const radiusPill = component.querySelector<HTMLInputElement>("[data-button-radius-pill]");
+      const radiusValue = component.querySelector<HTMLElement>("[data-button-radius-value]");
+      const resetButton = document.querySelector<HTMLButtonElement>("[data-button-style-reset]");
+      if (!selects.length) return;
+
+      const syncRadiusUi = (radius: string) => {
+        const pill = isPillRadius(radius);
+        if (radiusPill) radiusPill.checked = pill;
+        if (radiusSlider) {
+          radiusSlider.disabled = pill;
+          const rem = radiusToRem(radius);
+          radiusSlider.value = String(rem ?? 1);
+        }
+        if (radiusValue) radiusValue.textContent = pill ? "Pill" : radius;
+      };
+
+      const syncUi = (settings: ReturnType<typeof readButtonStyleSettings>) => {
+        for (const select of selects) {
+          const key = select.dataset.buttonStyle as ButtonStyleKey | undefined;
+          if (!key || !BUTTON_STYLE_KEYS.includes(key)) continue;
+          select.value = settings[key];
+        }
+        syncRadiusUi(settings.radius);
+      };
+
+      const readFromControls = () => {
+        const settings = { ...DEFAULT_BUTTON_STYLES };
+        for (const select of selects) {
+          const key = select.dataset.buttonStyle as ButtonStyleKey | undefined;
+          if (!key || !BUTTON_STYLE_KEYS.includes(key)) continue;
+          settings[key] = select.value;
+        }
+        if (radiusPill?.checked) {
+          settings.radius = "100vw";
+        } else if (radiusSlider) {
+          settings.radius = remToRadius(Number(radiusSlider.value));
+        }
+        return settings;
+      };
+
+      const commit = (settings: ReturnType<typeof readButtonStyleSettings>) => {
+        applyButtonStyleSettings(settings);
+        syncUi(settings);
+        void persist(
+          { buttonStyles: settings },
+          () => writeButtonStyleSettings(settings),
+          () => clearButtonStyleStorage(),
+        );
+      };
+
+      const initial = readButtonStyleSettings();
+      applyButtonStyleSettings(initial);
+      syncUi(initial);
+
+      for (const select of selects) {
+        select.addEventListener("change", () => {
+          commit(readFromControls());
+        });
+      }
+
+      radiusSlider?.addEventListener("input", () => {
+        if (radiusPill) radiusPill.checked = false;
+        commit(readFromControls());
+      });
+
+      radiusPill?.addEventListener("change", () => {
+        commit(readFromControls());
+      });
+
+      resetButton?.addEventListener("click", () => {
+        const settings = { ...DEFAULT_BUTTON_STYLES };
+        applyButtonStyleSettings(settings);
+        syncUi(settings);
+        void persist(
+          { buttonStyles: settings },
+          () => {
+            clearButtonStyleOverride();
+            applyButtonStyleSettings(settings);
+          },
+          () => clearButtonStyleStorage(),
+        );
+      });
+    });
+
+    const wireRungSelect = (
+      select: HTMLSelectElement | null,
+      resetButton: HTMLButtonElement | null,
+      key: "gutter" | "padding",
+    ) => {
+      if (!select) return;
+
+      const readCurrent = () => readSpacingRungSettings();
+
+      const syncUi = (settings: ReturnType<typeof readSpacingRungSettings>) => {
+        select.value = String(settings[key]);
+      };
+
+      const commit = (settings: ReturnType<typeof readSpacingRungSettings>) => {
+        applySpacingRungSettings(settings);
+        syncUi(settings);
+        void persist(
+          { spacingRungs: settings },
+          () => writeSpacingRungSettings(settings),
+          () => clearSpacingRungStorage(),
+        );
+      };
+
+      const initial = readCurrent();
+      applySpacingRungSettings(initial);
+      syncUi(initial);
+
+      select.addEventListener("change", () => {
+        const next = { ...readCurrent(), [key]: Number(select.value) };
+        commit(next);
+      });
+
+      resetButton?.addEventListener("click", () => {
+        const settings = {
+          ...readCurrent(),
+          [key]: DEFAULT_SPACING_RUNGS[key],
+        };
+        applySpacingRungSettings(settings);
+        syncUi(settings);
+        void persist(
+          { spacingRungs: settings },
+          () => writeSpacingRungSettings(settings),
+          () => clearSpacingRungStorage(),
+        );
+      });
+    };
+
+    wireRungSelect(
+      document.querySelector<HTMLSelectElement>("[data-gutter-rung]"),
+      document.querySelector<HTMLButtonElement>("[data-gutter-rung-reset]"),
+      "gutter",
+    );
+    wireRungSelect(
+      document.querySelector<HTMLSelectElement>("[data-padding-rung]"),
+      document.querySelector<HTMLButtonElement>("[data-padding-rung-reset]"),
+      "padding",
+    );
+
+    /* Bundle flags. Unlike every other control on this page these have no
+       runtime effect to apply — they decide what the *next build* contains, so
+       there is no localStorage fallback worth offering: without the dev server
+       there is nothing a browser can do about the bundle. Say so instead. */
+    const featureStatus = document.querySelector<HTMLElement>("[data-feature-status]");
+
+    for (const key of FEATURE_KEYS) {
+      const toggle = document.querySelector<HTMLInputElement>(`[data-feature="${key}"]`);
+      if (!toggle) continue;
+
+      toggle.addEventListener("change", () => {
+        const enabled = toggle.checked;
+        const label = FEATURE_META[key].label;
+        toggle.disabled = true;
+
+        void saveTokensToCss({ features: { [key]: enabled } }).then((saved) => {
+          toggle.disabled = false;
+          if (saved) {
+            if (featureStatus) {
+              featureStatus.textContent =
+                `${label} ${enabled ? "on" : "off"} — features.json updated, reloading…`;
+            }
+            /* features.json is a build input, so the page has to come back from
+               the server to reflect it. */
+            window.location.reload();
+            return;
+          }
+          toggle.checked = !enabled;
+          if (featureStatus) {
+            featureStatus.textContent =
+              "Dev server unavailable — bundle flags can only change during astro dev";
+          }
+        });
+      });
+    }
+  });
+</script>
+<style>
+  /* Specimen chrome only. No u-* redefinitions, no media queries, no px. */
+
+  .masthead_content {
+    width: 100%;
+  }
+
+  .masthead_title {
+    max-width: 12ch;
+    margin-bottom: var(--_text-style---margin-bottom);
+  }
+
+  .masthead_title_accent {
+    color: var(--_theme---accent);
+  }
+
+  .masthead_text {
+    max-width: 46ch;
+    margin-bottom: var(--_spacing---space--8);
+  }
+
+  .ladder_title,
+  .grid_title,
+  .type_title,
+  .colour_title,
+  .button_title,
+  .spacing_title {
+    padding-bottom: var(--_spacing---space--5);
+    border-bottom: var(--border-width--main) solid var(--_theme---border);
+  }
+
+  .grid_subtitle,
+  .type_subtitle,
+  .colour_subtitle,
+  .spacing_subtitle {
+    margin-top: var(--_spacing---space--6);
+  }
+
+  .grid_text,
+  .type_text,
+  .colour_text {
+    max-width: 62ch;
+  }
+
+  /* Ladder */
+  .ladder_row_wrap {
+    display: grid;
+    flex-direction: column;
+    grid-template-columns: 7rem 4rem minmax(0, 1fr) 5rem;
+    align-items: center;
+    gap: var(--_spacing---space--5);
+    padding-top: var(--_spacing---space--3);
+    padding-bottom: var(--_spacing---space--3);
+    border-bottom: var(--border-width--main) solid var(--_theme---border);
+    width: 100%;
+  }
+
+  .ladder_note {
+    text-align: right;
+  }
+
+  .ladder_bar {
+    display: block;
+    height: var(--_spacing---space--1);
+    background-color: var(--_theme---text);
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .ladder_bar.is-0 { width: calc(var(--phi-0) * 1rem); }
+  .ladder_bar.is-1 { width: calc(var(--phi-1) * 1rem); }
+  .ladder_bar.is-2 { width: calc(var(--phi-2) * 1rem); }
+  .ladder_bar.is-3 { width: calc(var(--phi-3) * 1rem); }
+  .ladder_bar.is-4 { width: calc(var(--phi-4) * 1rem); }
+  .ladder_bar.is-5 { width: calc(var(--phi-5) * 1rem); }
+  .ladder_bar.is-6 { width: calc(var(--phi-6) * 1rem); }
+  .ladder_bar.is-7 { width: calc(var(--phi-7) * 1rem); }
+  .ladder_bar.is-8 { width: calc(var(--phi-8) * 1rem); }
+  .ladder_bar.is-9 { width: calc(var(--phi-9) * 1rem); }
+  .ladder_bar.is-10 { width: calc(var(--phi-10) * 1rem); }
+  .ladder_bar.is-11 { width: calc(var(--phi-11) * 1rem); }
+
+  /* Grid */
+  .grid_band_smoke {
+    display: var(--flex-medium, flex);
+    flex-direction: var(--column-wide, row);
+    gap: var(--_spacing---space--3);
+    margin-bottom: var(--_spacing---space--4);
+  }
+
+  .grid_demo_wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  .grid_cell_wrap {
+    background-color: var(--_theme---background-2);
+    border-radius: var(--radius--small);
+    padding-top: var(--_spacing---space--6);
+    padding-bottom: var(--_spacing---space--6);
+    text-align: center;
+    width: 100%;
+  }
+
+  .grid_cell_wrap.is-9 { display: var(--none-medium, block); }
+  .grid_cell_wrap.is-5 { display: var(--none-small, block); }
+
+  .grid_metrics_wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--_spacing---space--8);
+    width: 100%;
+  }
+
+  .grid_metric_label {
+    margin-bottom: var(--_spacing---space--2);
+  }
+
+  .grid_span_wrap {
+    background-color: var(--_theme---background-2);
+    border-radius: var(--radius--small);
+    padding: var(--_spacing---space--4);
+    width: 100%;
+  }
+
+  .grid_lock_wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--_spacing---space--5);
+  }
+
+  .grid_lock_text {
+    max-width: 62ch;
+  }
+
+  .grid_lock_controls_wrap {
+    display: flex;
+    flex-direction: var(--column-small, row);
+    flex-wrap: wrap;
+    align-items: var(--start-small, end);
+    gap: var(--_spacing---space--6);
+    width: 100%;
+  }
+
+  .grid_lock_toggle_wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--_spacing---space--3);
+    cursor: pointer;
+  }
+
+  .grid_lock_toggle {
+    width: 1rem;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+    accent-color: var(--_theme---text);
+  }
+
+  .grid_lock_width_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_spacing---space--2);
+  }
+
+  .grid_lock_width_field_wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--_spacing---space--3);
+  }
+
+  .grid_lock_width {
+    width: 6rem;
+    font-size: 1rem;
+    font-family: var(--_typography---font--tertiary);
+    color: var(--_theme---text);
+    background-color: var(--_theme---background-2);
+    border: var(--border-width--main) solid var(--_theme---border);
+    border-radius: var(--radius--small);
+    padding: var(--_spacing---space--3) var(--_spacing---space--4);
+  }
+
+  .grid_lock_width:disabled {
+    color: color-mix(in hsl, currentColor 50%, transparent);
+  }
+
+  .grid_lock_actions {
+    margin-top: 0;
+  }
+
+  .grid_lock_button {
+    padding: var(--_spacing---space--3) var(--_spacing---space--5);
+    border-radius: var(--radius--round);
+    border-style: solid;
+    border-width: var(--border-width--main);
+    background-color: color-mix(in hsl, var(--_theme---button-primary--background-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--background) calc(100% * var(--_trigger---off)));
+    color: color-mix(in hsl, var(--_theme---button-primary--text-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--text) calc(100% * var(--_trigger---off)));
+    border-color: color-mix(in hsl, var(--_theme---button-primary--border-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--border) calc(100% * var(--_trigger---off)));
+    transition: all 300ms;
+  }
+
+  .grid_lock_button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .grid_lock_button_secondary {
+    padding: var(--_spacing---space--3) var(--_spacing---space--5);
+    border-radius: var(--radius--round);
+    border-style: solid;
+    border-width: var(--border-width--main);
+    background-color: color-mix(in hsl, var(--_theme---button-secondary--background-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--background) calc(100% * var(--_trigger---off)));
+    color: color-mix(in hsl, var(--_theme---button-secondary--text-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--text) calc(100% * var(--_trigger---off)));
+    border-color: color-mix(in hsl, var(--_theme---button-secondary--border-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--border) calc(100% * var(--_trigger---off)));
+    transition: all 300ms;
+  }
+
+  /* Type */
+  .type_row_wrap {
+    padding-top: var(--_spacing---space--8);
+    padding-bottom: var(--_spacing---space--8);
+    border-bottom: var(--border-width--main) solid var(--_theme---border);
+    width: 100%;
+  }
+
+  .type_meta_wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_spacing---space--5);
+    margin-bottom: var(--_spacing---space--5);
+  }
+
+  .type_ratio {
+    padding-left: var(--_spacing---space--3);
+    padding-right: var(--_spacing---space--3);
+    border: var(--border-width--main) solid var(--_theme---border);
+    border-radius: var(--radius--round);
+  }
+
+  .type_save_status:empty {
+    display: none;
+  }
+
+  .type_option_controls_wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--_spacing---space--3);
+  }
+
+  .type_font_wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--_spacing---space--1);
+  }
+
+  .type_font_label:not(.u-sr-only) {
+    font-size: var(--_typography---size--small);
+  }
+
+  .type_font_select {
+    font-size: 1rem;
+    font-family: var(--_typography---font--tertiary);
+    color: var(--_theme---text);
+    background-color: var(--_theme---background-2);
+    border: var(--border-width--main) solid var(--_theme---border);
+    border-radius: var(--radius--small);
+    padding: var(--_spacing---space--2) var(--_spacing---space--3);
+    cursor: pointer;
+  }
+
+  .type_font_actions {
+    margin-top: 0;
+  }
+
+  .type_font_button,
+  .type_font_button_secondary {
+    padding: var(--_spacing---space--3) var(--_spacing---space--5);
+    border-radius: var(--radius--round);
+    border-style: solid;
+    border-width: var(--border-width--main);
+    transition: all 300ms;
+  }
+
+  .type_font_button {
+    background-color: color-mix(in hsl, var(--_theme---button-primary--background-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--background) calc(100% * var(--_trigger---off)));
+    color: color-mix(in hsl, var(--_theme---button-primary--text-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--text) calc(100% * var(--_trigger---off)));
+    border-color: color-mix(in hsl, var(--_theme---button-primary--border-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--border) calc(100% * var(--_trigger---off)));
+  }
+
+  .type_font_button_secondary {
+    background-color: color-mix(in hsl, var(--_theme---button-secondary--background-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--background) calc(100% * var(--_trigger---off)));
+    color: color-mix(in hsl, var(--_theme---button-secondary--text-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--text) calc(100% * var(--_trigger---off)));
+    border-color: color-mix(in hsl, var(--_theme---button-secondary--border-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--border) calc(100% * var(--_trigger---off)));
+  }
+
+  .type_families_wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--_spacing---space--8);
+    width: 100%;
+  }
+
+  .type_family_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_spacing---space--3);
+    flex-grow: 1;
+    min-width: 16rem;
+  }
+
+  .type_master_wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--_spacing---space--3);
+    margin-bottom: var(--_spacing---space--5);
+  }
+
+  .type_master_hint {
+    max-width: 40rem;
+  }
+
+  .type_typekit_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_spacing---space--4);
+    margin-bottom: var(--_spacing---space--6);
+    max-width: 36rem;
+  }
+
+  .type_typekit_field_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_spacing---space--2);
+  }
+
+  .type_typekit_input,
+  .type_family_select {
+    font-family: var(--_typography---font--nexus);
+    font-size: var(--_typography---size--main);
+    color: var(--_theme---text);
+    background-color: var(--_theme---background-2);
+    border: var(--border-width--main) solid var(--_theme---border);
+    border-radius: var(--radius--small);
+    padding: var(--_spacing---space--3) var(--_spacing---space--4);
+    width: 100%;
+  }
+
+  .type_specimen_wrap.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .type_family_input {
+    width: 100%;
+    font-size: 1rem;
+    font-family: var(--_typography---font--tertiary);
+    color: var(--_theme---text);
+    background-color: var(--_theme---background-2);
+    border: var(--border-width--main) solid var(--_theme---border);
+    border-radius: var(--radius--small);
+    padding: var(--_spacing---space--3) var(--_spacing---space--4);
+  }
+
+  .type_family_sample.is-mono {
+    font-family: var(--_typography---font--tertiary);
+  }
+
+  /* Colour */
+  .colour_swatches_wrap,
+  .colour_ramp_wrap,
+  .colour_themes_wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--_spacing---space--6);
+    width: 100%;
+  }
+
+  .colour_swatch_control_wrap {
+    position: relative;
+    display: block;
+    width: 12rem;
+    margin-bottom: var(--_spacing---space--4);
+    cursor: pointer;
+  }
+
+  .colour_swatch_input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+  }
+
+  .colour_swatch {
+    width: 100%;
+    aspect-ratio: 1.618;
+    border-radius: var(--radius--small);
+    border: var(--border-width--main) solid var(--_theme---border);
+    padding: 0;
+  }
+
+  .colour_swatch.is-light { background-color: var(--swatch--light-100); }
+  .colour_swatch.is-dark { background-color: var(--swatch--dark-900); }
+  .colour_swatch.is-brand { background-color: var(--swatch--brand-500); }
+  .colour_swatch.is-accent { background-color: var(--swatch--accent); }
+  .colour_swatch.is-overscroll { background-color: var(--swatch--overscroll); }
+
+  .colour_swatch_hex {
+    display: block;
+    width: 12rem;
+    margin-top: var(--_spacing---space--2);
+    font-size: var(--_typography---size--small);
+    color: var(--_theme---text);
+    background-color: var(--_theme---background-2);
+    border: var(--border-width--main) solid var(--_theme---border);
+    border-radius: var(--radius--small);
+    padding: var(--_spacing---space--2) var(--_spacing---space--3);
+  }
+
+  .colour_add_colour_row {
+    display: flex;
+    align-items: center;
+    gap: var(--_spacing---space--3);
+  }
+
+  .colour_add_colour_row .colour_swatch_hex {
+    width: 8rem;
+    margin-top: 0;
+  }
+
+
+  .colour_edit_actions,
+  .colour_add_actions {
+    margin-top: 0;
+  }
+
+  .colour_edit_button,
+  .colour_edit_button_secondary,
+  .colour_extra_remove {
+    padding: var(--_spacing---space--3) var(--_spacing---space--5);
+    border-radius: var(--radius--round);
+    border-style: solid;
+    border-width: var(--border-width--main);
+    transition: all 300ms;
+  }
+
+  .colour_edit_button {
+    background-color: color-mix(in hsl, var(--_theme---button-primary--background-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--background) calc(100% * var(--_trigger---off)));
+    color: color-mix(in hsl, var(--_theme---button-primary--text-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--text) calc(100% * var(--_trigger---off)));
+    border-color: color-mix(in hsl, var(--_theme---button-primary--border-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--border) calc(100% * var(--_trigger---off)));
+  }
+
+  .colour_edit_button_secondary,
+  .colour_extra_remove {
+    background-color: color-mix(in hsl, var(--_theme---button-secondary--background-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--background) calc(100% * var(--_trigger---off)));
+    color: color-mix(in hsl, var(--_theme---button-secondary--text-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--text) calc(100% * var(--_trigger---off)));
+    border-color: color-mix(in hsl, var(--_theme---button-secondary--border-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--border) calc(100% * var(--_trigger---off)));
+  }
+
+  .colour_add_wrap {
+    display: flex;
+    flex-direction: var(--column-small, row);
+    flex-wrap: wrap;
+    align-items: var(--start-small, end);
+    gap: var(--_spacing---space--5);
+    width: 100%;
+  }
+
+  .colour_add_name_wrap,
+  .colour_add_colour_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_spacing---space--2);
+  }
+
+  .colour_add_name {
+    width: 12rem;
+    font-size: 1rem;
+    font-family: var(--_typography---font--tertiary);
+    color: var(--_theme---text);
+    background-color: var(--_theme---background-2);
+    border: var(--border-width--main) solid var(--_theme---border);
+    border-radius: var(--radius--small);
+    padding: var(--_spacing---space--3) var(--_spacing---space--4);
+  }
+
+  .colour_add_colour {
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border: var(--border-width--main) solid var(--_theme---border);
+    border-radius: var(--radius--small);
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  .colour_add_hint:empty {
+    display: none;
+  }
+
+  .colour_extras_wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--_spacing---space--6);
+    width: 100%;
+  }
+
+  .colour_extras_wrap:empty {
+    display: none;
+  }
+
+  .colour_swatch_wrap.is-extra {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_spacing---space--3);
+  }
+
+  .colour_ramp_chip {
+    width: 5rem;
+    aspect-ratio: 1.618;
+    border-radius: var(--radius--small);
+    margin-bottom: var(--_spacing---space--2);
+    padding: 0;
+  }
+
+  .colour_ramp_chip.is-brand.is-100 { background-color: var(--swatch--brand-100); }
+  .colour_ramp_chip.is-brand.is-200 { background-color: var(--swatch--brand-200); }
+  .colour_ramp_chip.is-brand.is-300 { background-color: var(--swatch--brand-300); }
+  .colour_ramp_chip.is-brand.is-400 { background-color: var(--swatch--brand-400); }
+  .colour_ramp_chip.is-brand.is-500 { background-color: var(--swatch--brand-500); }
+  .colour_ramp_chip.is-brand.is-600 { background-color: var(--swatch--brand-600); }
+  .colour_ramp_chip.is-brand.is-700 { background-color: var(--swatch--brand-700); }
+  .colour_ramp_chip.is-brand.is-800 { background-color: var(--swatch--brand-800); }
+  .colour_ramp_chip.is-brand.is-900 { background-color: var(--swatch--brand-900); }
+
+  .colour_ramp_chip.is-accent.is-100 { background-color: var(--swatch--accent-100); }
+  .colour_ramp_chip.is-accent.is-200 { background-color: var(--swatch--accent-200); }
+  .colour_ramp_chip.is-accent.is-300 { background-color: var(--swatch--accent-300); }
+  .colour_ramp_chip.is-accent.is-400 { background-color: var(--swatch--accent-400); }
+  .colour_ramp_chip.is-accent.is-500 { background-color: var(--swatch--accent-500); }
+  .colour_ramp_chip.is-accent.is-600 { background-color: var(--swatch--accent-600); }
+  .colour_ramp_chip.is-accent.is-700 { background-color: var(--swatch--accent-700); }
+  .colour_ramp_chip.is-accent.is-800 { background-color: var(--swatch--accent-800); }
+  .colour_ramp_chip.is-accent.is-900 { background-color: var(--swatch--accent-900); }
+
+  .colour_theme_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_spacing---space--5);
+    padding: var(--_spacing---space--7);
+    border-radius: var(--radius--main);
+    flex-grow: 1;
+  }
+
+  .colour_theme_accent_wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--_spacing---space--3);
+  }
+
+  .colour_theme_accent {
+    width: 2.5rem;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius--small);
+    background-color: var(--_theme---accent);
+    border: var(--border-width--main) solid var(--_theme---border);
+    padding: 0;
+  }
+
+  .colour_theme_actions {
+    margin-top: 0;
+  }
+
+  /* --_trigger---on is 0 at rest, so the *-hover value is the one that pairs
+     with it; the resting value pairs with --_trigger---off.
+     `on` still comes first, per the ordering rule. */
+  .colour_theme_button {
+    padding: var(--button--padding-block) var(--button--padding-inline);
+    border-radius: var(--button--radius);
+    border-style: solid;
+    border-width: var(--border-width--main);
+    background-color: color-mix(in hsl, var(--_theme---button-primary--background-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--background) calc(100% * var(--_trigger---off)));
+    color: color-mix(in hsl, var(--_theme---button-primary--text-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--text) calc(100% * var(--_trigger---off)));
+    border-color: color-mix(in hsl, var(--_theme---button-primary--border-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--border) calc(100% * var(--_trigger---off)));
+    font-family: var(--button--font-family);
+    transition: all 300ms;
+  }
+
+  .colour_theme_button_secondary {
+    padding: var(--button--padding-block) var(--button--padding-inline);
+    border-radius: var(--button--radius);
+    border-style: solid;
+    border-width: var(--border-width--main);
+    background-color: color-mix(in hsl, var(--_theme---button-secondary--background-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--background) calc(100% * var(--_trigger---off)));
+    color: color-mix(in hsl, var(--_theme---button-secondary--text-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--text) calc(100% * var(--_trigger---off)));
+    border-color: color-mix(in hsl, var(--_theme---button-secondary--border-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--border) calc(100% * var(--_trigger---off)));
+    font-family: var(--button--font-family);
+    transition: all 300ms;
+  }
+
+  .colour_theme_button_tertiary,
+  .button_specimen_tertiary {
+    padding: var(--button--padding-block) var(--button--padding-inline);
+    border-radius: 0;
+    border-style: solid;
+    border-width: var(--border-width--main);
+    border-color: transparent;
+    background-color: transparent;
+    color: color-mix(in hsl, var(--_theme---button-tertiary--text-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-tertiary--text) calc(100% * var(--_trigger---off)));
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: var(--border-width--main);
+    font-family: var(--button--font-family);
+    transition: all 300ms;
+  }
+
+  .colour_theme_button,
+  .button_specimen_primary {
+    font-family: var(--button--font-family);
+  }
+
+  .button_text {
+    max-width: 62ch;
+  }
+
+  .button_specimen_wrap {
+    width: 100%;
+  }
+
+  .button_specimen_actions {
+    margin-top: 0;
+  }
+
+  .button_specimen_primary {
+    padding: var(--button--padding-block) var(--button--padding-inline);
+    border-radius: var(--button--radius);
+    border-style: solid;
+    border-width: var(--border-width--main);
+    background-color: color-mix(in hsl, var(--_theme---button-primary--background-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--background) calc(100% * var(--_trigger---off)));
+    color: color-mix(in hsl, var(--_theme---button-primary--text-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--text) calc(100% * var(--_trigger---off)));
+    border-color: color-mix(in hsl, var(--_theme---button-primary--border-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-primary--border) calc(100% * var(--_trigger---off)));
+    transition: all 300ms;
+  }
+
+  .button_specimen_secondary {
+    padding: var(--button--padding-block) var(--button--padding-inline);
+    border-radius: var(--button--radius);
+    border-style: solid;
+    border-width: var(--border-width--main);
+    background-color: color-mix(in hsl, var(--_theme---button-secondary--background-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--background) calc(100% * var(--_trigger---off)));
+    color: color-mix(in hsl, var(--_theme---button-secondary--text-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--text) calc(100% * var(--_trigger---off)));
+    border-color: color-mix(in hsl, var(--_theme---button-secondary--border-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--border) calc(100% * var(--_trigger---off)));
+    font-family: var(--button--font-family);
+    transition: all 300ms;
+  }
+
+  .button_controls_wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--_spacing---space--5);
+    width: 100%;
+  }
+
+  .button_control_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_spacing---space--2);
+    min-width: 12rem;
+  }
+
+  .button_control_select {
+    font-size: 1rem;
+    font-family: var(--_typography---font--tertiary);
+    color: var(--_theme---text);
+    background-color: var(--_theme---background-2);
+    border: var(--border-width--main) solid var(--_theme---border);
+    border-radius: var(--radius--small);
+    padding: var(--_spacing---space--2) var(--_spacing---space--3);
+    cursor: pointer;
+  }
+
+  .button_control_wrap_radius {
+    min-width: 16rem;
+  }
+
+  .button_radius_row {
+    display: flex;
+    align-items: center;
+    gap: var(--_spacing---space--3);
+  }
+
+  .button_radius_slider {
+    flex: 1 1 auto;
+    min-width: 8rem;
+    accent-color: var(--_theme---accent);
+  }
+
+  .button_radius_value {
+    min-width: 4.5rem;
+    text-align: right;
+  }
+
+  .button_radius_pill_wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--_spacing---space--2);
+    cursor: pointer;
+  }
+
+  .button_actions {
+    margin-top: 0;
+  }
+
+  .button_actions_reset {
+    padding: var(--_spacing---space--3) var(--_spacing---space--5);
+    border-radius: var(--radius--round);
+    border-style: solid;
+    border-width: var(--border-width--main);
+    background-color: color-mix(in hsl, var(--_theme---button-secondary--background-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--background) calc(100% * var(--_trigger---off)));
+    color: color-mix(in hsl, var(--_theme---button-secondary--text-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--text) calc(100% * var(--_trigger---off)));
+    border-color: color-mix(in hsl, var(--_theme---button-secondary--border-hover) calc(100% * var(--_trigger---on)), var(--_theme---button-secondary--border) calc(100% * var(--_trigger---off)));
+    font-family: var(--button--font-family);
+    transition: all 300ms;
+  }
+
+  /* Bundle */
+  .bundle_list_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_spacing---space--5);
+    width: 100%;
+    margin-top: var(--_spacing---space--5);
+  }
+
+  .bundle_row_wrap {
+    display: flex;
+    flex-direction: var(--column-small, row);
+    align-items: var(--start-small, baseline);
+    gap: var(--_spacing---space--5);
+    padding-top: var(--_spacing---space--3);
+    border-top: 1px solid var(--_theme---border);
+    width: 100%;
+  }
+
+  .bundle_toggle_wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--_spacing---space--3);
+    flex-shrink: 0;
+    /* --unset-small drops the fixed label column once the row stacks. */
+    width: var(--unset-small, 14rem);
+    cursor: pointer;
+  }
+
+  .bundle_note {
+    flex-grow: 1;
+  }
+
+  .bundle_packages {
+    flex-shrink: 0;
+    max-width: 18rem;
+    word-break: break-word;
+  }
+
+  .bundle_status {
+    margin-top: var(--_spacing---space--5);
+  }
+
+  /* Spacing */
+  .spacing_row_wrap {
+    display: flex;
+    flex-direction: var(--column-small, row);
+    align-items: var(--start-small, center);
+    gap: var(--_spacing---space--5);
+    padding-top: var(--_spacing---space--2);
+    padding-bottom: var(--_spacing---space--2);
+    width: 100%;
+  }
+
+  .spacing_label {
+    flex-shrink: 0;
+    width: 14rem;
+  }
+
+  .spacing_bar {
+    display: block;
+    height: var(--_spacing---space--5);
+    background-color: var(--_theme---text);
+    border-radius: var(--radius--small);
+    padding: 0;
+  }
+
+  .spacing_bar.is-1 { width: var(--_spacing---space--1); }
+  .spacing_bar.is-2 { width: var(--_spacing---space--2); }
+  .spacing_bar.is-3 { width: var(--_spacing---space--3); }
+  .spacing_bar.is-4 { width: var(--_spacing---space--4); }
+  .spacing_bar.is-5 { width: var(--_spacing---space--5); }
+  .spacing_bar.is-6 { width: var(--_spacing---space--6); }
+  .spacing_bar.is-7 { width: var(--_spacing---space--7); }
+  .spacing_bar.is-8 { width: var(--_spacing---space--8); }
+</style>

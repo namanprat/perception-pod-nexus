@@ -1,0 +1,483 @@
+/* ===========================================================================
+   NEXUS — UTILITIES
+   The u-* layer. Page and component CSS uses these and never redefines them.
+   =========================================================================== */
+
+/* ─── Theme ──────────────────────────────────────────────────────────────
+   Applied to a section or card; every --_theme---* below it updates. */
+
+.u-theme-light {
+  --_theme---background: var(--swatch--light-100);
+  --_theme---background-2: var(--swatch--light-200);
+  --_theme---text: var(--swatch--dark-900);
+  --_theme---accent: var(--swatch--accent);
+  --_theme---heading-accent: var(--swatch--dark-900);
+
+  --_theme---text-link--text: var(--swatch--dark-900);
+  --_theme---text-link--text-hover: var(--swatch--accent);
+
+  --_theme---button-primary--background: var(--button-primary--background);
+  --_theme---button-primary--background-hover: var(--button-primary--background-hover);
+  --_theme---button-primary--text: var(--button-primary--text);
+  --_theme---button-primary--text-hover: var(--button-primary--text-hover);
+  --_theme---button-primary--border: var(--button-primary--background);
+  --_theme---button-primary--border-hover: var(--button-primary--background-hover);
+
+  --_theme---button-secondary--background: transparent;
+  --_theme---button-secondary--background-hover: var(--button-primary--background);
+  --_theme---button-secondary--text: var(--button-secondary--text);
+  --_theme---button-secondary--text-hover: var(--button-secondary--text-hover);
+  --_theme---button-secondary--border: color-mix(in srgb, var(--button-secondary--text) 72%, transparent);
+  --_theme---button-secondary--border-hover: var(--button-secondary--text);
+
+  --_theme---button-tertiary--background: transparent;
+  --_theme---button-tertiary--background-hover: transparent;
+  --_theme---button-tertiary--text: var(--button-tertiary--text);
+  --_theme---button-tertiary--text-hover: var(--button-tertiary--text-hover);
+  --_theme---button-tertiary--border: transparent;
+  --_theme---button-tertiary--border-hover: transparent;
+}
+
+.u-theme-dark {
+  --_theme---background: var(--swatch--dark-900);
+  --_theme---background-2: var(--swatch--dark-800);
+  --_theme---text: var(--swatch--light-100);
+  --_theme---accent: var(--swatch--accent);
+  --_theme---heading-accent: var(--swatch--light-100);
+
+  --_theme---text-link--text: var(--swatch--light-100);
+  --_theme---text-link--text-hover: var(--swatch--accent);
+
+  /* Invert the primary recipe on dark fields. */
+  --_theme---button-primary--background: var(--button-primary--text);
+  --_theme---button-primary--background-hover: var(--button-primary--background-hover);
+  --_theme---button-primary--text: var(--button-primary--background);
+  --_theme---button-primary--text-hover: var(--button-primary--background);
+  --_theme---button-primary--border: var(--button-primary--text);
+  --_theme---button-primary--border-hover: var(--button-primary--background-hover);
+
+  --_theme---button-secondary--background: transparent;
+  --_theme---button-secondary--background-hover: var(--button-primary--text);
+  --_theme---button-secondary--text: var(--button-primary--text);
+  --_theme---button-secondary--text-hover: var(--button-primary--background);
+  --_theme---button-secondary--border: color-mix(in srgb, var(--button-primary--text) 72%, transparent);
+  --_theme---button-secondary--border-hover: var(--button-primary--text);
+
+  --_theme---button-tertiary--background: transparent;
+  --_theme---button-tertiary--background-hover: transparent;
+  --_theme---button-tertiary--text: var(--button-primary--text);
+  --_theme---button-tertiary--text-hover: var(--button-tertiary--text-hover);
+  --_theme---button-tertiary--border: transparent;
+  --_theme---button-tertiary--border-hover: transparent;
+}
+
+.u-theme-brand {
+  --_theme---background: var(--swatch--brand-500);
+  --_theme---background-2: var(--swatch--brand-400);
+  --_theme---text: var(--swatch--brand-text);
+  --_theme---accent: var(--swatch--accent);
+  --_theme---heading-accent: var(--swatch--accent);
+
+  --_theme---text-link--text: var(--swatch--brand-text);
+  --_theme---text-link--text-hover: var(--swatch--accent-700);
+
+  /* Primary is the accent CTA on a brand field. */
+  --_theme---button-primary--background: var(--button-primary--background-hover);
+  --_theme---button-primary--background-hover: var(--swatch--accent-700);
+  --_theme---button-primary--text: var(--button-primary--text);
+  --_theme---button-primary--text-hover: var(--button-primary--text-hover);
+  --_theme---button-primary--border: var(--button-primary--background-hover);
+  --_theme---button-primary--border-hover: var(--swatch--accent-700);
+
+  --_theme---button-secondary--background: transparent;
+  --_theme---button-secondary--background-hover: var(--button-primary--background-hover);
+  --_theme---button-secondary--text: var(--swatch--brand-text);
+  --_theme---button-secondary--text-hover: var(--button-primary--text);
+  --_theme---button-secondary--border: var(--swatch--brand-text-o20);
+  --_theme---button-secondary--border-hover: var(--button-primary--background-hover);
+
+  --_theme---button-tertiary--background: transparent;
+  --_theme---button-tertiary--background-hover: transparent;
+  --_theme---button-tertiary--text: var(--swatch--brand-text);
+  --_theme---button-tertiary--text-hover: var(--button-tertiary--text-hover);
+  --_theme---button-tertiary--border: transparent;
+  --_theme---button-tertiary--border-hover: transparent;
+}
+
+.u-theme-light,
+.u-theme-dark,
+.u-theme-brand {
+  background-color: var(--_theme---background);
+  color: var(--_theme---text);
+}
+
+/* ─── Section & container ──────────────────────────────────────────────── */
+
+.u-section {
+  display: flex;
+  flex-flow: column;
+  background-color: var(--_theme---background);
+  color: var(--_theme---text);
+  padding-top: var(--_spacing---section-space--main);
+  padding-bottom: var(--_spacing---section-space--main);
+}
+
+.u-section-small {
+  padding-top: var(--_spacing---section-space--small);
+  padding-bottom: var(--_spacing---section-space--small);
+}
+
+.u-section-large {
+  padding-top: var(--_spacing---section-space--large);
+  padding-bottom: var(--_spacing---section-space--large);
+}
+
+.u-section-page-top {
+  padding-top: var(--_spacing---section-space--page-top);
+}
+
+.u-section-none {
+  padding-top: var(--_spacing---section-space--none);
+  padding-bottom: var(--_spacing---section-space--none);
+}
+
+.u-container {
+  max-width: var(--max-width--main);
+  width: calc(100% - var(--site--margin) * 2);
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-flow: column;
+  container-type: inline-size;
+}
+
+.u-container-small {
+  max-width: var(--max-width--small);
+}
+
+.u-container-full {
+  max-width: var(--max-width--full);
+}
+
+/* Default section layout stack. Prefer this over attribute selectors. */
+.u-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--_spacing---space--8);
+  width: 100%;
+}
+
+/* ─── Grid ───────────────────────────────────────────────────────────────
+   Column count is 12 / 8 / 4 — assembled from the responsive flags in
+   variables.css, so no media query is needed here. */
+
+.u-grid-main {
+  display: grid;
+  grid-template-columns: repeat(var(--site--column-count), minmax(0, 1fr));
+  column-gap: var(--site--gutter);
+  row-gap: var(--_spacing---space--8);
+  width: 100%;
+}
+
+/* Spans match the twelve-column set. Anything wider than 4 must also carry a
+   narrower span for small screens, or use u-column-span-full — the grid only
+   has 4 columns there and a wider span would generate implicit columns. */
+.u-column-span-2 { grid-column-end: span 2; }
+.u-column-span-3 { grid-column-end: span 3; }
+.u-column-span-4 { grid-column-end: span 4; }
+.u-column-span-6 { grid-column-end: span 6; }
+.u-column-span-8 { grid-column-end: span 8; }
+
+.u-column-span-full { grid-column: 1 / -1; }
+
+/* ─── Type styles ────────────────────────────────────────────────────────
+   Nexus chrome uses .u-font-nexus (always Arial). Site content uses these
+   utilities with user-selected stacks. html.is-type-styles-off disables them. */
+
+.u-font-nexus {
+  font-family: var(--_typography---font--nexus);
+}
+
+.u-text-style-display {
+  font-family: var(--_typography---font-style--display);
+  font-size: var(--_typography---size--display);
+  font-weight: var(--_typography---font-weight--display);
+  line-height: var(--_typography---line-height--tight);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--display);
+  text-transform: var(--_typography---text-transform--display);
+  text-align: var(--_typography---text-align--display);
+}
+
+.u-text-style-h1 {
+  font-family: var(--_typography---font-style--h1);
+  font-size: var(--_typography---size--h1);
+  font-weight: var(--_typography---font-weight--h1);
+  line-height: var(--_typography---line-height--none);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--h1);
+  text-transform: var(--_typography---text-transform--h1);
+  text-align: var(--_typography---text-align--h1);
+}
+
+.u-text-style-h2 {
+  font-family: var(--_typography---font-style--h2);
+  font-size: var(--_typography---size--h2);
+  font-weight: var(--_typography---font-weight--h2);
+  line-height: var(--_typography---line-height--none);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--h2);
+  text-transform: var(--_typography---text-transform--h2);
+  text-align: var(--_typography---text-align--h2);
+}
+
+.u-text-style-h3 {
+  font-family: var(--_typography---font-style--h3);
+  font-size: var(--_typography---size--h3);
+  font-weight: var(--_typography---font-weight--h3);
+  line-height: var(--_typography---line-height--none);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--h3);
+  text-transform: var(--_typography---text-transform--h3);
+  text-align: var(--_typography---text-align--h3);
+}
+
+.u-text-style-h4 {
+  font-family: var(--_typography---font-style--h4);
+  font-size: var(--_typography---size--h4);
+  font-weight: var(--_typography---font-weight--h4);
+  line-height: var(--_typography---line-height--none);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--h4);
+  text-transform: var(--_typography---text-transform--h4);
+  text-align: var(--_typography---text-align--h4);
+}
+
+.u-text-style-h5 {
+  font-family: var(--_typography---font-style--h5);
+  font-size: var(--_typography---size--h5);
+  font-weight: var(--_typography---font-weight--h5);
+  line-height: var(--_typography---line-height--medium);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--h5);
+  text-transform: var(--_typography---text-transform--h5);
+  text-align: var(--_typography---text-align--h5);
+}
+
+.u-text-style-h6 {
+  font-family: var(--_typography---font-style--h6);
+  font-size: var(--_typography---size--h6);
+  font-weight: var(--_typography---font-weight--h6);
+  line-height: var(--_typography---line-height--medium);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--h6);
+  text-transform: var(--_typography---text-transform--h6);
+  text-align: var(--_typography---text-align--h6);
+}
+
+.u-text-style-large {
+  font-family: var(--_typography---font-style--large);
+  font-size: var(--_typography---size--large);
+  font-weight: var(--_typography---font-weight--large);
+  line-height: var(--_typography---line-height--golden);
+  text-wrap: var(--_typography---text-wrap--large);
+  text-transform: var(--_typography---text-transform--large);
+  text-align: var(--_typography---text-align--large);
+  line-height: 1.2;
+  letter-spacing: var(--_typography---letter-spacing--title);
+  color: color-mix(in hsl, var(--_theme---text) 70%, transparent);
+
+}
+
+.u-text-style-main {
+  font-family: var(--_typography---font-style--main);
+  font-size: var(--_typography---size--main);
+  font-weight: var(--_typography---font-weight--main);
+  line-height: var(--_typography---line-height--golden);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--main);
+  text-transform: var(--_typography---text-transform--main);
+  text-align: var(--_typography---text-align--main);
+}
+
+.u-text-style-small {
+  font-family: var(--_typography---font-style--small);
+  font-size: var(--_typography---size--small);
+  font-weight: var(--_typography---font-weight--small);
+  line-height: var(--_typography---line-height--medium);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--small);
+  text-transform: var(--_typography---text-transform--small);
+  text-align: var(--_typography---text-align--small);
+}
+
+/* Mono defaults to no transform — CSS custom properties are case-sensitive. */
+.u-text-style-mono {
+  font-family: var(--_typography---font-style--mono);
+  font-size: var(--_typography---size--small);
+  font-weight: var(--_typography---font-weight--mono);
+  line-height: var(--_typography---line-height--medium);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--mono);
+  text-transform: var(--_typography---text-transform--mono);
+  text-align: var(--_typography---text-align--mono);
+}
+
+.u-text-uppercase {
+  text-transform: uppercase;
+}
+
+.u-text-style-eyebrow {
+  font-family: var(--_typography---font-style--eyebrow);
+  font-size: var(--_typography---size--small);
+  font-weight: var(--_typography---font-weight--eyebrow);
+  line-height: var(--_typography---line-height--medium);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--eyebrow);
+  text-transform: var(--_typography---text-transform--eyebrow);
+  text-align: var(--_typography---text-align--eyebrow);
+}
+
+/* Master switch off — do not use type-style stacks / wrap / transform / align / weight. */
+html.is-type-styles-off {
+  --button--font-family: var(--_typography---font--nexus);
+}
+
+html.is-type-styles-off .u-text-style-display,
+html.is-type-styles-off .u-text-style-h1,
+html.is-type-styles-off .u-text-style-h2,
+html.is-type-styles-off .u-text-style-h3,
+html.is-type-styles-off .u-text-style-h4,
+html.is-type-styles-off .u-text-style-h5,
+html.is-type-styles-off .u-text-style-h6,
+html.is-type-styles-off .u-text-style-large,
+html.is-type-styles-off .u-text-style-main,
+html.is-type-styles-off .u-text-style-small,
+html.is-type-styles-off .u-text-style-mono,
+html.is-type-styles-off .u-text-style-eyebrow {
+  font-family: var(--_typography---font--nexus);
+  text-wrap: pretty;
+  text-transform: none;
+  text-align: start;
+}
+
+.u-text-italic { font-style: italic; }
+.u-text-align-center { text-align: center; }
+.u-text-faded { color: color-mix(in hsl, currentColor 70%, transparent); }
+
+/* ─── Text width wrappers ────────────────────────────────────────────────
+   `_content` stays display:block so margins collapse. Headings/paragraphs
+   that need a max-width wrap in these utilities — they stay full-width,
+   pass max-width to their direct child, and inherit alignment from content. */
+
+.u-heading,
+.u-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+  align-items: inherit;
+  justify-content: inherit;
+}
+
+.u-heading > :first-child,
+.u-text > :first-child {
+  max-width: inherit;
+}
+
+.u-alignment-center {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ─── Rhythm ─────────────────────────────────────────────────────────────
+   No element carries a default margin-bottom; opt in with this utility,
+   which scales with the element's own font size. */
+
+.u-margin-bottom {
+  margin-bottom: var(--_text-style---margin-bottom);
+}
+
+.u-margin-trim > :first-child { margin-top: 0; }
+.u-margin-trim > :last-child { margin-bottom: 0; }
+
+/* ─── Buttons ────────────────────────────────────────────────────────────
+   There is no button utility — buttons are styled on the component class.
+   This wrapper supplies the gap and top margin. */
+
+.u-button-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: inherit;
+  gap: var(--_spacing---space--4);
+  margin-top: var(--_spacing---space--6);
+}
+
+.u-display-none { display: none; }
+
+.u-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: clip;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ─── Grid line guides (authoring aid) ───────────────────────────────────
+   Shift+G toggles the overlay. All 12 columns are always rendered and the
+   surplus is hidden with the responsive keyword variables — no media query
+   and no resize listener. */
+
+.u-grid-lines {
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - var(--site--margin) * 2);
+  max-width: var(--max-width--main);
+  display: flex;
+  gap: var(--site--gutter);
+  pointer-events: none;
+}
+
+/* Nested inside a u-container (or any content that is already the grid
+   width). Match the parent 1:1 — do not re-apply site margin / lock. */
+.u-grid-lines.is-inset {
+  left: 0;
+  transform: none;
+  width: 100%;
+  max-width: none;
+}
+
+.u-grid-lines_col {
+  flex: 1 1 0;
+  border-left: var(--border-width--main) dashed var(--_theme---border);
+  border-right: var(--border-width--main) dashed var(--_theme---border);
+}
+
+/* Columns 9–12 drop at medium, columns 5–8 drop at small. Because a keyword
+   variable stays set at every breakpoint below its own, .is-9 alone covers
+   medium *and* smaller — the two classes never need to combine. */
+.u-grid-lines_col.is-9 { display: var(--none-medium, block); }
+.u-grid-lines_col.is-5 { display: var(--none-small, block); }
+
+.u-grid-lines_col.is-overlay {
+  border-left-style: solid;
+  border-right-style: solid;
+  border-left-color: red;
+  border-right-color: red;
+  background-color: rgb(255 0 0 / 8%);
+}
+
+.u-grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z--modal);
+  pointer-events: none;
+  opacity: var(--_state---true);
+}

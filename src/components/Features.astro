@@ -1,0 +1,23 @@
+---
+/**
+ * The build-time gate for the site-wide motion libraries.
+ *
+ * The imports are dynamic and guarded by the defined literals rather than by a
+ * features.json read — see the `define` note in astro.config.ts. A static
+ * import here would ship the library's hoisted script even on the false
+ * branch, which is exactly the bug `npm run check:features` exists to catch.
+ *
+ * R3F is not here — it draws a visible canvas, so it is gated at the place it
+ * is used (src/pages/index.astro) instead of site-wide.
+ */
+const Lenis = __FEATURE_LENIS__
+  ? (await import("./features/Lenis.astro")).default
+  : null;
+
+const Gsap = __FEATURE_GSAP__
+  ? (await import("./features/Gsap.astro")).default
+  : null;
+---
+
+{Lenis && <Lenis />}
+{Gsap && <Gsap />}

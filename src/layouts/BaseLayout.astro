@@ -1,0 +1,265 @@
+---
+import "../styles/main.css";
+import GridOverlay from "../components/GridOverlay.astro";
+import Features from "../components/Features.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Site-wide theme. Nexus shell defaults to dark. */
+  theme?: "light" | "dark" | "brand";
+  /** Locks scroll from first paint until the preloader finishes. */
+  preloading?: boolean;
+}
+
+const { title, description = "", theme = "dark", preloading = false } =
+  Astro.props;
+
+const htmlClass = [
+  `u-theme-${theme}`,
+  preloading ? "is-preloading" : null,
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<!doctype html>
+<html lang="en" class={htmlClass}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="author" content="Naman Pratulya" />
+    {description && <meta name="description" content={description} />}
+
+    <!-- New Spirit (Adobe Fonts / Typekit) — kit id mirrors --_typography---typekit-kit-id -->
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://use.typekit.net/gqw3ofa.css"
+      data-nexus-typekit="gqw3ofa"
+    />
+
+    <!-- Apply persisted layout/colour/type overrides before paint (set from /styling). -->
+    <script is:inline>
+      (function () {
+        try {
+          var root = document.documentElement;
+          var locked = localStorage.getItem("nexus:container-lock");
+          var width = localStorage.getItem("nexus:container-width");
+          if (locked !== null || width !== null) {
+            var rem = parseFloat(width || "90");
+            if (!isFinite(rem) || rem <= 0) rem = 90;
+            root.style.setProperty(
+              "--max-width--main",
+              locked === "0" ? "100vw" : rem + "rem",
+            );
+          }
+
+          var swatchesRaw = localStorage.getItem("nexus:swatches");
+          if (swatchesRaw) {
+            var swatches = JSON.parse(swatchesRaw);
+            var swatchMap = {
+              light: "--swatch--light-100",
+              dark: "--swatch--dark-900",
+              brand: "--swatch--brand-500",
+              accent: "--swatch--accent",
+              overscroll: "--swatch--overscroll",
+            };
+            for (var swatchKey in swatchMap) {
+              if (
+                typeof swatches[swatchKey] === "string" &&
+                /^#[0-9a-fA-F]{6}$/.test(swatches[swatchKey])
+              ) {
+                root.style.setProperty(swatchMap[swatchKey], swatches[swatchKey].toLowerCase());
+              }
+            }
+          }
+
+          var extrasRaw = localStorage.getItem("nexus:extra-swatches");
+          if (extrasRaw) {
+            var extras = JSON.parse(extrasRaw);
+            for (var extraSlug in extras) {
+              if (
+                typeof extras[extraSlug] === "string" &&
+                /^#[0-9a-fA-F]{6}$/.test(extras[extraSlug]) &&
+                /^[a-z][a-z0-9-]{0,31}$/.test(extraSlug)
+              ) {
+                root.style.setProperty("--swatch--" + extraSlug, extras[extraSlug].toLowerCase());
+              }
+            }
+          }
+
+          /* Typekit — swap kit link if localStorage / CSS differs from the default. */
+          var kitId = localStorage.getItem("nexus:typekit-kit-id");
+          if (!kitId) {
+            var kitFromCss = getComputedStyle(root)
+              .getPropertyValue("--_typography---typekit-kit-id")
+              .trim();
+            if (/^[a-z0-9]{5,10}$/i.test(kitFromCss)) kitId = kitFromCss.toLowerCase();
+          }
+          if (kitId && /^[a-z0-9]{5,10}$/i.test(kitId)) {
+            var kitNorm = kitId.toLowerCase();
+            var existing = document.querySelector('link[data-nexus-typekit]');
+            if (!existing || existing.getAttribute("data-nexus-typekit") !== kitNorm) {
+              if (existing) existing.remove();
+              var link = document.createElement("link");
+              link.rel = "stylesheet";
+              link.href = "https://use.typekit.net/" + kitNorm + ".css";
+              link.setAttribute("data-nexus-typekit", kitNorm);
+              document.head.appendChild(link);
+            }
+          }
+
+          var familiesRaw = localStorage.getItem("nexus:font-families");
+          if (familiesRaw) {
+            var families = JSON.parse(familiesRaw);
+            var familyMap = {
+              primary: "--_typography---font--primary",
+              secondary: "--_typography---font--secondary",
+              tertiary: "--_typography---font--tertiary",
+            };
+            for (var familyKey in familyMap) {
+              if (typeof families[familyKey] === "string" && families[familyKey].trim()) {
+                root.style.setProperty(familyMap[familyKey], families[familyKey].trim());
+              }
+            }
+          }
+
+          /* Type styles master switch — when off, never apply user type styles. */
+          var typeStylesFlag = localStorage.getItem("nexus:type-styles-enabled");
+          if (typeStylesFlag === null) {
+            var flagFromCss = getComputedStyle(root)
+              .getPropertyValue("--_typography---type-styles-enabled")
+              .trim();
+            typeStylesFlag = flagFromCss === "0" ? "0" : "1";
+          }
+          var typeStylesOn = typeStylesFlag !== "0";
+          root.style.setProperty(
+            "--_typography---type-styles-enabled",
+            typeStylesOn ? "1" : "0",
+          );
+          root.classList.toggle("is-type-styles-off", !typeStylesOn);
+
+          var styleKeys = [
+            "display", "h1", "h2", "h3", "h4", "h5", "h6",
+            "large", "main", "small", "mono", "eyebrow",
+          ];
+
+          if (!typeStylesOn) {
+            for (var di = 0; di < styleKeys.length; di++) {
+              var dsk = styleKeys[di];
+              root.style.setProperty("--_typography---font-style--" + dsk, "Arial, sans-serif");
+              root.style.setProperty("--_typography---text-wrap--" + dsk, "pretty");
+              root.style.setProperty("--_typography---text-transform--" + dsk, "none");
+              root.style.setProperty("--_typography---text-align--" + dsk, "start");
+              root.style.setProperty("--_typography---font-weight--" + dsk, "400");
+            }
+          } else {
+            var styleFontsRaw = localStorage.getItem("nexus:text-style-fonts");
+            if (styleFontsRaw) {
+              var styleFonts = JSON.parse(styleFontsRaw);
+              var roles = { primary: 1, secondary: 1, tertiary: 1 };
+              for (var styleKey in styleFonts) {
+                var role = styleFonts[styleKey];
+                if (roles[role]) {
+                  root.style.setProperty(
+                    "--_typography---font-style--" + styleKey,
+                    "var(--_typography---font--" + role + ")",
+                  );
+                }
+              }
+            }
+
+            var styleOptionsRaw = localStorage.getItem("nexus:text-style-options");
+            if (styleOptionsRaw) {
+              var styleOptions = JSON.parse(styleOptionsRaw);
+              var wrapOk = { balance: 1, pretty: 1, wrap: 1, nowrap: 1, stable: 1 };
+              var transformOk = { none: 1, uppercase: 1, lowercase: 1, capitalize: 1 };
+              var alignOk = { start: 1, center: 1, end: 1, justify: 1 };
+              var weightOk = { "300": 1, "400": 1, "500": 1, "600": 1, "700": 1 };
+              for (var i = 0; i < styleKeys.length; i++) {
+                var sk = styleKeys[i];
+                var w = styleOptions.wrap && styleOptions.wrap[sk];
+                var tr = styleOptions.transform && styleOptions.transform[sk];
+                var al = styleOptions.align && styleOptions.align[sk];
+                var wt = styleOptions.weight && styleOptions.weight[sk];
+                if (wrapOk[w]) root.style.setProperty("--_typography---text-wrap--" + sk, w);
+                if (transformOk[tr]) root.style.setProperty("--_typography---text-transform--" + sk, tr);
+                if (alignOk[al]) root.style.setProperty("--_typography---text-align--" + sk, al);
+                if (weightOk[wt]) root.style.setProperty("--_typography---font-weight--" + sk, wt);
+              }
+            }
+          }
+
+          var buttonStylesRaw = localStorage.getItem("nexus:button-styles");
+          if (buttonStylesRaw) {
+            var buttonStyles = JSON.parse(buttonStylesRaw);
+            var buttonMap = {
+              fontFamily: "--button--font-family",
+              primaryBackground: "--button-primary--background",
+              primaryBackgroundHover: "--button-primary--background-hover",
+              primaryText: "--button-primary--text",
+              primaryTextHover: "--button-primary--text-hover",
+              secondaryText: "--button-secondary--text",
+              secondaryTextHover: "--button-secondary--text-hover",
+              tertiaryText: "--button-tertiary--text",
+              tertiaryTextHover: "--button-tertiary--text-hover",
+            };
+            for (var buttonKey in buttonMap) {
+              var buttonValue = buttonStyles[buttonKey];
+              if (typeof buttonValue === "string" && /^var\(--[a-zA-Z0-9_-]+\)$/.test(buttonValue)) {
+                root.style.setProperty(buttonMap[buttonKey], buttonValue);
+              }
+            }
+            var paddingPresets = {
+              compact: ["var(--_spacing---space--2)", "var(--_spacing---space--4)"],
+              default: ["var(--_spacing---space--3)", "var(--_spacing---space--5)"],
+              comfortable: ["var(--_spacing---space--4)", "var(--_spacing---space--6)"],
+            };
+            var padPreset = buttonStyles.paddingPreset;
+            if (typeof padPreset === "string" && paddingPresets[padPreset]) {
+              root.style.setProperty("--button--padding-block", paddingPresets[padPreset][0]);
+              root.style.setProperty("--button--padding-inline", paddingPresets[padPreset][1]);
+            }
+            var radiusValue = buttonStyles.radius;
+            if (
+              typeof radiusValue === "string" &&
+              /^(\d*\.?\d+rem|100vw)$/.test(radiusValue)
+            ) {
+              root.style.setProperty("--button--radius", radiusValue);
+            }
+          }
+
+          var rungsRaw = localStorage.getItem("nexus:spacing-rungs");
+          if (rungsRaw) {
+            var rungs = JSON.parse(rungsRaw);
+            var clampRung = function (value) {
+              var n = Number(value);
+              if (!isFinite(n)) return 0;
+              return Math.min(2, Math.max(-2, Math.round(n)));
+            };
+            if (typeof rungs.gutter === "number") {
+              root.style.setProperty("--site--gutter-rung", String(clampRung(rungs.gutter)));
+            }
+            if (typeof rungs.padding === "number") {
+              root.style.setProperty("--_spacing---padding-rung", String(clampRung(rungs.padding)));
+            }
+          }
+
+          /* Preloader pages: never restore mid-scroll under the locked shell. */
+          if (root.classList.contains("is-preloading")) {
+            if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+            window.scrollTo(0, 0);
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+    <GridOverlay />
+    <Features />
+  </body>
+</html>

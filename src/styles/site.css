@@ -1,0 +1,1161 @@
+/* Perception Pod site chrome — layout only. Tokens / type / themes from Nexus. */
+
+:root {
+  --site-gap: var(--_spacing---space--6);
+  --site-pad-y: var(--_spacing---section-space--main);
+}
+
+.page_wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-flow: column;
+  min-height: 100svh;
+  /* visible so position:sticky sections (Bloom) can stick to the viewport */
+  overflow: visible;
+  background-color: transparent;
+}
+
+.page_main {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+}
+
+/* --- Nav --------------------------------------------------------------- */
+.nav_wrap {
+  z-index: 4;
+  position: fixed;
+  inset: 0% 0% auto;
+  align-self: center;
+  padding-block: var(--_spacing---space--5);
+}
+
+.nav_contain {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--site-gap);
+}
+
+.nav_logo_contain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  text-decoration: none;
+}
+
+.nav_wordmark {
+  /* Two phi rungs up from 12rem / 42vw (×φ). */
+  width: min(calc(42vw * var(--ratio--phi)), calc(12rem * var(--ratio--phi)));
+  object-fit: contain;
+}
+
+.nav_btn {
+  display: flex;
+  justify-content: flex-end;
+  justify-self: end;
+  margin-top: 0;
+}
+
+.nav_meta {
+  display: var(--none-medium, flex);
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  overflow: hidden;
+}
+
+.nav_item,
+.hero_nav_item {
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.hero_link:hover {
+  color: var(--_theme---text);
+}
+
+/* --- Buttons -----------------------------------------------------------
+   Match /styling Nexus primary recipe (theme tokens + trigger mix). */
+.btn_wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--button--padding-block) var(--button--padding-inline);
+  border-radius: var(--button--radius);
+  border-style: solid;
+  border-width: var(--border-width--main);
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: var(--button--font-family);
+  background-color: color-mix(
+    in hsl,
+    var(--_theme---button-primary--background-hover) calc(100% * var(--_trigger---on)),
+    var(--_theme---button-primary--background) calc(100% * var(--_trigger---off))
+  );
+  color: color-mix(
+    in hsl,
+    var(--_theme---button-primary--text-hover) calc(100% * var(--_trigger---on)),
+    var(--_theme---button-primary--text) calc(100% * var(--_trigger---off))
+  );
+  border-color: color-mix(
+    in hsl,
+    var(--_theme---button-primary--border-hover) calc(100% * var(--_trigger---on)),
+    var(--_theme---button-primary--border) calc(100% * var(--_trigger---off))
+  );
+  transition: all 300ms;
+}
+
+.btn_wrap.is-secondary {
+  background-color: color-mix(
+    in hsl,
+    var(--_theme---button-secondary--background-hover) calc(100% * var(--_trigger---on)),
+    var(--_theme---button-secondary--background) calc(100% * var(--_trigger---off))
+  );
+  color: color-mix(
+    in hsl,
+    var(--_theme---button-secondary--text-hover) calc(100% * var(--_trigger---on)),
+    var(--_theme---button-secondary--text) calc(100% * var(--_trigger---off))
+  );
+  border-color: color-mix(
+    in hsl,
+    var(--_theme---button-secondary--border-hover) calc(100% * var(--_trigger---on)),
+    var(--_theme---button-secondary--border) calc(100% * var(--_trigger---off))
+  );
+}
+
+.btn_wrap.is-tertiary {
+  border-radius: 0;
+  border-color: transparent;
+  background-color: transparent;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: var(--border-width--main);
+  color: color-mix(
+    in hsl,
+    var(--_theme---button-tertiary--text-hover) calc(100% * var(--_trigger---on)),
+    var(--_theme---button-tertiary--text) calc(100% * var(--_trigger---off))
+  );
+}
+
+.btn_text {
+  position: relative;
+  z-index: 2;
+  line-height: inherit;
+  font-family: inherit;
+  color: inherit;
+}
+
+/* --- Hero -------------------------------------------------------------- */
+.hero_wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100vh;
+  margin-top: 0;
+  padding-block: var(--_spacing---space--5);
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.hero_contain {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--_spacing---space--5);
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero_wrap {
+    position: relative;
+    z-index: 1;
+    height: auto;
+    pointer-events: auto;
+  }
+
+  .hero_contain {
+    height: auto;
+  }
+}
+
+.hero_top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  gap: var(--site-gap);
+  /* Mask the wordmark yPercent park/reveal so it never sits visibly above the slot. */
+  overflow: hidden;
+}
+
+.hero_wordmark {
+  width: 100%;
+  margin-inline: auto;
+  object-fit: contain;
+}
+
+/* Pre-JS reveal parking — opacity/visibility only. GSAP owns all transforms;
+   a CSS transform would re-apply when GSAP clears an identity matrix and snap
+   elements back to the from-state after reveal. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero_wordmark,
+  .hero_nav_item,
+  #header-split {
+    opacity: 0;
+  }
+
+  .footer_top,
+  .footer_bottom {
+    opacity: 0;
+  }
+
+  .manifesto_text {
+    opacity: 0.2;
+  }
+
+  .scrub_text_header,
+  .scrub_text_body {
+    opacity: 0;
+  }
+}
+
+.hero_bottom {
+  width: 100%;
+}
+
+/* Site column grid — 4+4+4 (12) / 3+2+3 (8) / full stack (4). */
+.hero_bottom_wrap {
+  display: grid;
+  grid-template-columns: repeat(var(--site--column-count), minmax(0, 1fr));
+  column-gap: var(--site--gutter);
+  row-gap: var(--site-gap);
+  align-items: stretch;
+  width: 100%;
+}
+
+.hero_links {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-self: start;
+  width: 100%;
+  /* One line of h3 — not the full hero_center stack. Text stays h6. */
+  height: var(--_typography---size--h3);
+  grid-column-end: span calc(
+    4 * var(--_responsive---wide) + 4 * var(--_responsive---xlarge) +
+      4 * var(--_responsive---large) + 3 * var(--_responsive---medium) +
+      4 * var(--_responsive---small) + 4 * var(--_responsive---xsmall)
+  );
+}
+
+.hero_links:first-child {
+  text-align: start;
+}
+
+.hero_links:last-child {
+  text-align: end;
+}
+
+.hero_link {
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+
+.hero_center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  grid-column-end: span calc(
+    4 * var(--_responsive---wide) + 4 * var(--_responsive---xlarge) +
+      4 * var(--_responsive---large) + 2 * var(--_responsive---medium) +
+      4 * var(--_responsive---small) + 4 * var(--_responsive---xsmall)
+  );
+}
+
+.hero_actions {
+  justify-content: center;
+}
+
+.hero_title {
+  margin-top: -0.3rem;
+  text-align: center;
+  width: 100%;
+}
+
+.split_line {
+  display: block;
+  margin-top: -0.3rem;
+  padding-bottom: 0.3rem;
+  padding-right: 0.3rem;
+  overflow: clip;
+  text-align: center;
+}
+
+/* --- Bloom ------------------------------------------------------------- */
+/* Height comes from ScrollTrigger pin spacing on .bloom_stage.
+   Keep z-index below scrub/hero/nav so the pinned stage never covers them. */
+.bloom_wrap {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  flex-shrink: 0;
+  padding-top: 25svh;
+  background-color: transparent;
+}
+
+.bloom_stage {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.bloom_head {
+  position: relative;
+  z-index: 1;
+  grid-area: 1 / 1;
+  width: 100%;
+  /* % of .u-container, not a rem cap — keeps the h1 at ~2 lines as the
+     container scales, and the body copy fills the same measure. */
+  max-width: 55%;
+  margin-inline: auto;
+  text-align: center;
+  pointer-events: auto;
+  gap: var(--_spacing---space--4);
+}
+
+/* Both utilities set their own text-align token — override it. */
+.bloom_head .bloom_title,
+.bloom_head .bloom_text {
+  width: 100%;
+  text-align: center;
+}
+
+.bloom_cards {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.bloom_card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--_spacing---space--3);
+  width: min(29.4rem, calc(100% - 2rem));
+  aspect-ratio: 4 / 5;
+  padding: var(--_spacing---space--4);
+  border-radius: var(--radius--main);
+  background-color: var(--card-bg);
+  box-shadow: 0 1.5rem 3rem rgba(20, 16, 10, 0.22);
+  overflow: clip;
+  /* Pre-JS parking spot; GSAP overwrites with xPercent/yPercent/rotation.
+     Matches ENTER_YPERCENT in bloomCards.js — just below the fold. */
+  transform: translate(-50%, 100%);
+  will-change: transform;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bloom_stage {
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--_spacing---space--3);
+    padding-top: 25svh;
+    padding-bottom: var(--site-pad-y);
+  }
+
+  .bloom_cards {
+    position: relative;
+    inset: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--_spacing---space--3);
+    width: 100%;
+    height: auto;
+    pointer-events: auto;
+  }
+
+  .bloom_card {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: min(29.4rem, calc(100% - 2rem));
+    transform: none;
+    will-change: auto;
+  }
+}
+
+.bloom_card_head {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.bloom_card_sub {
+  font-family: var(--_typography---font-style--h3);
+  font-size: var(--_typography---size--h3);
+  font-weight: var(--_typography---font-weight--h3);
+  line-height: var(--_typography---line-height--none);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--h3);
+  text-transform: var(--_typography---text-transform--h3);
+  color: var(--card-accent);
+}
+
+.bloom_card_divider {
+  width: 100%;
+  height: 0;
+  border-top: var(--border-width--main) solid var(--card-accent);
+}
+
+.bloom_card_list {
+  display: flex;
+  flex-direction: column;
+}
+
+.bloom_card_list_item {
+  position: relative;
+  padding-left: 1.1rem;
+  /* large type via .u-text-style-large; keep card accent over utility color */
+  color: var(--card-accent);
+}
+
+.bloom_card_bullet {
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.35rem;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius--round);
+  background-color: var(--card-accent);
+}
+
+.bloom_card_row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.bloom_card_label {
+  font-family: var(--_typography---font-style--h2);
+  font-size: var(--_typography---size--h2);
+  font-weight: var(--_typography---font-weight--h2);
+  line-height: var(--_typography---line-height--none);
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-wrap: var(--_typography---text-wrap--h2);
+  text-transform: var(--_typography---text-transform--h2);
+  color: var(--card-accent);
+}
+
+.bloom_card_badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.3rem;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius--round);
+  flex-shrink: 0;
+  background-color: var(--card-accent);
+}
+
+.bloom_card_num {
+  font-family: var(--_typography---font-style--h5);
+  font-size: var(--_typography---size--h5);
+  font-weight: var(--_typography---font-weight--h5);
+  line-height: var(--_typography---line-height--medium);
+  text-wrap: var(--_typography---text-wrap--h5);
+  text-transform: var(--_typography---text-transform--h5);
+  color: var(--card-bg);
+}
+
+.bloom_card.is-1 {
+  --card-bg: #003d9f;
+  --card-accent: #a6c9ff;
+  z-index: 1;
+}
+.bloom_card.is-2 {
+  --card-bg: #b6152e;
+  --card-accent: #f9c4cc;
+  z-index: 2;
+}
+.bloom_card.is-3 {
+  --card-bg: #906813;
+  --card-accent: #f3d155;
+  z-index: 3;
+}
+.bloom_card.is-4 {
+  --card-bg: #5b1f8a;
+  --card-accent: #cdb3fa;
+  z-index: 4;
+}
+.bloom_card.is-5 {
+  --card-bg: #00563f;
+  --card-accent: #05bb2f;
+  z-index: 5;
+}
+
+/* --- Scrub text reveal ------------------------------------------------- */
+.scrub_text_wrap {
+  position: relative;
+  /* Above Bloom so scrub’s pin never paints under the next section */
+  z-index: 2;
+  width: 100%;
+  /* Height comes from ScrollTrigger pin spacing (lead + beats + end). */
+  background-color: transparent;
+}
+
+.scrub_text_sticky {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scrub_contain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scrub_contain canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.scrub_text_dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  margin-bottom: var(--site--margin);
+  pointer-events: none;
+  justify-content: flex-end;
+}
+
+.scrub_text_main {
+  width: min(100%, var(--site--span-6));
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  pointer-events: none;
+}
+
+.scrub_text_header_wrap {
+  overflow: hidden;
+  padding-block: 0.3125rem 0.9375rem;
+  padding-right: 0.1875rem;
+}
+
+.scrub_text_header {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.05;
+  text-align: left;
+  color: var(--_theme---heading-accent);
+}
+
+.scrub-text-line-mask {
+  display: block;
+  overflow: hidden;
+}
+
+.scrub-text-line {
+  display: block;
+}
+
+/* --- Manifesto --------------------------------------------------------- */
+.manifesto_wrap {
+  position: relative;
+  width: 100%;
+  height: 300vh;
+  background-color: transparent;
+}
+
+.manifesto_sticky {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding-block: var(--_spacing---section-space--large);
+}
+
+.manifesto_contain {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.manifesto_text {
+  width: 100%;
+  max-width: 40ch;
+  margin-inline: auto;
+  text-align: center;
+  color: var(--_theme---heading-accent);
+}
+
+/* --- FAQ --------------------------------------------------------------- */
+/* Section spacing and container come from u-section / u-container. Only the
+   theme fill is overridden, so the backdrop canvas shows through. */
+.faq_wrap {
+  background-color: transparent;
+}
+
+/* span-4 + span-6 only fits while the grid has 12 columns. These spans are
+   lengths, not grid tracks, so nothing caps them on the narrower grids —
+   min() does, and the pair stacks once there is no room for both. */
+.faq_grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--site--gutter);
+  width: 100%;
+}
+
+.faq_title {
+  width: min(100%, var(--site--span-4));
+  flex-shrink: 0;
+}
+
+.faq_list {
+  width: min(100%, var(--site--span-6));
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+/* The container measures ~48em as the viewport reaches medium, where the grid
+   drops to 8 columns and the pair stops fitting. Direction and widths flip
+   together so they cannot disagree at the boundary. @container is the
+   per-component switch; responsive.css owns every width query. */
+@container (width <= 48em) {
+  .faq_grid {
+    flex-direction: column;
+  }
+
+  .faq_title,
+  .faq_list {
+    width: 100%;
+  }
+}
+
+.faq_item {
+  width: 100%;
+  border-bottom: var(--border-width--main) solid var(--_theme---border);
+}
+
+.faq_item_head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--_spacing---space--4);
+  padding-block: var(--_spacing---space--3);
+  text-align: left;
+  color: var(--_theme---text);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.faq_item_icon {
+  position: relative;
+  width: 1rem;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+}
+
+.faq_item_bar {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: var(--border-width--main);
+  background-color: var(--_theme---text);
+  transform: translateY(-50%);
+}
+
+.faq_item_bar.is-vertical {
+  transform: translateY(-50%) rotate(90deg) scaleX(var(--_state---false));
+}
+
+.faq_item_panel {
+  width: 100%;
+  overflow: clip;
+}
+
+.faq_item_answer {
+  display: grid;
+  gap: 0.85rem;
+  padding-bottom: var(--site-gap);
+}
+
+.faq_item_answer > :first-child {
+  margin-top: 0;
+}
+
+.faq_item_answer > :last-child {
+  margin-bottom: 0;
+}
+
+.faq_item_answer p {
+  margin: 0;
+}
+
+.faq_item_list {
+  margin: 0;
+  padding-inline-start: 1.25em;
+  display: grid;
+  gap: 0.45rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq_item_panel {
+    max-height: calc(30rem * var(--_state---true));
+    opacity: calc(0.35 + 0.65 * var(--_state---true));
+    transition:
+      max-height 400ms ease,
+      opacity 300ms ease;
+  }
+}
+
+/* --- Footer ------------------------------------------------------------ */
+.footer_wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--_spacing---space--5);
+  background-color: transparent;
+  padding-block: var(--_spacing---space--5);
+  overflow: clip;
+}
+
+.footer_media {
+  position: absolute;
+  left: 50%;
+  bottom: -50%;
+  width: min(60%, 42rem);
+  transform: translateX(-50%);
+  opacity: 0.55;
+  z-index: 0;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.footer_media_img {
+  width: 100%;
+  object-fit: contain;
+  background-color: transparent;
+}
+
+.footer_contain {
+  position: relative;
+  z-index: 1;
+  align-items: center;
+  gap: var(--site-pad-y);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer_top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--site-gap);
+  width: 100%;
+}
+
+.footer_actions {
+  justify-content: center;
+}
+
+.footer_bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--site-pad-y);
+  width: 100%;
+}
+
+.footer_links {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(var(--site--column-count), minmax(0, 1fr));
+  column-gap: var(--site--gutter);
+  align-items: center;
+}
+
+.footer_link {
+  color: color-mix(in hsl, var(--_theme---text) 70%, transparent);
+  text-transform: uppercase;
+  letter-spacing: var(--_typography---letter-spacing--title);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 300ms;
+  grid-column-end: span calc(
+    4 * var(--_responsive---wide) + 4 * var(--_responsive---xlarge) +
+      4 * var(--_responsive---large) + 3 * var(--_responsive---medium) +
+      4 * var(--_responsive---small) + 4 * var(--_responsive---xsmall)
+  );
+}
+
+.footer_link:nth-child(1) {
+  justify-self: start;
+  text-align: left;
+}
+
+.footer_link:nth-child(2) {
+  justify-self: center;
+  text-align: center;
+  grid-column-end: span calc(
+    4 * var(--_responsive---wide) + 4 * var(--_responsive---xlarge) +
+      4 * var(--_responsive---large) + 2 * var(--_responsive---medium) +
+      4 * var(--_responsive---small) + 4 * var(--_responsive---xsmall)
+  );
+}
+
+.footer_link:nth-child(3) {
+  justify-self: end;
+  text-align: right;
+}
+
+.footer_wordmark {
+  display: block;
+  width: calc(100% - var(--site--margin) * 2);
+  max-width: var(--max-width--main);
+  height: auto;
+  margin-inline: auto;
+  object-fit: contain;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Preloader --------------------------------------------------------- */
+/* Fixed overlay shell — theme colours from u-theme-dark. Logo is a CSS mask
+   over a scaleX progress bar; curve SVG provides the slide-up wipe edge. */
+.preloader_wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: var(--z--modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preloader_logo {
+  position: relative;
+  z-index: 1;
+  width: min(90vw, 28rem);
+  aspect-ratio: 1302 / 171;
+  background-color: color-mix(in srgb, var(--swatch--light-100) 25%, transparent);
+  -webkit-mask-image: url("/assets/logo.svg");
+  mask-image: url("/assets/logo.svg");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  /* Dark SVG fills must use alpha, not luminance, or the mark disappears */
+  -webkit-mask-source-type: alpha;
+  mask-mode: alpha;
+}
+
+.preloader_progressbar {
+  position: absolute;
+  inset: 0;
+  background-color: var(--swatch--light-100);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.preloader_curve {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 300px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.preloader_curve_path {
+  fill: var(--_theme---background);
+}
+
+/* --- Contact modal ----------------------------------------------------- */
+.contact_wrap {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z--modal) + 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 2rem);
+  background: color-mix(in srgb, var(--swatch--dark-900) 72%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.contact_wrap.is-open {
+  pointer-events: auto;
+}
+
+.contact_panel {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 40rem);
+  max-height: min(92dvh, 48rem);
+  overflow: hidden;
+  background: var(--swatch--light-100);
+  color: var(--swatch--dark-900);
+  border-radius: var(--radius--main);
+  box-shadow: 0 1.5rem 3rem
+    color-mix(in srgb, var(--swatch--dark-900) 28%, transparent);
+  letter-spacing: var(--_typography---letter-spacing--title);
+}
+
+.contact_header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-shrink: 0;
+  padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1.25rem, 3vw, 1.75rem) 0;
+}
+
+.contact_title {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.contact_close {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: -0.35rem -0.35rem 0 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius--round);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 200ms ease;
+}
+
+.contact_close:hover,
+.contact_close:focus-visible {
+  background: color-mix(in srgb, var(--swatch--dark-900) 8%, transparent);
+  outline: none;
+}
+
+.contact_close svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.contact_form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.contact_body {
+  display: grid;
+  gap: 1.35rem;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 1.25rem clamp(1.25rem, 3vw, 1.75rem);
+  overscroll-behavior: contain;
+}
+
+.contact_field,
+.contact_fieldset {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  min-width: 0;
+  min-inline-size: 0;
+  width: 100%;
+}
+
+/* Legend is taken out of fieldset layout by default, so parent/grid gap
+   around the fieldset looks broken / unadjustable. Float forces it into
+   the grid formatting context so gap behaves like other .contact_field items. */
+.contact_fieldset > legend {
+  float: left;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.contact_prompt {
+  margin: 0;
+  padding: 0;
+  color: var(--swatch--dark-900);
+}
+
+.contact_input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  border-bottom: 1.5px solid
+    color-mix(in srgb, var(--swatch--dark-900) 18%, transparent);
+  background: transparent;
+  padding: 0.45rem 0 0.55rem;
+  border-radius: 0;
+  outline: none;
+  /* Override .u-text-style-large muted color so typed text matches form ink */
+  color: var(--swatch--dark-900);
+}
+
+.contact_input::placeholder {
+  color: color-mix(in srgb, var(--swatch--dark-900) 40%, transparent);
+}
+
+.contact_input:focus {
+  border-bottom-color: var(--swatch--dark-900);
+}
+
+.contact_textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+  max-height: 10rem;
+}
+
+.contact_services {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+  /* Clear floated legend so services sit below it in the fieldset grid */
+  clear: both;
+}
+
+@media (min-width: 30rem) {
+  .contact_services {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem 1rem;
+  }
+}
+
+.contact_service {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  min-width: 0;
+  /* Slightly muted vs form ink; checked label goes full brand black */
+  color: color-mix(in srgb, var(--swatch--dark-900) 72%, transparent);
+}
+
+.contact_service input[type="checkbox"] {
+  margin: 0;
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  accent-color: var(--swatch--dark-900);
+  vertical-align: middle;
+}
+
+.contact_service span {
+  text-wrap: pretty;
+  color: inherit;
+  line-height: 1.2;
+}
+
+.contact_service:has(input:checked) span {
+  color: var(--swatch--brand-text, var(--swatch--dark-900));
+}
+
+.contact_footer {
+  display: grid;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  padding: 0 clamp(1.25rem, 3vw, 1.75rem) clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.contact_footer .btn_wrap {
+  justify-self: start;
+  font: inherit;
+  background-color: var(--swatch--dark-900);
+  color: var(--swatch--light-100);
+  border-color: var(--swatch--dark-900);
+}
+
+.contact_footer .btn_wrap:hover,
+.contact_footer .btn_wrap:focus-visible {
+  background-color: color-mix(in srgb, var(--swatch--dark-900) 85%, white);
+  border-color: color-mix(in srgb, var(--swatch--dark-900) 85%, white);
+  color: var(--swatch--light-100);
+}
+
+.contact_success {
+  display: none;
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius--small);
+  background: color-mix(in srgb, #22c55e 14%, transparent);
+}
+
+.contact_success.is-visible {
+  display: block;
+}

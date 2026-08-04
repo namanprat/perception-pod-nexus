@@ -1,0 +1,33 @@
+---
+import GridLines from "./GridLines.astro";
+---
+
+<div class="u-grid-overlay" data-grid-overlay aria-hidden="true">
+  <GridLines overlay />
+</div>
+
+<script>
+  /* Shift+G toggles the guides. The script only adds .is-active — visibility
+     comes from --_state---true in utilities.css, never a descendant selector. */
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll<HTMLElement>(".u-grid-overlay").forEach((component) => {
+      if (component.dataset.scriptInitialized) return;
+      component.dataset.scriptInitialized = "true";
+
+      document.addEventListener("keydown", (event) => {
+        if (!event.shiftKey || event.key.toLowerCase() !== "g") return;
+
+        const target = event.target as HTMLElement | null;
+        if (
+          target?.isContentEditable ||
+          ["INPUT", "TEXTAREA", "SELECT"].includes(target?.tagName ?? "")
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+        component.classList.toggle("is-active");
+      });
+    });
+  });
+</script>
