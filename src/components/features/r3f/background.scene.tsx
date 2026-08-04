@@ -98,10 +98,10 @@ const frag = /* glsl */ `
     float noiseScale = 10.0;
     tuv += (noise(tuv * noiseScale + t) - 0.5) * noiseAmount;
 
-    // Midway between original stops and the softer pastel pass.
-    vec3 colorYellow = vec3(0.995, 0.955, 0.84);
-    vec3 colorPink = vec3(0.96, 0.71, 0.78);
-    vec3 colorBlue = vec3(0.59, 0.67, 0.92);
+    // Midway stops, then −15% saturation (mix toward luma).
+    vec3 colorYellow = vec3(0.989, 0.955, 0.857);
+    vec3 colorPink = vec3(0.931, 0.719, 0.778);
+    vec3 colorBlue = vec3(0.602, 0.670, 0.883);
 
     /* Derivative AA: when the trail folds tuv, colour bands would otherwise
        stair-step. Widen each mix by a screen-space pixel of the field. */

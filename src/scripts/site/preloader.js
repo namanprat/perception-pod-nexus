@@ -15,12 +15,45 @@ const EXIT = {
 /** Keep the bar from flashing past on a warm cache / fast network. */
 const MIN_PRELOAD_MS = 1200;
 
+/**
+ * Curve bulge scales with the shorter viewport axis so the wipe reads the same
+ * on phones, tablets, and wide desktops (clamped so it never disappears or
+ * eats the whole screen).
+ */
+function curveBulge(width, height) {
+  const shortSide = Math.min(width, height);
+  return Math.round(Math.min(Math.max(shortSide * 0.22, 96), 320));
+}
+
 function curvePaths(width, height) {
+  const bulge = curveBulge(width, height);
   const midX = width / 2;
+  const bottom = height;
   return {
-    initial: `M0 0 L${width} 0 L${width} ${height} Q${midX} ${height + 300} 0 ${height} L0 0`,
-    flat: `M0 0 L${width} 0 L${width} ${height} Q${midX} ${height} 0 ${height} L0 0`,
+    bulge,
+    viewBox: `0 0 ${width} ${bottom + bulge}`,
+    initial: `M0 0 L${width} 0 L${width} ${bottom} Q${midX} ${bottom + bulge} 0 ${bottom} Z`,
+    flat: `M0 0 L${width} 0 L${width} ${bottom} Q${midX} ${bottom} 0 ${bottom} Z`,
   };
+}
+
+function applyCurveGeometry(wrap, curveSvg, curvePath) {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const paths = curvePaths(width, height);
+
+  wrap?.style.setProperty("--preloader-curve-bulge", `${paths.bulge}px`);
+
+  if (curveSvg) {
+    curveSvg.setAttribute("viewBox", paths.viewBox);
+    curveSvg.setAttribute("preserveAspectRatio", "none");
+  }
+
+  if (curvePath) {
+    curvePath.setAttribute("d", paths.initial);
+  }
+
+  return paths;
 }
 
 function lockScroll() {
@@ -77,15 +110,10 @@ export async function initPreloader({ onComplete } = {}) {
 
   const logo = document.querySelector(".preloader_logo");
   const bar = document.querySelector(".preloader_progressbar");
+  const curveSvg = document.querySelector(".preloader_curve");
   const curvePath = document.querySelector(".preloader_curve_path");
 
-  const { initial: initialPath, flat: flatPath } = curvePaths(
-    window.innerWidth,
-    window.innerHeight,
-  );
-  if (curvePath) {
-    curvePath.setAttribute("d", initialPath);
-  }
+  const { flat: flatPath } = applyCurveGeometry(wrap, curveSvg, curvePath);
 
   if (bar) {
     gsap.set(bar, { scaleX: 0, transformOrigin: "left center" });

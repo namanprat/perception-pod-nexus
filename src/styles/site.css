@@ -679,6 +679,20 @@
   justify-content: flex-end;
 }
 
+/* Mobile: dock under the fixed nav, with 3 φ rungs of clearance (space--4 → space--7). */
+@container site (width <= 50em) {
+  .scrub_text_dock {
+    top: calc(
+      var(--_spacing---space--5) +
+      var(--_spacing---space--8) +
+      var(--_spacing---space--5) +
+      var(--_spacing---space--7)
+    );
+    bottom: auto;
+    margin-bottom: 0;
+  }
+}
+
 .scrub_text_main {
   width: min(100%, var(--site--span-6));
   display: flex;
@@ -1023,9 +1037,11 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: calc(100% + 300px);
+  /* Extra height tracks the responsive Q bulge set from preloader.js */
+  height: calc(100% + var(--preloader-curve-bulge, 22vmin));
   pointer-events: none;
   z-index: 0;
+  overflow: visible;
 }
 
 .preloader_curve_path {
