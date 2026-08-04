@@ -680,14 +680,21 @@
   right: 0;
   bottom: 0;
   z-index: 2;
-  width: 100%;
+  /* Let .u-container own width + site margins (do not stretch to 100vw). */
   margin-bottom: var(--site--margin);
   pointer-events: none;
-  justify-content: flex-end;
+}
+
+.scrub_text_grid {
+  width: 100%;
+  /* Column tracks + gutters come from .u-grid-main */
+  row-gap: 0;
+  align-items: end;
 }
 
 .scrub_text_main {
-  width: min(100%, var(--site--span-4));
+  width: 100%;
+  min-width: 0;
   display: flex;
   flex-flow: column;
   align-items: flex-start;
@@ -708,7 +715,7 @@
   color: var(--_theme---heading-accent);
 }
 
-/* Mobile: full-width copy under the nav (3 φ rungs below). */
+/* Mobile: full grid width under the nav (3 φ rungs below). */
 @container site (width <= 50em) {
   .scrub_text_dock {
     top: calc(
@@ -719,14 +726,12 @@
     );
     bottom: auto;
     margin-bottom: 0;
-    align-items: center;
-    justify-content: center;
     text-align: center;
   }
 
   .scrub_text_main {
+    grid-column: 1 / -1;
     width: 100%;
-    max-width: none;
     align-items: center;
   }
 
