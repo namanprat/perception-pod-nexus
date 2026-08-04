@@ -259,7 +259,7 @@ const htmlClass = [
   </head>
   <body>
     <slot />
-    <GridOverlay />
+    {import.meta.env.DEV && <GridOverlay />}
     <Features />
   </body>
 </html>
