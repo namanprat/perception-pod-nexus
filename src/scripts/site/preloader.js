@@ -121,29 +121,38 @@ export async function initPreloader({ onComplete } = {}) {
 
   const startedAt = performance.now();
 
-  await preloadScrubFrames({
-    onProgress: (loaded, total) => {
-      if (!bar || total <= 0) return;
-      gsap.to(bar, {
-        scaleX: loaded / total,
-        duration: 0.2,
-        ease: "power1.out",
-        overwrite: "auto",
-      });
-    },
-  }).catch((error) => {
+  let framesReady = false;
+  try {
+    await preloadScrubFrames({
+      onProgress: (loaded, total) => {
+        if (!bar || total <= 0) return;
+        gsap.to(bar, {
+          scaleX: loaded / total,
+          duration: 0.2,
+          ease: "power1.out",
+          overwrite: "auto",
+        });
+      },
+    });
+    framesReady = true;
+  } catch (error) {
     console.error("Scrub frame preload failed:", error);
-    if (bar) gsap.set(bar, { scaleX: 1 });
-  });
+  }
 
-  const remaining = Math.max(0, MIN_PRELOAD_MS - (performance.now() - startedAt));
-  if (remaining > 0) {
-    if (bar) {
-      gsap.to(bar, { scaleX: 1, duration: remaining / 1000, ease: "power1.out" });
-    }
-    await wait(remaining);
-  } else if (bar) {
-    gsap.set(bar, { scaleX: 1 });
+  // Hold at 100% only after every frame is in cache (plus a short minimum).
+  if (bar) {
+    gsap.to(bar, {
+      scaleX: 1,
+      duration: framesReady ? 0.2 : 0.35,
+      ease: "power1.out",
+    });
+  }
+
+  if (framesReady) {
+    const remaining = Math.max(0, MIN_PRELOAD_MS - (performance.now() - startedAt));
+    if (remaining > 0) await wait(remaining);
+  } else {
+    await wait(350);
   }
 
   let heroRevealed = false;
