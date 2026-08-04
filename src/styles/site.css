@@ -294,6 +294,34 @@
   text-align: end;
 }
 
+/* Mobile: drop the clock/location cluster; stack remaining blocks reversed
+   (Services/About above the title + Contact). */
+@container site (width <= 50em) {
+  .hero_links:first-child {
+    display: none;
+  }
+
+  .hero_bottom_wrap {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: var(--site-gap);
+  }
+
+  .hero_links,
+  .hero_center {
+    grid-column: auto;
+    width: 100%;
+  }
+
+  .hero_links:last-child {
+    text-align: center;
+    justify-content: center;
+    height: auto;
+    gap: var(--_spacing---space--5);
+  }
+}
+
 .hero_link {
   font: inherit;
   letter-spacing: inherit;
@@ -420,9 +448,8 @@
   pointer-events: auto;
 }
 
-/* Mobile: the 4/5 box leaves ~194px of dead space under the content at 375px,
-   and the card sat wider than the site gutter. Size to content, match the
-   gutter the head and nav use. */
+/* Mobile: match the site gutter so STACK jitter doesn't clip card corners.
+   Keep the 4:5 portrait ratio at every breakpoint. */
 @container bloom (width <= 35em) {
   .bloom_card {
     /* Inset a further 2rem inside the gutter: the STACK poses add ±16px of x
@@ -430,7 +457,6 @@
        the stage edge and got its corners clipped. The reference insets too
        (300px card in a 339px container). */
     width: calc(100% - var(--site--margin) * 2 - 2rem);
-    aspect-ratio: auto;
   }
 }
 
@@ -592,15 +618,18 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  height: 100vh;
+  height: 100svh;
   overflow: hidden;
   pointer-events: none;
 }
 
 .scrub_contain {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   z-index: 1;
+  width: 100%;
+  height: 100svh;
   overflow: hidden;
   pointer-events: none;
 }
@@ -875,8 +904,11 @@
 
 .footer_links {
   width: 100%;
+  /* Always three tracks — site column spans collapse each link to a full row
+     on the 4-col (small) band and stack them. Desktop stagger stays start /
+     center / end at every width. */
   display: grid;
-  grid-template-columns: repeat(var(--site--column-count), minmax(0, 1fr));
+  grid-template-columns: 1fr 1fr 1fr;
   column-gap: var(--site--gutter);
   align-items: center;
 }
@@ -888,11 +920,6 @@
   text-decoration: none;
   font-weight: 500;
   transition: color 300ms;
-  grid-column-end: span calc(
-    4 * var(--_responsive---wide) + 4 * var(--_responsive---xlarge) +
-      4 * var(--_responsive---large) + 3 * var(--_responsive---medium) +
-      4 * var(--_responsive---small) + 4 * var(--_responsive---xsmall)
-  );
 }
 
 .footer_link:nth-child(1) {
@@ -903,11 +930,6 @@
 .footer_link:nth-child(2) {
   justify-self: center;
   text-align: center;
-  grid-column-end: span calc(
-    4 * var(--_responsive---wide) + 4 * var(--_responsive---xlarge) +
-      4 * var(--_responsive---large) + 2 * var(--_responsive---medium) +
-      4 * var(--_responsive---small) + 4 * var(--_responsive---xsmall)
-  );
 }
 
 .footer_link:nth-child(3) {
