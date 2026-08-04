@@ -526,13 +526,6 @@
 }
 
 .bloom_card_sub {
-  font-family: var(--_typography---font-style--h3);
-  font-size: var(--_typography---size--h3);
-  font-weight: var(--_typography---font-weight--h3);
-  line-height: var(--_typography---line-height--none);
-  letter-spacing: var(--_typography---letter-spacing--title);
-  text-wrap: var(--_typography---text-wrap--h3);
-  text-transform: var(--_typography---text-transform--h3);
   color: var(--card-accent);
 }
 
@@ -572,13 +565,6 @@
 }
 
 .bloom_card_label {
-  font-family: var(--_typography---font-style--h2);
-  font-size: var(--_typography---size--h2);
-  font-weight: var(--_typography---font-weight--h2);
-  line-height: var(--_typography---line-height--none);
-  letter-spacing: var(--_typography---letter-spacing--title);
-  text-wrap: var(--_typography---text-wrap--h2);
-  text-transform: var(--_typography---text-transform--h2);
   color: var(--card-accent);
 }
 
@@ -594,12 +580,6 @@
 }
 
 .bloom_card_num {
-  font-family: var(--_typography---font-style--h5);
-  font-size: var(--_typography---size--h5);
-  font-weight: var(--_typography---font-weight--h5);
-  line-height: var(--_typography---line-height--medium);
-  text-wrap: var(--_typography---text-wrap--h5);
-  text-transform: var(--_typography---text-transform--h5);
   color: var(--card-bg);
 }
 
@@ -709,9 +689,6 @@
 }
 
 .scrub_text_header {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  line-height: 1.05;
-  text-align: left;
   color: var(--_theme---heading-accent);
 }
 
@@ -853,11 +830,6 @@
   cursor: pointer;
 }
 
-/* Keep h5 family / weight / tracking; step size up to the large display rung (h4). */
-.faq_item_question {
-  font-size: var(--_typography---size--h4);
-}
-
 .faq_item_icon {
   position: relative;
   width: 1rem;
@@ -991,11 +963,8 @@
 }
 
 .footer_link {
-  color: color-mix(in hsl, var(--_theme---text) 70%, transparent);
-  text-transform: uppercase;
-  letter-spacing: var(--_typography---letter-spacing--title);
+  /* Type from .u-text-style-h6 + .u-text-faded */
   text-decoration: none;
-  font-weight: 500;
   transition: color 300ms;
 }
 
@@ -1120,7 +1089,6 @@
   border-radius: var(--radius--main);
   box-shadow: 0 1.5rem 3rem
     color-mix(in srgb, var(--swatch--dark-900) 28%, transparent);
-  letter-spacing: var(--_typography---letter-spacing--title);
   container-type: inline-size;
 }
 
