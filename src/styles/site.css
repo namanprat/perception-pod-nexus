@@ -401,25 +401,34 @@
   z-index: 1;
   grid-area: 1 / 1;
   width: 100%;
-  gap: var(--_spacing---space--4);
   pointer-events: auto;
 }
 
-/* Center a 4-col measure on whatever band the grid is in. */
-.bloom_text_row {
+.bloom_head_grid {
   width: 100%;
   row-gap: 0;
+  align-items: start;
 }
 
-.bloom_text {
+/* Title + body share one centered 4-col measure on the site grid. */
+.bloom_head_main {
   grid-column-start: calc((var(--site--column-count) - 4) / 2 + 1);
   grid-column-end: span 4;
   width: 100%;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--_spacing---space--4);
+}
+
+.bloom_title,
+.bloom_text {
+  width: 100%;
 }
 
 @container bloom (width <= 50em) {
-  .bloom_text {
+  .bloom_head_main {
     grid-column: 1 / -1;
   }
 }
@@ -788,7 +797,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--_spacing---space--4);
-  padding-block: var(--_spacing---space--3);
+  padding-block: var(--_spacing---space--4);
   text-align: left;
   color: var(--_theme---text);
   background: none;
