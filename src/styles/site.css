@@ -690,6 +690,23 @@
     );
     bottom: auto;
     margin-bottom: 0;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .scrub_text_main {
+    width: 100%;
+    align-items: center;
+  }
+
+  .scrub_text_header_wrap {
+    padding-right: 0;
+  }
+
+  .scrub_text_header,
+  .scrub_text_body {
+    text-align: center;
   }
 }
 
@@ -818,6 +835,11 @@
   background: none;
   border: 0;
   cursor: pointer;
+}
+
+/* Keep h5 family / weight / tracking; step size up to the large display rung (h4). */
+.faq_item_question {
+  font-size: var(--_typography---size--h4);
 }
 
 .faq_item_icon {
