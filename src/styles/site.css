@@ -314,11 +314,30 @@
     width: 100%;
   }
 
-  .hero_links:last-child {
-    text-align: center;
-    justify-content: center;
+  .hero_links {
+    width: 100%;
     height: auto;
-    gap: var(--_spacing---space--5);
+    justify-content: space-between;
+    align-items: center;
+    text-align: start;
+  }
+
+  .hero_links:last-child {
+    text-align: start;
+    justify-content: space-between;
+    height: auto;
+    gap: 0;
+  }
+
+  .hero_nav_item {
+    height: 100%;
+  }
+
+  .hero_link {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
   }
 }
 

@@ -98,9 +98,10 @@ const frag = /* glsl */ `
     float noiseScale = 10.0;
     tuv += (noise(tuv * noiseScale + t) - 0.5) * noiseAmount;
 
-    vec3 colorYellow = vec3(1.0, 0.95, 0.8);
-    vec3 colorPink = vec3(0.95, 0.6, 0.7);
-    vec3 colorBlue = vec3(0.4, 0.5, 0.9);
+    // Pastel stops — high value, low saturation (cream / blush / lilac).
+    vec3 colorYellow = vec3(0.99, 0.96, 0.88);
+    vec3 colorPink = vec3(0.97, 0.82, 0.86);
+    vec3 colorBlue = vec3(0.78, 0.84, 0.94);
 
     /* Derivative AA: when the trail folds tuv, colour bands would otherwise
        stair-step. Widen each mix by a screen-space pixel of the field. */
