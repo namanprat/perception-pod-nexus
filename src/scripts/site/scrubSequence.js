@@ -1,18 +1,9 @@
 import { gsap, ScrollTrigger } from "./gsapRuntime.js";
-import { buildFrameUrls, resolveScrubConfig } from "./scrubConfig.js";
-
-function resolveScrubConfigSource(scrubWrap, scrubContain) {
-  const dataset = scrubContain?.dataset ?? scrubWrap?.dataset ?? {};
-
-  return resolveScrubConfig({
-    assetBaseUrl: dataset.assetBaseUrl,
-    extension: dataset.assetExtension,
-    firstFrame: dataset.firstFrame,
-    frameCount: dataset.frameCount,
-    eagerCount: dataset.eagerCount,
-    batchSize: dataset.batchSize,
-  });
-}
+import {
+  getScrubFrameCache,
+  preloadScrubFrames,
+  resolveScrubConfigFromDom,
+} from "./scrubFrames.js";
 
 function getNearestLoadedImage(images, targetIndex) {
   if (images[targetIndex]) {
@@ -36,6 +27,8 @@ function getNearestLoadedImage(images, targetIndex) {
 
 /**
  * Canvas PNG frame scrub bound to the same scroll track as text beats.
+ * Prefers images preloaded by the preloader via {@link preloadScrubFrames}.
+ *
  * @param {{ wrap: Element, trackScrollPx: () => number, reducedMotion?: boolean }} options
  */
 export function initScrubSequence({ wrap, trackScrollPx, reducedMotion = false } = {}) {
@@ -47,17 +40,28 @@ export function initScrubSequence({ wrap, trackScrollPx, reducedMotion = false }
     return () => {};
   }
 
-  const config = resolveScrubConfigSource(scrubWrap, scrubContain);
-  const imageUrls = buildFrameUrls(config);
+  const config = resolveScrubConfigFromDom(scrubWrap, scrubContain);
   const imageSequence = {
     frame: 0,
-    images: new Array(imageUrls.length).fill(null),
+    images: new Array(config.frameCount).fill(null),
     loaded: new Set(),
-    totalImages: imageUrls.length,
+    totalImages: config.frameCount,
   };
   const cleanupCallbacks = [];
-  const frameLoadPromises = new Map();
   let scrollTween = null;
+
+  const syncFromCache = () => {
+    const cached = getScrubFrameCache();
+    if (!cached.images.length) return;
+
+    for (let i = 0; i < cached.images.length; i += 1) {
+      const image = cached.images[i];
+      if (!image) continue;
+      imageSequence.images[i] = image;
+      imageSequence.loaded.add(i);
+    }
+    imageSequence.totalImages = cached.totalImages || imageSequence.totalImages;
+  };
 
   const mountNode = document.getElementById("pp-scrub") ?? scrubContain;
   let canvas = mountNode.querySelector("canvas");
@@ -135,47 +139,6 @@ export function initScrubSequence({ wrap, trackScrollPx, reducedMotion = false }
     context.globalCompositeOperation = "source-over";
   };
 
-  const loadFrame = (index) => {
-    if (imageSequence.loaded.has(index)) {
-      return Promise.resolve(imageSequence.images[index]);
-    }
-
-    if (frameLoadPromises.has(index)) {
-      return frameLoadPromises.get(index);
-    }
-
-    const promise = new Promise((resolve) => {
-      const image = new Image();
-
-      image.onload = () => {
-        imageSequence.images[index] = image;
-        imageSequence.loaded.add(index);
-        frameLoadPromises.delete(index);
-        resolve(image);
-      };
-
-      image.onerror = () => {
-        console.error(`Failed to load image: ${imageUrls[index]}`);
-        frameLoadPromises.delete(index);
-        resolve(null);
-      };
-
-      image.src = imageUrls[index];
-    });
-
-    frameLoadPromises.set(index, promise);
-    return promise;
-  };
-
-  const loadFrameRange = async (indexes) => {
-    const batchSize = Math.max(1, config.batchSize);
-
-    for (let start = 0; start < indexes.length; start += batchSize) {
-      const batch = indexes.slice(start, start + batchSize);
-      await Promise.all(batch.map((index) => loadFrame(index)));
-    }
-  };
-
   const initScrollTrigger = () => {
     drawFrame();
 
@@ -214,28 +177,23 @@ export function initScrubSequence({ wrap, trackScrollPx, reducedMotion = false }
 
   resizeCanvas();
 
-  const allIndexes = Array.from({ length: imageSequence.totalImages }, (_, index) => index);
-  const eagerCount = Math.min(config.eagerCount, imageSequence.totalImages);
-  const eagerIndexes = allIndexes.slice(0, eagerCount);
-  const restIndexes = allIndexes.slice(eagerCount);
-
   const staticFrame = Math.floor(imageSequence.totalImages / 2);
 
-  loadFrameRange(eagerIndexes).then(() => {
+  const boot = async () => {
+    // Reuse preloader cache when present; otherwise load now.
+    await preloadScrubFrames({ config });
+    syncFromCache();
+
     if (reducedMotion) {
       imageSequence.frame = staticFrame;
       drawFrame();
-      // Still warm the rest in the background for a sharp static paint if mid wasn't eager.
-      void loadFrame(staticFrame).then(() => {
-        imageSequence.frame = staticFrame;
-        drawFrame();
-      });
       return;
     }
 
     initScrollTrigger();
-    void loadFrameRange(restIndexes).then(() => drawFrame());
-  });
+  };
+
+  void boot();
 
   return () => {
     cleanupCallbacks.splice(0).forEach((cleanup) => cleanup());

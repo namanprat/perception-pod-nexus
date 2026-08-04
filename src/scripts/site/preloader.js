@@ -1,6 +1,7 @@
 import { gsap, CustomEase, getLenis, prefersReducedMotion } from "./gsapRuntime.js";
 import { playHeroReveal, skipHeroToFinalState } from "./hero.js";
 import { resetScrollTop, setupPageInitialStates } from "./initialStates.js";
+import { preloadScrubFrames } from "./scrubFrames.js";
 
 /** Exit timings ×1.3 (30% slower than the Larose reference). */
 const EXIT = {
@@ -10,6 +11,9 @@ const EXIT = {
   delaySlide: 0.2 * 1.3,
   delayCurve: 0.3 * 1.3,
 };
+
+/** Keep the bar from flashing past on a warm cache / fast network. */
+const MIN_PRELOAD_MS = 1200;
 
 function curvePaths(width, height) {
   const midX = width / 2;
@@ -30,6 +34,12 @@ function unlockScroll() {
   getLenis()?.start();
 }
 
+function wait(ms) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
+}
+
 export async function initPreloader({ onComplete } = {}) {
   resetScrollTop();
 
@@ -39,6 +49,7 @@ export async function initPreloader({ onComplete } = {}) {
 
   const wrap = document.querySelector(".preloader_wrap");
   if (!wrap) {
+    await preloadScrubFrames().catch(() => {});
     await setupPageInitialStates();
     unlockScroll();
     if (prefersReducedMotion()) {
@@ -53,6 +64,7 @@ export async function initPreloader({ onComplete } = {}) {
   await setupPageInitialStates();
 
   if (prefersReducedMotion()) {
+    await preloadScrubFrames().catch(() => {});
     gsap.set(wrap, { display: "none" });
     unlockScroll();
     skipHeroToFinalState();
@@ -79,6 +91,33 @@ export async function initPreloader({ onComplete } = {}) {
     gsap.set(bar, { scaleX: 0, transformOrigin: "left center" });
   }
 
+  const startedAt = performance.now();
+
+  await preloadScrubFrames({
+    onProgress: (loaded, total) => {
+      if (!bar || total <= 0) return;
+      gsap.to(bar, {
+        scaleX: loaded / total,
+        duration: 0.2,
+        ease: "power1.out",
+        overwrite: "auto",
+      });
+    },
+  }).catch((error) => {
+    console.error("Scrub frame preload failed:", error);
+    if (bar) gsap.set(bar, { scaleX: 1 });
+  });
+
+  const remaining = Math.max(0, MIN_PRELOAD_MS - (performance.now() - startedAt));
+  if (remaining > 0) {
+    if (bar) {
+      gsap.to(bar, { scaleX: 1, duration: remaining / 1000, ease: "power1.out" });
+    }
+    await wait(remaining);
+  } else if (bar) {
+    gsap.set(bar, { scaleX: 1 });
+  }
+
   let heroRevealed = false;
   const revealHero = () => {
     if (heroRevealed) return;
@@ -95,23 +134,11 @@ export async function initPreloader({ onComplete } = {}) {
     },
   });
 
-  // 1. Logo-masked progress fill
-  if (bar) {
-    tl.to(bar, {
-      scaleX: 1,
-      duration: 3,
-      ease: "none",
-    });
-  } else {
-    tl.to({}, { duration: 3 });
-  }
-
-  // 2. Fade logo
+  // Fade logo, then curved slide-up exit (progress already filled by asset load).
   if (logo) {
     tl.to(logo, { autoAlpha: 0, duration: EXIT.fadeLogo, ease: "power2.out" });
   }
 
-  // 3. Curved slide-up exit
   tl.addLabel("exit");
 
   tl.to(
