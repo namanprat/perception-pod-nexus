@@ -410,21 +410,28 @@
   z-index: 1;
   grid-area: 1 / 1;
   width: 100%;
-  /* % of .u-container, not a rem cap — keeps the h1 at ~2 lines as the
-     container scales, and the body copy fills the same measure. */
-  max-width: 55%;
+  max-width: 100%;
   margin-inline: auto;
   text-align: center;
   pointer-events: auto;
   gap: var(--_spacing---space--4);
 }
 
-/* 55% of the container is a desktop measure; below tablet it collapses the
-   head to a ~200px ribbon. Fall back to the standard site gutter — .bloom_head's
-   own width:100% would otherwise beat .u-container's calc and go full-bleed. */
+.bloom_title {
+  width: 100%;
+}
+
+.bloom_text {
+  width: min(100%, var(--site--span-4));
+  margin-inline: auto;
+}
+
+/* Below tablet: every bloom measure goes full container width. */
 @container bloom (width <= 50em) {
-  .bloom_head {
-    width: calc(100% - var(--site--margin) * 2);
+  .bloom_head,
+  .bloom_title,
+  .bloom_text {
+    width: 100%;
     max-width: 100%;
   }
 }
@@ -432,7 +439,6 @@
 /* Both utilities set their own text-align token — override it. */
 .bloom_head .bloom_title,
 .bloom_head .bloom_text {
-  width: 100%;
   text-align: center;
 }
 
@@ -674,13 +680,15 @@
   right: 0;
   bottom: 0;
   z-index: 2;
+  width: 100%;
   margin-bottom: var(--site--margin);
   pointer-events: none;
   justify-content: flex-end;
 }
 
 .scrub_text_main {
-  width: min(100%, var(--site--span-6));
+  width: 100%;
+  max-width: none;
   display: flex;
   flex-flow: column;
   align-items: flex-start;
@@ -1337,10 +1345,6 @@
     width: 2.75rem;
     height: 2.75rem;
   }
-
-  .contact_service {
-    min-height: 44px;
-  }
 }
 
 @container site (width <= 50em) {
@@ -1376,12 +1380,5 @@
   .contact_close {
     width: 2.75rem;
     height: 2.75rem;
-  }
-
-  /* The label already wraps the checkbox, so the whole 303px row is tappable —
-     but only 24px tall. Grow the row, not the box: the checkbox stays at 1em
-     so it keeps matching the text height. */
-  .contact_service {
-    min-height: 44px;
   }
 }
