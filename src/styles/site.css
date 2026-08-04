@@ -61,6 +61,24 @@
   margin-top: 0;
 }
 
+/* Below medium, .nav_meta is display:none so only two grid items remain — the
+   third 1fr track let the wordmark claim a full 1fr and pushed Contact ~56px
+   off-screen. Two tracks, logo left (as the reference does), wordmark capped. */
+@media (width <= 50em) {
+  .nav_contain {
+    grid-template-columns: 1fr auto;
+  }
+
+  .nav_logo_contain {
+    justify-content: flex-start;
+    justify-self: start;
+  }
+
+  .nav_wordmark {
+    width: min(100%, 10.5rem);
+  }
+}
+
 .nav_meta {
   display: var(--none-medium, flex);
   align-items: center;
@@ -345,6 +363,16 @@
   gap: var(--_spacing---space--4);
 }
 
+/* 55% of the container is a desktop measure; below tablet it collapses the
+   head to a ~200px ribbon. Fall back to the standard site gutter — .bloom_head's
+   own width:100% would otherwise beat .u-container's calc and go full-bleed. */
+@media (width <= 50em) {
+  .bloom_head {
+    width: calc(100% - var(--site--margin) * 2);
+    max-width: 100%;
+  }
+}
+
 /* Both utilities set their own text-align token — override it. */
 .bloom_head .bloom_title,
 .bloom_head .bloom_text {
@@ -375,11 +403,26 @@
   background-color: var(--card-bg);
   box-shadow: 0 1.5rem 3rem rgba(20, 16, 10, 0.22);
   overflow: clip;
-  /* Pre-JS parking spot; GSAP overwrites with xPercent/yPercent/rotation.
-     Matches ENTER_YPERCENT in bloomCards.js — just below the fold. */
-  transform: translate(-50%, 100%);
+  /* Pre-JS parking spot; GSAP overwrites with xPercent/yPercent/y/rotation.
+     One viewport below centre — matches the fromTo park in bloomCards.js, and
+     unlike a card-height park it stays offscreen on short mobile cards too. */
+  transform: translate(-50%, -50%) translateY(100svh);
   will-change: transform;
   pointer-events: auto;
+}
+
+/* Mobile: the 4/5 box leaves ~194px of dead space under the content at 375px,
+   and the card sat wider than the site gutter. Size to content, match the
+   gutter the head and nav use. */
+@media (width <= 35em) {
+  .bloom_card {
+    /* Inset a further 2rem inside the gutter: the STACK poses add ±16px of x
+       jitter and up to 7° of rotation, which pushed a gutter-width card past
+       the stage edge and got its corners clipped. The reference insets too
+       (300px card in a 339px container). */
+    width: calc(100% - var(--site--margin) * 2 - 2rem);
+    aspect-ratio: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1159,4 +1202,50 @@
 
 .contact_success.is-visible {
   display: block;
+}
+
+/* --- Touch targets ------------------------------------------------------
+   These links are 18–22px tall — under the 44px touch minimum, and under the
+   24px WCAG 2.5.8 AA floor. */
+@media (pointer: coarse), (width <= 50em) {
+  /* .hero_nav_item has overflow:hidden, which clips a pseudo-element hit area
+     down to the text box — so size the list item itself. Safe for the intro
+     reveal: hero.js translates the li (yPercent), not its contents. */
+  .hero_links {
+    height: auto;
+  }
+
+  .hero_nav_item {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* These two aren't clipped by an ancestor, so the hit area can be expanded
+     with a pseudo-element and leave the visual layout untouched. */
+  .footer_link,
+  .nav_logo_contain {
+    position: relative;
+  }
+
+  .footer_link::after,
+  .nav_logo_contain::after {
+    content: "";
+    position: absolute;
+    inset: 50% 0 auto;
+    height: 44px;
+    translate: 0 -50%;
+  }
+
+  .contact_close {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  /* The label already wraps the checkbox, so the whole 303px row is tappable —
+     but only 24px tall. Grow the row, not the box: the checkbox stays at 1em
+     so it keeps matching the text height. */
+  .contact_service {
+    min-height: 44px;
+  }
 }

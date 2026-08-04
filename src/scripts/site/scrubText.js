@@ -6,9 +6,20 @@ import {
 } from "./gsapRuntime.js";
 import { initScrubSequence } from "./scrubSequence.js";
 
-export const BEAT_VH = 250;
-export const LEAD_VH = 150;
-export const END_VH = 150;
+// Scroll budget per phase, in viewport heights. Mobile runs about half the
+// desktop distance: at 250vh a beat, advancing one line of text costs 2.5
+// screens of thumb-scrolling, and the section ran 11.5 screens on a phone.
+const PACE = {
+  desktop: { beat: 250, lead: 150, end: 150 },
+  mobile: { beat: 125, lead: 80, end: 80 },
+};
+
+const MOBILE_QUERY = "(width <= 35em)";
+
+/** Read live, not frozen at import — a rotate or resize picks up the other pace. */
+function pace() {
+  return window.matchMedia(MOBILE_QUERY).matches ? PACE.mobile : PACE.desktop;
+}
 
 function parseSlides(wrap) {
   const jsonEl = wrap.querySelector("[data-scrub-slides]");
@@ -31,19 +42,21 @@ function parseSlides(wrap) {
 }
 
 export function totalTrackVh(slideCount) {
-  return LEAD_VH + slideCount * BEAT_VH + END_VH;
+  const p = pace();
+  return p.lead + slideCount * p.beat + p.end;
 }
 
 export function trackScrollPx(slideCount) {
   return (totalTrackVh(slideCount) / 100) * window.innerHeight;
 }
 
-/** -1 in lead-in; then 0..n-1 every BEAT_VH after LEAD_VH. */
+/** -1 in lead-in; then 0..n-1 every beat after the lead. */
 function indexFromScrolledVh(scrolledVh, slideCount) {
-  const afterLead = scrolledVh - LEAD_VH;
+  const p = pace();
+  const afterLead = scrolledVh - p.lead;
   if (afterLead < 0) return -1;
   if (slideCount <= 1) return 0;
-  return Math.min(slideCount - 1, Math.floor(afterLead / BEAT_VH));
+  return Math.min(slideCount - 1, Math.floor(afterLead / p.beat));
 }
 
 function initTextBeats(wrap, sticky, slides, headerEl, bodyEl, { reducedMotion } = {}) {
@@ -202,6 +215,7 @@ function initTextBeats(wrap, sticky, slides, headerEl, bodyEl, { reducedMotion }
         pin: sticky,
         anticipatePin: 1,
         refreshPriority: 1,
+        invalidateOnRefresh: true,
         onUpdate: (self) => onTrackProgress(self.progress),
         onLeaveBack: () => enterLead(),
       });
@@ -218,6 +232,7 @@ function initTextBeats(wrap, sticky, slides, headerEl, bodyEl, { reducedMotion }
         pin: sticky,
         anticipatePin: 1,
         refreshPriority: 1,
+        invalidateOnRefresh: true,
         onUpdate: (self) => {
           const scrolledVh = self.progress * totalTrackVh(slides.length);
           const index = indexFromScrolledVh(scrolledVh, slides.length);
