@@ -110,8 +110,10 @@ export function initScrubSequence({ wrap, trackScrollPx, reducedMotion = false }
 
     context.clearRect(0, 0, canvasWidth, canvasHeight);
 
-    // object-fit: contain — full frame visible, letterboxed (no crop zoom).
-    const scale = Math.min(
+    // Mobile (≤50em): cover so the frame spans full sticky height.
+    // Desktop: contain so the full 16:9 plate stays visible.
+    const cover = window.matchMedia("(width <= 50em)").matches;
+    const scale = (cover ? Math.max : Math.min)(
       canvasWidth / image.naturalWidth,
       canvasHeight / image.naturalHeight
     );

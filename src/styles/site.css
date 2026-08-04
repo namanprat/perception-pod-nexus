@@ -662,6 +662,12 @@
   object-fit: contain;
 }
 
+@container site (width <= 50em) {
+  .scrub_contain canvas {
+    object-fit: cover;
+  }
+}
+
 .scrub_text_dock {
   position: absolute;
   left: 0;
