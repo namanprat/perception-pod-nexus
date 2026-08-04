@@ -966,6 +966,7 @@
   box-shadow: 0 1.5rem 3rem
     color-mix(in srgb, var(--swatch--dark-900) 28%, transparent);
   letter-spacing: var(--_typography---letter-spacing--title);
+  container-type: inline-size;
 }
 
 .contact_header {
@@ -1090,7 +1091,7 @@
   clear: both;
 }
 
-@media (min-width: 30rem) {
+@container (width >= 30rem) {
   .contact_services {
     grid-template-columns: 1fr 1fr;
     gap: 0.55rem 1rem;
