@@ -1,9 +1,9 @@
 const DEFAULT_SCRUB_CONFIG = {
   assetBaseUrl: "/frames",
-  extension: "png",
-  firstFrame: 1,
-  frameCount: 115,
-  eagerCount: 8,
+  extension: "webp",
+  firstFrame: 0,
+  frameCount: 201,
+  eagerCount: 25,
   batchSize: 12,
 };
 

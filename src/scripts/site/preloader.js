@@ -82,7 +82,7 @@ export async function initPreloader({ onComplete } = {}) {
 
   const wrap = document.querySelector(".preloader_wrap");
   if (!wrap) {
-    await preloadScrubFrames().catch(() => {});
+    await preloadScrubFrames({ eagerOnly: true }).catch(() => {});
     await setupPageInitialStates();
     unlockScroll();
     if (prefersReducedMotion()) {
@@ -97,7 +97,7 @@ export async function initPreloader({ onComplete } = {}) {
   await setupPageInitialStates();
 
   if (prefersReducedMotion()) {
-    await preloadScrubFrames().catch(() => {});
+    await preloadScrubFrames({ eagerOnly: true }).catch(() => {});
     gsap.set(wrap, { display: "none" });
     unlockScroll();
     skipHeroToFinalState();
@@ -123,7 +123,9 @@ export async function initPreloader({ onComplete } = {}) {
 
   let framesReady = false;
   try {
+    // Only block on the first eagerCount frames; the rest keep loading.
     await preloadScrubFrames({
+      eagerOnly: true,
       onProgress: (loaded, total) => {
         if (!bar || total <= 0) return;
         gsap.to(bar, {
@@ -139,7 +141,7 @@ export async function initPreloader({ onComplete } = {}) {
     console.error("Scrub frame preload failed:", error);
   }
 
-  // Hold at 100% only after every frame is in cache (plus a short minimum).
+  // Hold at 100% once the eager band is ready (remaining frames load in background).
   if (bar) {
     gsap.to(bar, {
       scaleX: 1,

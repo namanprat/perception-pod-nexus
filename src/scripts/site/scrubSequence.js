@@ -94,6 +94,9 @@ export function initScrubSequence({ wrap, trackScrollPx, reducedMotion = false }
   };
 
   const drawFrame = () => {
+    // Pull in frames that finished loading in the background.
+    syncFromCache();
+
     const targetFrame = Math.max(
       0,
       Math.min(Math.floor(imageSequence.frame), imageSequence.totalImages - 1)
@@ -182,9 +185,17 @@ export function initScrubSequence({ wrap, trackScrollPx, reducedMotion = false }
   const staticFrame = Math.floor(imageSequence.totalImages / 2);
 
   const boot = async () => {
-    // Reuse preloader cache when present; otherwise load now.
-    await preloadScrubFrames({ config });
+    // Start with the eager band (preloader already kicked this off).
+    await preloadScrubFrames({ config, eagerOnly: true }).catch(() => {});
     syncFromCache();
+
+    // Keep downloading the remaining frames without blocking scrub setup.
+    void preloadScrubFrames({ config })
+      .then(() => {
+        syncFromCache();
+        drawFrame();
+      })
+      .catch(() => {});
 
     if (reducedMotion) {
       imageSequence.frame = staticFrame;
